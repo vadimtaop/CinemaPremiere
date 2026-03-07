@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CinemaPremiereApp.Classes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -34,18 +35,15 @@ namespace CinemaPremiereApp.Pages
 
                 if (string.IsNullOrEmpty(login))
                 {
-                    MainSnackbar.MessageQueue.Enqueue(
-                        content:"Ошибка\nВведите данные в поле 'Логин'",
-                        null, null, null, false, true,
-                        durationOverride: TimeSpan.FromSeconds(3));
+                    MainSnackbar.ErrorMessage("Ошибка\nВведите данные в поле 'Логин'");
                     return;
                 }
                 if (string.IsNullOrEmpty(password))
                 {
                     MainSnackbar.MessageQueue.Enqueue(
                         content: "Ошибка\nВведите данные в поле 'Пароль'",
-                        null, null, null, false, true,
-                        durationOverride: TimeSpan.FromSeconds(3));
+                        null, null, null, false, false,
+                        durationOverride: TimeSpan.FromSeconds(30));
                     return;
                 }
             }
