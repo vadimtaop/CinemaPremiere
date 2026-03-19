@@ -14,7 +14,7 @@
         MinWidth="1280"
         Height="720"
         Width="1280"
-        Icon="/Images/Logo.png"
+        Icon="../Images/Logo.png"
         WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
@@ -43,6 +43,7 @@
         </materialDesign:Card>
 
         <Frame Grid.Row="1"
+               NavigationUIVisibility="Hidden"
                Source="../Pages/AuthPage.xaml"/>
     </Grid>
 </Window>

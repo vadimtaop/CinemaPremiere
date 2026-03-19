@@ -9,44 +9,70 @@
       Background="{DynamicResource MaterialDesignPaper}"
       FontFamily="{materialDesign:MaterialDesignFont}"
       mc:Ignorable="d" 
-      d:DesignHeight="450"
-      d:DesignWidth="800"
+      d:DesignHeight="670"
+      d:DesignWidth="1280"
       Title="AuthPage">
 
     <Grid>
         <materialDesign:Card HorizontalAlignment="Center"
                              VerticalAlignment="Center"
                              UniformCornerRadius="15"
-                             Padding="50"
+                             Padding="30"
                              materialDesign:ElevationAssist.Elevation="Dp8">
-            <StackPanel Orientation="Vertical"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center">
-                <TextBlock Text="Авторизация"
-                           FontSize="24"
-                           HorizontalAlignment="Center"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="300"/>
+                </Grid.ColumnDefinitions>
 
-                <TextBox Name="LoginTextBox"
-                         Margin="0 40 0 0"
-                         ToolTip="Логин"
-                         FontSize="18"
-                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                         materialDesign:HintAssist.Hint="Логин"
-                         materialDesign:TextFieldAssist.LeadingIcon="Account"/>
-                <PasswordBox Name="PasswordTextBox"
-                             Margin="0 20 0 0"
-                             ToolTip="Пароль"
+                <Grid Grid.Column="0">
+                    <Border CornerRadius="20"
+                            Height="400"
+                            Width="300"
+                            Margin="10"
+                            HorizontalAlignment="Center"    
+                            VerticalAlignment="Center">
+                        <Border.Background>
+                            <ImageBrush ImageSource="/Images/CheburashkaWallpaper.jpg"
+                                        Stretch="UniformToFill"/>
+                        </Border.Background>
+                    </Border>
+                </Grid>
+                
+                <StackPanel Orientation="Vertical"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Grid.Column="1">
+                    <TextBlock Text="Авторизация"
+                               FontSize="24"
+                               HorizontalAlignment="Center"/>
+
+                    <TextBox Name="LoginTextBox"
+                             Margin="0 40 0 0"
+                             ToolTip="Логин"
                              FontSize="18"
-                             Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
-                             materialDesign:HintAssist.Hint="Пароль"/>
+                             Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                             materialDesign:HintAssist.Hint="Логин"
+                             materialDesign:TextFieldAssist.HasClearButton="True">
+                    </TextBox>
+                    <PasswordBox Name="PasswordTextBox"
+                                 Margin="0 20 0 0"
+                                 ToolTip="Пароль"
+                                 FontSize="18"
+                                 Style="{StaticResource MaterialDesignFloatingHintRevealPasswordBox}"
+                                 materialDesign:HintAssist.Hint="Пароль"
+                                 materialDesign:TextFieldAssist.HasClearButton="True"/>
 
-                <Button Content="Войти"
-                        Width="200"
-                        Margin="0 40 0 0"
-                        Click="LoginButtonClick"
-                        Cursor="Hand"
-                        Style="{StaticResource MaterialDesignRaisedButton}"/>
-            </StackPanel>
+                    <Button Content="Войти"
+                            Width="200"
+                            Margin="0 40 0 0"
+                            Click="LoginButtonClick"
+                            Cursor="Hand"
+                            IsDefault="True"
+                            Style="{StaticResource MaterialDesignRaisedButton}"/>
+                </StackPanel>
+
+            </Grid>
         </materialDesign:Card>
 
         <materialDesign:Snackbar Name="MainSnackbar"

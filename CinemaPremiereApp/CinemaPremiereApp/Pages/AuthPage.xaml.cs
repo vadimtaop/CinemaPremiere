@@ -1,7 +1,9 @@
-﻿using CinemaPremiereApp.Classes;
+﻿using CinemaPremiereApp.Ado;
+using CinemaPremiereApp.Classes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -30,27 +32,89 @@ namespace CinemaPremiereApp.Pages
         {
             try
             {
-                string login = LoginTextBox.Text;
-                string password = PasswordTextBox.Password;
+                string login = LoginTextBox.Text.Trim();
+                string password = PasswordTextBox.Password.Trim();
 
-                if (string.IsNullOrEmpty(login))
+                if (!IsFieldValid(login, "Логин")) return;
+                if (!IsFieldValid(password, "Пароль")) return;
+
+                var user = AppData.db.Users.FirstOrDefault(u => u.Login == login);
+
+                if (user != null)
                 {
-                    MainSnackbar.ErrorMessage("Ошибка\nВведите данные в поле 'Логин'");
-                    return;
+                    if (user.LockoutEnd >= DateTime.Now)
+                    {
+                        MainSnackbar.ErrorMessage($"Ошибка\nВы временно заблокированы\nПовторите попытку позже");
+                        return;
+                    }
+
+                    if (user.Password == PasswordHash(password))
+                    {
+                        user.FailedAttempts = 0;
+                        user.LockoutEnd = null;
+
+                        AppData.db.SaveChanges();
+
+                        NavigationService.Navigate(new OrdersPage());
+
+                        MainSnackbar.SuccessMessage($"Успех\nДобро пожаловать в приложение!");
+                    }
+                    else
+                    {
+                        user.FailedAttempts++;
+
+                        AppData.db.SaveChanges();
+
+                        if (user.FailedAttempts >= 3)
+                        {
+                            user.LockoutEnd = DateTime.Now.AddMinutes(10);
+
+                            AppData.db.SaveChanges();
+
+                            MainSnackbar.ErrorMessage($"Ошибка\nПревышение допустымых попыток\nВы временно заблокированы\nПовторите попытку позже");
+                            return;
+                        }
+
+                        MainSnackbar.ErrorMessage($"Ошибка\nНеверный пароль\nПовторите попытку");
+                    }
                 }
-                if (string.IsNullOrEmpty(password))
+                else
                 {
-                    MainSnackbar.MessageQueue.Enqueue(
-                        content: "Ошибка\nВведите данные в поле 'Пароль'",
-                        null, null, null, false, false,
-                        durationOverride: TimeSpan.FromSeconds(30));
-                    return;
+                    MainSnackbar.ErrorMessage($"Ошибка\nПользователь не найден");
                 }
             }
             catch (Exception ex)
             {
-
+                MessageBox.Show($"Произошла неизвестная ошибка: {ex.Message}",
+                    "Кинотеатр \"Премьера\"",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
             }
+        }
+
+        // Метод валидации логина и пароля
+        private bool IsFieldValid(string value, string fieldName)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                MainSnackbar.ErrorMessage($"Ошибка\nВведите данные в поле '{fieldName}'");
+                return false;
+            }
+            
+            if (value.Length < 4 || value.Length > 50)
+            {
+                MainSnackbar.ErrorMessage($"Ошибка\nДлина поля '{fieldName}' должна быть от 4 до 50 символов");
+                return false;
+            }
+
+            return true;
+        }
+
+        // Метод хеширования пароля
+        private string PasswordHash(string password)
+        {
+            var bytes = SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(password));
+            return BitConverter.ToString(bytes).Replace("-", "").ToLower();
         }
     }
 }
