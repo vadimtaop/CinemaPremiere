@@ -27,8 +27,8 @@ namespace CinemaPremiereApp.Ado
         public int FailedAttempts { get; set; }
         public Nullable<System.DateTime> LockoutEnd { get; set; }
     
+        public virtual Roles Roles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Orders> Orders { get; set; }
-        public virtual Roles Roles { get; set; }
     }
 }

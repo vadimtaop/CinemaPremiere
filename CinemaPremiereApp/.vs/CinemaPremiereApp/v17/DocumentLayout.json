@@ -3,20 +3,8 @@
   "WorkspaceRootPath": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\CinemaPremiereApp\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{91A8D746-A9B3-4269-AA16-6E68CB15ADF8}|CinemaPremiereApp\\CinemaPremiereApp.csproj|c:\\users\\vadim\\desktop\\cinemapremiere\\cinemapremiereapp\\cinemapremiereapp\\windows\\generalwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{91A8D746-A9B3-4269-AA16-6E68CB15ADF8}|CinemaPremiereApp\\CinemaPremiereApp.csproj|solutionrelative:cinemapremiereapp\\windows\\generalwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{91A8D746-A9B3-4269-AA16-6E68CB15ADF8}|CinemaPremiereApp\\CinemaPremiereApp.csproj|C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\CinemaPremiereApp\\cinemapremiereapp\\windows\\generalwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{91A8D746-A9B3-4269-AA16-6E68CB15ADF8}|CinemaPremiereApp\\CinemaPremiereApp.csproj|solutionrelative:cinemapremiereapp\\windows\\generalwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{91A8D746-A9B3-4269-AA16-6E68CB15ADF8}|CinemaPremiereApp\\CinemaPremiereApp.csproj|c:\\users\\vadim\\desktop\\cinemapremiere\\cinemapremiereapp\\cinemapremiereapp\\classes\\dialogclass.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{91A8D746-A9B3-4269-AA16-6E68CB15ADF8}|CinemaPremiereApp\\CinemaPremiereApp.csproj|solutionrelative:cinemapremiereapp\\classes\\dialogclass.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{91A8D746-A9B3-4269-AA16-6E68CB15ADF8}|CinemaPremiereApp\\CinemaPremiereApp.csproj|c:\\users\\vadim\\desktop\\cinemapremiere\\cinemapremiereapp\\cinemapremiereapp\\classes\\messageclass.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{91A8D746-A9B3-4269-AA16-6E68CB15ADF8}|CinemaPremiereApp\\CinemaPremiereApp.csproj|solutionrelative:cinemapremiereapp\\classes\\messageclass.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{91A8D746-A9B3-4269-AA16-6E68CB15ADF8}|CinemaPremiereApp\\CinemaPremiereApp.csproj|c:\\users\\vadim\\desktop\\cinemapremiere\\cinemapremiereapp\\cinemapremiereapp\\pages\\orderspage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{91A8D746-A9B3-4269-AA16-6E68CB15ADF8}|CinemaPremiereApp\\CinemaPremiereApp.csproj|solutionrelative:cinemapremiereapp\\pages\\orderspage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     }
   ],
   "DocumentGroupContainers": [
@@ -31,52 +19,13 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "GeneralWindow.xaml",
-              "DocumentMoniker": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\CinemaPremiereApp\\CinemaPremiereApp\\Windows\\GeneralWindow.xaml",
-              "RelativeDocumentMoniker": "CinemaPremiereApp\\Windows\\GeneralWindow.xaml",
-              "ToolTip": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\CinemaPremiereApp\\CinemaPremiereApp\\Windows\\GeneralWindow.xaml",
-              "RelativeToolTip": "CinemaPremiereApp\\Windows\\GeneralWindow.xaml",
+              "Title": "OrdersPage.xaml",
+              "DocumentMoniker": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\CinemaPremiereApp\\CinemaPremiereApp\\Pages\\OrdersPage.xaml",
+              "RelativeDocumentMoniker": "CinemaPremiereApp\\Pages\\OrdersPage.xaml",
+              "ToolTip": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\CinemaPremiereApp\\CinemaPremiereApp\\Pages\\OrdersPage.xaml",
+              "RelativeToolTip": "CinemaPremiereApp\\Pages\\OrdersPage.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2026-03-20T08:01:59.846Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "MessageClass.cs",
-              "DocumentMoniker": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\CinemaPremiereApp\\CinemaPremiereApp\\Classes\\MessageClass.cs",
-              "RelativeDocumentMoniker": "CinemaPremiereApp\\Classes\\MessageClass.cs",
-              "ToolTip": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\CinemaPremiereApp\\CinemaPremiereApp\\Classes\\MessageClass.cs",
-              "RelativeToolTip": "CinemaPremiereApp\\Classes\\MessageClass.cs",
-              "ViewState": "AgIAADUAAAAAAAAAAAAIwBIAAABAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-19T19:47:34.151Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "DialogClass.cs",
-              "DocumentMoniker": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\CinemaPremiereApp\\CinemaPremiereApp\\Classes\\DialogClass.cs",
-              "RelativeDocumentMoniker": "CinemaPremiereApp\\Classes\\DialogClass.cs",
-              "ToolTip": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\CinemaPremiereApp\\CinemaPremiereApp\\Classes\\DialogClass.cs",
-              "RelativeToolTip": "CinemaPremiereApp\\Classes\\DialogClass.cs",
-              "ViewState": "AgIAACMAAAAAAAAAAAAiwDoAAAAdAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-20T07:40:39.738Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "GeneralWindow.xaml.cs",
-              "DocumentMoniker": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\CinemaPremiereApp\\CinemaPremiereApp\\Windows\\GeneralWindow.xaml.cs",
-              "RelativeDocumentMoniker": "CinemaPremiereApp\\Windows\\GeneralWindow.xaml.cs",
-              "ToolTip": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\CinemaPremiereApp\\CinemaPremiereApp\\Windows\\GeneralWindow.xaml.cs",
-              "RelativeToolTip": "CinemaPremiereApp\\Windows\\GeneralWindow.xaml.cs",
-              "ViewState": "AgIAAD0AAAAAAAAAAAAiwFMAAAAvAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-19T18:19:26.807Z",
+              "WhenOpened": "2026-03-20T10:35:44.79Z",
               "EditorCaption": ""
             }
           ]

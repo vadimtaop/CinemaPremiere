@@ -201,7 +201,9 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Images\Posters\" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Logo.png" />
   </ItemGroup>

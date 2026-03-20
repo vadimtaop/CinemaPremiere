@@ -13,12 +13,16 @@
   <EntityContainer Name="CinemaPremiereDbEntities" annotation:LazyLoadingEnabled="true">
     <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
     <EntitySet Name="AgeRatings" EntityType="CinemaPremiereDbModel.AgeRatings" />
-    <EntitySet Name="Films" EntityType="CinemaPremiereDbModel.Films" />
     <EntitySet Name="Genres" EntityType="CinemaPremiereDbModel.Genres" />
-    <EntitySet Name="Orders" EntityType="CinemaPremiereDbModel.Orders" />
     <EntitySet Name="PaymentTypes" EntityType="CinemaPremiereDbModel.PaymentTypes" />
     <EntitySet Name="Roles" EntityType="CinemaPremiereDbModel.Roles" />
     <EntitySet Name="Users" EntityType="CinemaPremiereDbModel.Users" />
+    <AssociationSet Name="FK_Users_Roles" Association="CinemaPremiereDbModel.FK_Users_Roles">
+      <End Role="Roles" EntitySet="Roles" />
+      <End Role="Users" EntitySet="Users" />
+    </AssociationSet>
+    <EntitySet Name="Films" EntityType="CinemaPremiereDbModel.Films" />
+    <EntitySet Name="Orders" EntityType="CinemaPremiereDbModel.Orders" />
     <AssociationSet Name="FK_Films_AgeRatings" Association="CinemaPremiereDbModel.FK_Films_AgeRatings">
       <End Role="AgeRatings" EntitySet="AgeRatings" />
       <End Role="Films" EntitySet="Films" />
@@ -35,10 +39,6 @@
       <End Role="Users" EntitySet="Users" />
       <End Role="Orders" EntitySet="Orders" />
     </AssociationSet>
-    <AssociationSet Name="FK_Users_Roles" Association="CinemaPremiereDbModel.FK_Users_Roles">
-      <End Role="Roles" EntitySet="Roles" />
-      <End Role="Users" EntitySet="Users" />
-    </AssociationSet>
     <AssociationSet Name="FilmGenres" Association="CinemaPremiereDbModel.FilmGenres">
       <End Role="Films" EntitySet="Films" />
       <End Role="Genres" EntitySet="Genres" />
@@ -52,18 +52,6 @@
     <Property Name="Name" Type="Int32" Nullable="false" />
     <NavigationProperty Name="Films" Relationship="CinemaPremiereDbModel.FK_Films_AgeRatings" FromRole="AgeRatings" ToRole="Films" />
   </EntityType>
-  <EntityType Name="Films">
-    <Key>
-      <PropertyRef Name="FilmId" />
-    </Key>
-    <Property Name="FilmId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="Title" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="AgeRatingId" Type="Int32" Nullable="false" />
-    <Property Name="PosterPath" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-    <NavigationProperty Name="AgeRatings" Relationship="CinemaPremiereDbModel.FK_Films_AgeRatings" FromRole="Films" ToRole="AgeRatings" />
-    <NavigationProperty Name="Orders" Relationship="CinemaPremiereDbModel.FK_Orders_Films" FromRole="Films" ToRole="Orders" />
-    <NavigationProperty Name="Genres" Relationship="CinemaPremiereDbModel.FilmGenres" FromRole="Films" ToRole="Genres" />
-  </EntityType>
   <EntityType Name="Genres">
     <Key>
       <PropertyRef Name="GenreId" />
@@ -71,24 +59,6 @@
     <Property Name="GenreId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
     <NavigationProperty Name="Films" Relationship="CinemaPremiereDbModel.FilmGenres" FromRole="Genres" ToRole="Films" />
-  </EntityType>
-  <EntityType Name="Orders">
-    <Key>
-      <PropertyRef Name="OrderId" />
-    </Key>
-    <Property Name="OrderId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="DateBuy" Type="DateTime" Nullable="false" Precision="0" />
-    <Property Name="FilmId" Type="Int32" Nullable="false" />
-    <Property Name="DateSession" Type="DateTime" Nullable="false" Precision="0" />
-    <Property Name="Price" Type="Decimal" Nullable="false" Precision="10" Scale="2" />
-    <Property Name="CountTickets" Type="Int32" Nullable="false" />
-    <Property Name="TotalSum" Type="Decimal" Precision="21" Scale="2" annotation:StoreGeneratedPattern="Computed" />
-    <Property Name="PaymentTypeId" Type="Int32" Nullable="false" />
-    <Property Name="Note" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-    <Property Name="UserId" Type="Int32" Nullable="false" />
-    <NavigationProperty Name="Films" Relationship="CinemaPremiereDbModel.FK_Orders_Films" FromRole="Orders" ToRole="Films" />
-    <NavigationProperty Name="PaymentTypes" Relationship="CinemaPremiereDbModel.FK_Orders_PaymentTypes" FromRole="Orders" ToRole="PaymentTypes" />
-    <NavigationProperty Name="Users" Relationship="CinemaPremiereDbModel.FK_Orders_Users" FromRole="Orders" ToRole="Users" />
   </EntityType>
   <EntityType Name="PaymentTypes">
     <Key>
@@ -116,8 +86,51 @@
     <Property Name="Password" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
     <Property Name="FailedAttempts" Type="Int32" Nullable="false" />
     <Property Name="LockoutEnd" Type="DateTime" Precision="3" />
-    <NavigationProperty Name="Orders" Relationship="CinemaPremiereDbModel.FK_Orders_Users" FromRole="Users" ToRole="Orders" />
     <NavigationProperty Name="Roles" Relationship="CinemaPremiereDbModel.FK_Users_Roles" FromRole="Users" ToRole="Roles" />
+    <NavigationProperty Name="Orders" Relationship="CinemaPremiereDbModel.FK_Orders_Users" FromRole="Users" ToRole="Orders" />
+  </EntityType>
+  <Association Name="FK_Users_Roles">
+    <End Type="CinemaPremiereDbModel.Roles" Role="Roles" Multiplicity="1" />
+    <End Type="CinemaPremiereDbModel.Users" Role="Users" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Roles">
+        <PropertyRef Name="RoleId" />
+      </Principal>
+      <Dependent Role="Users">
+        <PropertyRef Name="RoleId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="Films">
+    <Key>
+      <PropertyRef Name="FilmId" />
+    </Key>
+    <Property Name="FilmId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Title" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="AgeRatingId" Type="Int32" Nullable="false" />
+    <Property Name="PosterFileName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="ReleaseDate" Type="DateTime" Nullable="false" Precision="0" />
+    <NavigationProperty Name="AgeRatings" Relationship="CinemaPremiereDbModel.FK_Films_AgeRatings" FromRole="Films" ToRole="AgeRatings" />
+    <NavigationProperty Name="Orders" Relationship="CinemaPremiereDbModel.FK_Orders_Films" FromRole="Films" ToRole="Orders" />
+    <NavigationProperty Name="Genres" Relationship="CinemaPremiereDbModel.FilmGenres" FromRole="Films" ToRole="Genres" />
+  </EntityType>
+  <EntityType Name="Orders">
+    <Key>
+      <PropertyRef Name="OrderId" />
+    </Key>
+    <Property Name="OrderId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="BuyDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="FilmId" Type="Int32" Nullable="false" />
+    <Property Name="SessionDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="Price" Type="Decimal" Nullable="false" Precision="10" Scale="2" />
+    <Property Name="CountTickets" Type="Int32" Nullable="false" />
+    <Property Name="TotalSum" Type="Decimal" Precision="21" Scale="2" annotation:StoreGeneratedPattern="Computed" />
+    <Property Name="PaymentTypeId" Type="Int32" Nullable="false" />
+    <Property Name="Note" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="UserId" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Films" Relationship="CinemaPremiereDbModel.FK_Orders_Films" FromRole="Orders" ToRole="Films" />
+    <NavigationProperty Name="PaymentTypes" Relationship="CinemaPremiereDbModel.FK_Orders_PaymentTypes" FromRole="Orders" ToRole="PaymentTypes" />
+    <NavigationProperty Name="Users" Relationship="CinemaPremiereDbModel.FK_Orders_Users" FromRole="Orders" ToRole="Users" />
   </EntityType>
   <Association Name="FK_Films_AgeRatings">
     <End Type="CinemaPremiereDbModel.AgeRatings" Role="AgeRatings" Multiplicity="1" />
@@ -164,18 +177,6 @@
       </Principal>
       <Dependent Role="Orders">
         <PropertyRef Name="UserId" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_Users_Roles">
-    <End Type="CinemaPremiereDbModel.Roles" Role="Roles" Multiplicity="1" />
-    <End Type="CinemaPremiereDbModel.Users" Role="Users" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Roles">
-        <PropertyRef Name="RoleId" />
-      </Principal>
-      <Dependent Role="Users">
-        <PropertyRef Name="RoleId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>

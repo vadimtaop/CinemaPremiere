@@ -142,16 +142,11 @@
                                     <Style TargetType="materialDesign:PackIcon">
                                         <Setter Property="Kind"
                                                 Value="WbSunny"/>
-                                        <Setter Property="Foreground"
-                                                Value="#FFA500"/>
-
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding IsChecked, ElementName=ThemeToggleButton}"
                                                          Value="true">
                                                 <Setter Property="Kind"
-                                                        Value="WeatherNight"/>
-                                                <Setter Property="Foreground"
-                                                        Value="#FFA700"/>
+                                                        Value="MoonWaningCrescent"/>
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>

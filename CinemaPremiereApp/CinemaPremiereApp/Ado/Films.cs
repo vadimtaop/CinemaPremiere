@@ -24,7 +24,8 @@ namespace CinemaPremiereApp.Ado
         public int FilmId { get; set; }
         public string Title { get; set; }
         public int AgeRatingId { get; set; }
-        public string PosterPath { get; set; }
+        public string PosterFileName { get; set; }
+        public System.DateTime ReleaseDate { get; set; }
     
         public virtual AgeRatings AgeRatings { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

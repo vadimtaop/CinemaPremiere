@@ -15,9 +15,9 @@ namespace CinemaPremiereApp.Ado
     public partial class Orders
     {
         public int OrderId { get; set; }
-        public System.DateTime DateBuy { get; set; }
+        public System.DateTime BuyDate { get; set; }
         public int FilmId { get; set; }
-        public System.DateTime DateSession { get; set; }
+        public System.DateTime SessionDate { get; set; }
         public decimal Price { get; set; }
         public int CountTickets { get; set; }
         public Nullable<decimal> TotalSum { get; set; }

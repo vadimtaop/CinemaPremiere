@@ -5,22 +5,23 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:CinemaPremiereApp.Pages"
       mc:Ignorable="d" 
-      d:DesignHeight="450"
-      d:DesignWidth="800"
+      d:DesignHeight="670"
+      d:DesignWidth="1280"
       Title="OrdersPage">
     <Grid>
         <DataGrid Name="OrdersDataGrid"
                   AutoGenerateColumns="False"
                   IsReadOnly="True">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Код" MinWidth="60" Width="*" Binding="{Binding OrderId}"/>
-                <DataGridTextColumn Header="Дата покупки" MinWidth="120" Width="*" Binding="{Binding DateBuy, StringFormat=dd.MM.yyyy}"/>
+                <DataGridTextColumn Header="Код" MinWidth="60" Width="60" Binding="{Binding OrderId}"/>
+                <DataGridTextColumn Header="Дата покупки" MinWidth="120" Width="120" Binding="{Binding BuyDate, StringFormat=dd.MM.yyyy}"/>
                 <DataGridTextColumn Header="Название фильма" MinWidth="120" Width="*" Binding="{Binding Films.Title}"/>
-                <DataGridTextColumn Header="Дата сеанса" MinWidth="120" Width="*" Binding="{Binding DateSession, StringFormat=dd.MM.yyyy}"/>
-                <DataGridTextColumn Header="Стоимость билета" MinWidth="120" Width="*" Binding="{Binding Price}"/>
-                <DataGridTextColumn Header="Кол-во билетов" MinWidth="120" Width="*" Binding="{Binding CountTickets}"/>
-                <DataGridTextColumn Header="Итоговая сумма" MinWidth="120" Width="*" Binding="{Binding TotalSum}"/>
+                <DataGridTextColumn Header="Дата сеанса" MinWidth="120" Width="120" Binding="{Binding SessionDate, StringFormat=dd.MM.yyyy}"/>
+                <DataGridTextColumn Header="Стоимость билета" MinWidth="120" Width="150" Binding="{Binding Price}"/>
+                <DataGridTextColumn Header="Кол-во билетов" MinWidth="120" Width="130" Binding="{Binding CountTickets}"/>
+                <DataGridTextColumn Header="Итоговая сумма" MinWidth="120" Width="140" Binding="{Binding TotalSum}"/>
                 <DataGridTextColumn Header="Тип оплаты" MinWidth="120" Width="*" Binding="{Binding PaymentTypes.Name}"/>
+                <DataGridTextColumn Header="Заметка" MinWidth="100" Width="100" Binding="{Binding Note}"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

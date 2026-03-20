@@ -57,3 +57,4 @@ C:\Users\Vadim\Desktop\CinemaPremiere\CinemaPremiereApp\CinemaPremiereApp\bin\De
 C:\Users\Vadim\Desktop\CinemaPremiere\CinemaPremiereApp\CinemaPremiereApp\obj\Debug\Pages\OrdersPage.g.cs
 C:\Users\Vadim\Desktop\CinemaPremiere\CinemaPremiereApp\CinemaPremiereApp\obj\Debug\CinemaPremiereApp_Content.g.cs
 C:\Users\Vadim\Desktop\CinemaPremiere\CinemaPremiereApp\CinemaPremiereApp\obj\Debug\Pages\OrdersPage.baml
+C:\Users\Vadim\Desktop\CinemaPremiere\CinemaPremiereApp\CinemaPremiereApp\obj\Debug\CinemaPremiereApp.exe.config

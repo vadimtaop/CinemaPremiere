@@ -22,7 +22,8 @@
     <Property Name="FilmId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Title" Type="nvarchar" MaxLength="50" Nullable="false" />
     <Property Name="AgeRatingId" Type="int" Nullable="false" />
-    <Property Name="PosterPath" Type="nvarchar" MaxLength="255" />
+    <Property Name="PosterFileName" Type="nvarchar" MaxLength="255" />
+    <Property Name="ReleaseDate" Type="date" Nullable="false" />
   </EntityType>
   <EntityType Name="Genres">
     <Key>
@@ -36,9 +37,9 @@
       <PropertyRef Name="OrderId" />
     </Key>
     <Property Name="OrderId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="DateBuy" Type="date" Nullable="false" />
+    <Property Name="BuyDate" Type="date" Nullable="false" />
     <Property Name="FilmId" Type="int" Nullable="false" />
-    <Property Name="DateSession" Type="date" Nullable="false" />
+    <Property Name="SessionDate" Type="date" Nullable="false" />
     <Property Name="Price" Type="decimal" Precision="10" Scale="2" Nullable="false" />
     <Property Name="CountTickets" Type="int" Nullable="false" />
     <Property Name="TotalSum" Type="decimal" Precision="21" Scale="2" StoreGeneratedPattern="Computed" />
