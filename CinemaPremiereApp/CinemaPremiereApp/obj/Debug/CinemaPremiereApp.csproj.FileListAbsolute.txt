@@ -49,7 +49,6 @@ C:\Users\Vadim\Desktop\CinemaPremiere\CinemaPremiereApp\CinemaPremiereApp\obj\De
 C:\Users\Vadim\Desktop\CinemaPremiere\CinemaPremiereApp\CinemaPremiereApp\obj\Debug\CinemaPr.3A6791E5.Up2Date
 C:\Users\Vadim\Desktop\CinemaPremiere\CinemaPremiereApp\CinemaPremiereApp\obj\Debug\CinemaPremiereApp.exe
 C:\Users\Vadim\Desktop\CinemaPremiere\CinemaPremiereApp\CinemaPremiereApp\obj\Debug\CinemaPremiereApp.pdb
-C:\Users\Vadim\Desktop\CinemaPremiere\CinemaPremiereApp\CinemaPremiereApp\obj\Debug\CinemaPremiereApp.exe.config
 C:\Users\Vadim\Desktop\CinemaPremiere\CinemaPremiereApp\CinemaPremiereApp\bin\Debug\EntityFramework.dll
 C:\Users\Vadim\Desktop\CinemaPremiere\CinemaPremiereApp\CinemaPremiereApp\bin\Debug\EntityFramework.SqlServer.dll
 C:\Users\Vadim\Desktop\CinemaPremiere\CinemaPremiereApp\CinemaPremiereApp\bin\Debug\EntityFramework.xml

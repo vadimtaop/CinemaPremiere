@@ -14,10 +14,21 @@ namespace CinemaPremiereApp.Ado
     
     public partial class Users
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Users()
+        {
+            this.Orders = new HashSet<Orders>();
+        }
+    
         public int UserId { get; set; }
+        public int RoleId { get; set; }
         public string Login { get; set; }
         public string Password { get; set; }
         public int FailedAttempts { get; set; }
         public Nullable<System.DateTime> LockoutEnd { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Orders> Orders { get; set; }
+        public virtual Roles Roles { get; set; }
     }
 }

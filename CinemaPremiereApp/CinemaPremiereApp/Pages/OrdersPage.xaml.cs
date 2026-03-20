@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CinemaPremiereApp.Ado;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,13 @@ namespace CinemaPremiereApp.Pages
         public OrdersPage()
         {
             InitializeComponent();
+
+            LoadData();
+        }
+
+        private void LoadData()
+        {
+            OrdersDataGrid.ItemsSource = AppData.db.Orders.ToList();
         }
     }
 }

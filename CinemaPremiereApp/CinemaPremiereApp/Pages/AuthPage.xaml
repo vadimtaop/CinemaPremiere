@@ -38,7 +38,7 @@
                         </Border.Background>
                     </Border>
                 </Grid>
-                
+
                 <StackPanel Orientation="Vertical"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
@@ -71,11 +71,7 @@
                             IsDefault="True"
                             Style="{StaticResource MaterialDesignRaisedButton}"/>
                 </StackPanel>
-
             </Grid>
         </materialDesign:Card>
-
-        <materialDesign:Snackbar Name="MainSnackbar"
-                                 MessageQueue="{materialDesign:MessageQueue}"/>
     </Grid>
 </Page>

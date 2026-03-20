@@ -1,5 +1,6 @@
 ﻿using CinemaPremiereApp.Ado;
 using CinemaPremiereApp.Classes;
+using CinemaPremiereApp.Windows;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,7 +45,7 @@ namespace CinemaPremiereApp.Pages
                 {
                     if (user.LockoutEnd >= DateTime.Now)
                     {
-                        MainSnackbar.ErrorMessage($"Ошибка\nВы временно заблокированы\nПовторите попытку позже");
+                        MessageClass.ErrorMessage($"Ошибка\nВы временно заблокированы\nПовторите попытку позже");
                         return;
                     }
 
@@ -55,9 +56,14 @@ namespace CinemaPremiereApp.Pages
 
                         AppData.db.SaveChanges();
 
-                        NavigationService.Navigate(new OrdersPage());
+                        MessageClass.SuccessMessage($"Успех\nДобро пожаловать в приложение!");
 
-                        MainSnackbar.SuccessMessage($"Успех\nДобро пожаловать в приложение!");
+                        if (GeneralWindow.Instance != null)
+                        {
+                            GeneralWindow.Instance.MenuButton.Visibility = Visibility.Visible;
+                        }
+
+                        NavigationService.Navigate(new OrdersPage());
                     }
                     else
                     {
@@ -71,16 +77,16 @@ namespace CinemaPremiereApp.Pages
 
                             AppData.db.SaveChanges();
 
-                            MainSnackbar.ErrorMessage($"Ошибка\nПревышение допустымых попыток\nВы временно заблокированы\nПовторите попытку позже");
+                            MessageClass.ErrorMessage($"Ошибка\nПревышение допустымых попыток\nВы временно заблокированы\nПовторите попытку позже");
                             return;
                         }
 
-                        MainSnackbar.ErrorMessage($"Ошибка\nНеверный пароль\nПовторите попытку");
+                        MessageClass.ErrorMessage($"Ошибка\nНеверный пароль\nПовторите попытку");
                     }
                 }
                 else
                 {
-                    MainSnackbar.ErrorMessage($"Ошибка\nПользователь не найден");
+                    MessageClass.ErrorMessage($"Ошибка\nПользователь не найден");
                 }
             }
             catch (Exception ex)
@@ -97,13 +103,13 @@ namespace CinemaPremiereApp.Pages
         {
             if (string.IsNullOrWhiteSpace(value))
             {
-                MainSnackbar.ErrorMessage($"Ошибка\nВведите данные в поле '{fieldName}'");
+                MessageClass.ErrorMessage($"Ошибка\nВведите данные в поле '{fieldName}'");
                 return false;
             }
             
             if (value.Length < 4 || value.Length > 50)
             {
-                MainSnackbar.ErrorMessage($"Ошибка\nДлина поля '{fieldName}' должна быть от 4 до 50 символов");
+                MessageClass.ErrorMessage($"Ошибка\nДлина поля '{fieldName}' должна быть от 4 до 50 символов");
                 return false;
             }
 

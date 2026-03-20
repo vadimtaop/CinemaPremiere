@@ -9,41 +9,167 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{materialDesign:MaterialDesignFont}"
         mc:Ignorable="d"
-        Title='Кинотеатр "Премьера"'
+        Title="Кинотеатр «Премьера»"
         MinHeight="720"
         MinWidth="1280"
         Height="720"
         Width="1280"
         Icon="../Images/Logo.png"
         WindowStartupLocation="CenterScreen">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <materialDesign:Card Grid.Row="0"
-                             Background="{DynamicResource MaterialDesign.Brush.Primary}"
-                             Foreground="{DynamicResource MaterialDesign.Brush.Primary.Foreground}"
-                             materialDesign:ElevationAssist.Elevation="Dp8">
+    <materialDesign:DialogHost Name="MainDialogHost"
+                               CloseOnClickAway="True"
+                               Identifier="RootDialog">
+        <materialDesign:DrawerHost Name="MainDrawerHost">
+            <materialDesign:DrawerHost.LeftDrawerContent>
+                <StackPanel Width="200">
+                    <materialDesign:ColorZone Mode="PrimaryMid"
+                                              Padding="10">
+                        <TextBlock Text="Меню"
+                                   FontSize="22"
+                                   FontWeight="Bold"
+                                   HorizontalAlignment="Center"/>
+                    </materialDesign:ColorZone>
+
+                    <ListBox Name="MenuListBox"
+                             Margin="0 10 0 0"
+                             SelectionChanged="MenuListBoxSelectionChanged">
+                        <ListBoxItem Name="OrdersItem">
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="10">
+                                <materialDesign:PackIcon Kind="Ticket"
+                                                         Width="24"
+                                                         Height="24"/>
+                                <TextBlock Text="Заказы"
+                                           FontSize="16"
+                                           Margin="20 0 0 0"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </ListBoxItem>
+                        <ListBoxItem Name="FilmsItem">
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="10">
+                                <materialDesign:PackIcon Kind="Movie"
+                                                         Width="24"
+                                                         Height="24"/>
+                                <TextBlock Text="Фильмы"
+                                           FontSize="16"
+                                           Margin="20 0 0 0"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </ListBoxItem>
+                        <ListBoxItem Name="ScheduleItem">
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="10">
+                                <materialDesign:PackIcon Kind="ImageEdit"
+                                                         Width="24"
+                                                         Height="24"/>
+                                <TextBlock Text="Расписание"
+                                           FontSize="16"
+                                           Margin="20 0 0 0"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </ListBoxItem>
+                        <ListBoxItem Name="SettingsItem">
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="10">
+                                <materialDesign:PackIcon Kind="Settings"
+                                                         Width="24"
+                                                         Height="24"/>
+                                <TextBlock Text="Настройки"
+                                           FontSize="16"
+                                           Margin="20 0 0 0"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </ListBoxItem>
+                        <ListBoxItem Name="ExitItem">
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="10">
+                                <materialDesign:PackIcon Kind="ExitToApp"
+                                                         Width="24"
+                                                         Height="24"/>
+                                <TextBlock Text="Выйти"
+                                           FontSize="16"
+                                           Margin="20 0 0 0"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </ListBoxItem>
+                    </ListBox>
+                </StackPanel>
+            </materialDesign:DrawerHost.LeftDrawerContent>
+
             <Grid>
-                <TextBlock HorizontalAlignment="Center"
-                           VerticalAlignment="Center"
-                           Text='Кинотеатр "Премьера"'
-                           FontSize="24"/>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <materialDesign:Card Grid.Row="0"
+                                     Background="{DynamicResource MaterialDesign.Brush.Primary}"
+                                     Foreground="{DynamicResource MaterialDesign.Brush.Primary.Foreground}"
+                                     materialDesign:ElevationAssist.Elevation="Dp8">
+                    <Grid>
+                        <Button Name="MenuButton"
+                                Visibility="Collapsed"
+                                Style="{StaticResource MaterialDesignFlatButton}"
+                                Foreground="{DynamicResource MaterialDesign.Brush.Primary.Foreground}"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Padding="0"
+                                Margin="10 0 0 0"
+                                Width="40"
+                                Height="40"
+                                Click="MenuButtonClick">
+                            <materialDesign:PackIcon Kind="Menu"
+                                                     Width="40"
+                                                     Height="40"/>
+                        </Button>
 
-                <ToggleButton Name="ThemeToggleButton"
-                              HorizontalAlignment="Right"
-                              VerticalAlignment="Center"
-                              Margin="0 0 20 0"
-                              IsChecked="True"
-                              materialDesign:ToggleButtonAssist.SwitchTrackOnBackground="{DynamicResource MaterialDesign.Brush.Secondary}"
-                              Style="{StaticResource MaterialDesignSwitchToggleButton}"
-                              Click="ThemeToggleButtonClick"/>
+                        <TextBlock HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   Text="Кинотеатр «Премьера»"
+                                   FontWeight="Bold"
+                                   FontSize="24"/>
+
+                        <ToggleButton Name="ThemeToggleButton"
+                                      HorizontalAlignment="Right"
+                                      VerticalAlignment="Center"
+                                      Margin="0 0 20 0"
+                                      IsChecked="True"
+                                      Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}"
+                                      Click="ThemeToggleButtonClick">
+                            <materialDesign:PackIcon Width="28"
+                                                     Height="28">
+                                <materialDesign:PackIcon.Style>
+                                    <Style TargetType="materialDesign:PackIcon">
+                                        <Setter Property="Kind"
+                                                Value="WbSunny"/>
+                                        <Setter Property="Foreground"
+                                                Value="#FFA500"/>
+
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsChecked, ElementName=ThemeToggleButton}"
+                                                         Value="true">
+                                                <Setter Property="Kind"
+                                                        Value="WeatherNight"/>
+                                                <Setter Property="Foreground"
+                                                        Value="#FFA700"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </materialDesign:PackIcon.Style>
+                            </materialDesign:PackIcon>
+                        </ToggleButton>
+                    </Grid>
+                </materialDesign:Card>
+
+                <Frame Grid.Row="1"
+                       Name="MainFrame"
+                       NavigationUIVisibility="Hidden"
+                       Source="../Pages/AuthPage.xaml"/>
+
+                <materialDesign:Snackbar Name="MainSnackbar"
+                                         Grid.RowSpan="2"
+                                         MessageQueue="{materialDesign:MessageQueue}"/>
             </Grid>
-        </materialDesign:Card>
-
-        <Frame Grid.Row="1"
-               NavigationUIVisibility="Hidden"
-               Source="../Pages/AuthPage.xaml"/>
-    </Grid>
+        </materialDesign:DrawerHost>
+    </materialDesign:DialogHost>
 </Window>
