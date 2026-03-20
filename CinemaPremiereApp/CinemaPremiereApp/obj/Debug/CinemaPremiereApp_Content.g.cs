@@ -10,5 +10,16 @@
 
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("ado/dbmodel.context.tt")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("ado/dbmodel.tt")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/posters/4476433.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/posters/5268266.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/posters/5354680.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/posters/5379012.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/posters/5498755.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/posters/6275403.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/posters/6553075.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/posters/7132188.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/posters/7527356.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/posters/7869629.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/posters/9124157.jpg")]
 
 

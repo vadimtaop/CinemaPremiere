@@ -58,3 +58,16 @@ C:\Users\Vadim\Desktop\CinemaPremiere\CinemaPremiereApp\CinemaPremiereApp\obj\De
 C:\Users\Vadim\Desktop\CinemaPremiere\CinemaPremiereApp\CinemaPremiereApp\obj\Debug\CinemaPremiereApp_Content.g.cs
 C:\Users\Vadim\Desktop\CinemaPremiere\CinemaPremiereApp\CinemaPremiereApp\obj\Debug\Pages\OrdersPage.baml
 C:\Users\Vadim\Desktop\CinemaPremiere\CinemaPremiereApp\CinemaPremiereApp\obj\Debug\CinemaPremiereApp.exe.config
+C:\Users\Vadim\Desktop\CinemaPremiere\CinemaPremiereApp\CinemaPremiereApp\obj\Debug\Pages\FilmsPage.g.cs
+C:\Users\Vadim\Desktop\CinemaPremiere\CinemaPremiereApp\CinemaPremiereApp\obj\Debug\Pages\FilmsPage.baml
+C:\Users\Vadim\Desktop\CinemaPremiere\CinemaPremiereApp\CinemaPremiereApp\bin\Debug\Images\Posters\4476433.jpg
+C:\Users\Vadim\Desktop\CinemaPremiere\CinemaPremiereApp\CinemaPremiereApp\bin\Debug\Images\Posters\5268266.jpg
+C:\Users\Vadim\Desktop\CinemaPremiere\CinemaPremiereApp\CinemaPremiereApp\bin\Debug\Images\Posters\5354680.jpg
+C:\Users\Vadim\Desktop\CinemaPremiere\CinemaPremiereApp\CinemaPremiereApp\bin\Debug\Images\Posters\5379012.jpg
+C:\Users\Vadim\Desktop\CinemaPremiere\CinemaPremiereApp\CinemaPremiereApp\bin\Debug\Images\Posters\5498755.jpg
+C:\Users\Vadim\Desktop\CinemaPremiere\CinemaPremiereApp\CinemaPremiereApp\bin\Debug\Images\Posters\6275403.jpg
+C:\Users\Vadim\Desktop\CinemaPremiere\CinemaPremiereApp\CinemaPremiereApp\bin\Debug\Images\Posters\6553075.jpg
+C:\Users\Vadim\Desktop\CinemaPremiere\CinemaPremiereApp\CinemaPremiereApp\bin\Debug\Images\Posters\7132188.jpg
+C:\Users\Vadim\Desktop\CinemaPremiere\CinemaPremiereApp\CinemaPremiereApp\bin\Debug\Images\Posters\7527356.jpg
+C:\Users\Vadim\Desktop\CinemaPremiere\CinemaPremiereApp\CinemaPremiereApp\bin\Debug\Images\Posters\7869629.jpg
+C:\Users\Vadim\Desktop\CinemaPremiere\CinemaPremiereApp\CinemaPremiereApp\bin\Debug\Images\Posters\9124157.jpg

@@ -7,7 +7,7 @@
       mc:Ignorable="d" 
       d:DesignHeight="670"
       d:DesignWidth="1280"
-      Title="OrdersPage">
+      Title="Заказы">
     <Grid>
         <DataGrid Name="OrdersDataGrid"
                   AutoGenerateColumns="False"

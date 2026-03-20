@@ -66,7 +66,7 @@ namespace CinemaPremiereApp.Windows
 
             if (FilmsItem.IsSelected)
             {
-                MainFrame.Navigate(new Pages.OrdersPage());
+                MainFrame.Navigate(new Pages.FilmsPage());
             }
 
             if (ScheduleItem.IsSelected)
