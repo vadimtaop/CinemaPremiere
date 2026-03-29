@@ -22,7 +22,15 @@ namespace CinemaPremiereApp.Pages
     /// Логика взаимодействия для FilmsPage.xaml
     /// </summary>
     public partial class FilmsPage : Page
-    {
+    { 
+        // Основной список фильмов из БД
+        List<Films> allFilms = new List<Films>();
+
+        // Переменные для пагинации
+        int currentPage = 1;
+        int itemsPerPage = 10;
+        int totalPages = 1;
+
         public FilmsPage()
         {
             InitializeComponent();
@@ -33,14 +41,16 @@ namespace CinemaPremiereApp.Pages
         // Метод загрузки данных из БД
         public void LoadData()
         {
-            // Загрузка фильмов в таблицу
-            FilmsDataGrid.ItemsSource = AppData.db.Films
+            // Загрузка фильмов в список
+            allFilms = AppData.db.Films
                 .Include(f => f.Genres)
                 .Include(f => f.AgeRatings)
                 .ToList();
 
             // Загрузка жанров в фильтр
-            GenresListBox.ItemsSource = AppData.db.Genres.ToList();
+            GenresListBox.ItemsSource = AppData.db.Genres
+                .OrderBy(g => g.Name)
+                .ToList();
 
             ApplyFilters();
         }
@@ -60,59 +70,176 @@ namespace CinemaPremiereApp.Pages
             ApplyFilters();
         }
 
+        private void SortComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ApplyFilters();
+        }
+
+        private void FirstPageButtonClick(object sender, RoutedEventArgs e)
+        {
+            currentPage = 1;
+            ApplyFilters();
+        }
+
+        private void LastPageButtonClick(object sender, RoutedEventArgs e)
+        {
+            currentPage = totalPages;
+            ApplyFilters();
+        }
+        private void NextPageButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (currentPage < totalPages)
+            {
+                currentPage++;
+                ApplyFilters();
+            }
+        }
+
+        private void PrevPageButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (currentPage > 1)
+            {
+                currentPage--;
+                ApplyFilters();
+            }
+        }
+
         public void ApplyFilters()
         {
-            var view = CollectionViewSource.GetDefaultView(FilmsDataGrid.ItemsSource);
-
-            if (view == null)
+            if (FilmsDataGrid == null || SearchTextBox == null || PageInputTextBox == null)
                 return;
 
-            string searchText = SearchTextBox.Text.ToLower().Trim();
-
-            // Собираем выбранные возрасты
-            var selectedAgeRatings = AgeRatingsListBox.SelectedItems
-                .Cast<ListBoxItem>()
-                .Select(x => Convert.ToInt32(x.Tag))
-                .ToList();
-
-            // Собираем выбранные жанры
-            var selectedGenresIds = GenresListBox.SelectedItems
-                .Cast<Genres>()
-                .Select(x => x.GenreId)
-                .ToList();
-
-            view.Filter = (obj) =>
+            // Фильтруем весь список фильмов
+            var filtered = allFilms.Where(film =>
             {
-                var film = obj as Films;
-                if (film == null)
-                    return false;
+                // Собираем текст из поиска
+                string searchText = SearchTextBox.Text.ToLower().Trim();
 
-                bool matchesSearch = string.IsNullOrWhiteSpace(searchText) || 
+                // Собираем выбранные возрасты
+                var selectedAgeRatings = AgeRatingsListBox.SelectedItems
+                    .Cast<ListBoxItem>()
+                    .Select(x => Convert.ToInt32(x.Tag))
+                    .ToList();
+
+                // Собираем выбранные жанры
+                var selectedGenresIds = GenresListBox.SelectedItems
+                    .Cast<Genres>()
+                    .Select(x => x.GenreId)
+                    .ToList();
+
+                bool matchesSearch = string.IsNullOrWhiteSpace(searchText) ||
                     film.Title.ToLower().Contains(searchText);
 
-                bool matchesAge = selectedAgeRatings.Count == 0 || 
+                bool matchesAge = selectedAgeRatings.Count == 0 ||
                     (film.AgeRatings != null && selectedAgeRatings.Contains((int)film.AgeRatings.Name));
 
                 bool matchesGenre = selectedGenresIds.Count == 0 ||
                     film.Genres.Any(g => selectedGenresIds.Contains(g.GenreId));
 
                 return matchesSearch && matchesAge && matchesGenre;
-            };
+            }).ToList();
 
-            UpdateCounter(view);
+            // Сортировка
+            IEnumerable<Films> sorted = filtered;
+
+            switch (SortComboBox.SelectedIndex)
+            {
+                case 1:
+                    sorted = filtered.OrderByDescending(f => f.ReleaseDate);
+                    break;
+                case 2:
+                    sorted = filtered.OrderBy(f => f.Title);
+                    break;
+                case 3:
+                    sorted = filtered.OrderBy(f => f.AgeRatings.Name);
+                    break;
+                default:
+                    sorted = filtered;
+                    break;
+            } 
+
+            // Считаем страницы
+            int filteredCount = filtered.Count;
+            totalPages = (int)Math.Ceiling((double)filteredCount / itemsPerPage);
+
+            if (totalPages < 1)
+                totalPages = 1;
+
+            if (currentPage > totalPages)
+                currentPage = totalPages;
+
+            // Пагинация вместе с сортировкой
+            FilmsDataGrid.ItemsSource = sorted
+                .Skip((currentPage - 1) * itemsPerPage)
+                .Take(itemsPerPage)
+                .ToList();
+
+            // Счетчики
+            PageInputTextBox.Text = currentPage.ToString();
+
+            PageInfoTextBlock.Text = $"из {totalPages}";
+            CounterTextBlock.Text = $"Найдено {filteredCount} из {allFilms.Count}";
+
+            // Проверка на пустой список
+            if (filteredCount == 0)
+            {
+                FilmsDataGrid.Visibility = Visibility.Collapsed;
+                EmptyStackPanel.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                FilmsDataGrid.Visibility = Visibility.Visible;
+                EmptyStackPanel.Visibility = Visibility.Collapsed;
+            }
         }
 
-        // Метод счетчика
-        private void UpdateCounter(ICollectionView view)
+        private void PageInputTextBoxKeyDown(object sender, KeyEventArgs e)
         {
-            // Отфильтрованное количество
-            int filteredCount = view.Cast<object>().Count();
+            if (e.Key == Key.Enter)
+            {
+                if (int.TryParse(PageInputTextBox.Text, out int requestedPage) 
+                        && requestedPage <= totalPages)
+                {
+                    currentPage = requestedPage;
+                    ApplyFilters();
+                }
+                else
+                {
+                    PageInputTextBox.Text = currentPage.ToString();
+                }
+            }
+        }
 
-            // Общее количество
-            int totalCount = (FilmsDataGrid.ItemsSource as List<Films>)?.Count ?? 0;
+        private void PageSizeComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (PageSizeComboBox.SelectedItem == null || allFilms == null)
+                return;
 
-            // Вывод в текст
-            CounterTextBlock.Text = $"Найдено фильмов: {filteredCount} из {totalCount}";
+            var selectedItem = PageSizeComboBox.SelectedItem as ComboBoxItem;
+            
+            if (selectedItem != null)
+            {
+                itemsPerPage = Convert.ToInt32(selectedItem.Tag);
+
+                currentPage = 1;
+
+                ApplyFilters();
+            }
+        }
+
+        private void ResetFiltersButtonClick(object sender, RoutedEventArgs e)
+        {
+            SearchTextBox.Text = "";
+
+            AgeRatingsListBox.SelectedItems.Clear();
+            GenresListBox.SelectedItems.Clear();
+
+            PageSizeComboBox.SelectedIndex = 1;
+            SortComboBox.SelectedIndex = 0;
+
+            currentPage = 1;
+
+            ApplyFilters();
         }
     }
 }

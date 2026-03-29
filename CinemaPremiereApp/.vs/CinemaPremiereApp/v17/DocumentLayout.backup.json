@@ -18,21 +18,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 0,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "FilmsPage.xaml.cs",
-              "DocumentMoniker": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\CinemaPremiereApp\\CinemaPremiereApp\\Pages\\FilmsPage.xaml.cs",
-              "RelativeDocumentMoniker": "CinemaPremiereApp\\Pages\\FilmsPage.xaml.cs",
-              "ToolTip": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\CinemaPremiereApp\\CinemaPremiereApp\\Pages\\FilmsPage.xaml.cs",
-              "RelativeToolTip": "CinemaPremiereApp\\Pages\\FilmsPage.xaml.cs",
-              "ViewState": "AgIAAC4AAAAAAAAAAAAowDsAAAAbAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-20T14:22:37.626Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
@@ -43,6 +30,19 @@
               "RelativeToolTip": "CinemaPremiereApp\\Pages\\FilmsPage.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2026-03-20T14:16:39.95Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "FilmsPage.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\CinemaPremiereApp\\CinemaPremiereApp\\Pages\\FilmsPage.xaml.cs",
+              "RelativeDocumentMoniker": "CinemaPremiereApp\\Pages\\FilmsPage.xaml.cs",
+              "ToolTip": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\CinemaPremiereApp\\CinemaPremiereApp\\Pages\\FilmsPage.xaml.cs",
+              "RelativeToolTip": "CinemaPremiereApp\\Pages\\FilmsPage.xaml.cs",
+              "ViewState": "AgIAAKYAAAAAAAAAAAAuwMEAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-20T14:22:37.626Z",
               "EditorCaption": ""
             }
           ]

@@ -81,6 +81,30 @@
                                            VerticalAlignment="Center"/>
                             </StackPanel>
                         </ListBoxItem>
+                        <ListBoxItem Name="AboutAppItem">
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="10">
+                                <materialDesign:PackIcon Kind="ApplicationCog"
+                                                         Width="24"
+                                                         Height="24"/>
+                                <TextBlock Text="О программе"
+                                           FontSize="16"
+                                           Margin="20 0 0 0"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </ListBoxItem>
+                        <ListBoxItem Name="HelpItem">
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="10">
+                                <materialDesign:PackIcon Kind="HelpCircle"
+                                                         Width="24"
+                                                         Height="24"/>
+                                <TextBlock Text="Помощь"
+                                           FontSize="16"
+                                           Margin="20 0 0 0"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </ListBoxItem>
                         <ListBoxItem Name="ExitItem">
                             <StackPanel Orientation="Horizontal"
                                         Margin="10">
