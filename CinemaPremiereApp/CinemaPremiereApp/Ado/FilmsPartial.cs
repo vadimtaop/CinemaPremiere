@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
 namespace CinemaPremiereApp.Ado
 {
@@ -21,15 +22,27 @@ namespace CinemaPremiereApp.Ado
             }
         }
 
-        public string PosterPath
+        public object PosterPath
         {
             get
             {
-                if (string.IsNullOrEmpty(this.PosterFileName))
-                    return "/Images/Logo.png";
+                string folderPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images", "Posters");
 
-                return Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-                    "Images", "Posters", this.PosterFileName);
+                BitmapImage noPhoto = new BitmapImage(new Uri("pack://application:,,,/Images/NoPhoto.png"));
+
+                if (string.IsNullOrWhiteSpace(this.PosterFileName))
+                {
+                    return noPhoto;
+                }
+
+                string fullPath = Path.Combine(folderPath, this.PosterFileName);
+
+                if (File.Exists(fullPath))
+                {
+                    return new Uri(fullPath);
+                }
+
+                return noPhoto;
             }
         }
     }

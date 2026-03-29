@@ -36,8 +36,10 @@ namespace CinemaPremiereApp.Pages
                 string login = LoginTextBox.Text.Trim();
                 string password = PasswordTextBox.Password.Trim();
 
-                if (!IsFieldValid(login, "Логин")) return;
-                if (!IsFieldValid(password, "Пароль")) return;
+                if (!IsFieldValid(login, "Логин"))
+                    return;
+                if (!IsFieldValid(password, "Пароль"))
+                    return;
 
                 var user = AppData.db.Users.FirstOrDefault(u => u.Login == login);
 

@@ -4,14 +4,87 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:CinemaPremiereApp.Pages"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+      Background="{DynamicResource MaterialDesignPaper}"
+      FontFamily="{materialDesign:MaterialDesignFont}"
       mc:Ignorable="d" 
       d:DesignHeight="670"
       d:DesignWidth="1280"
       Title="Фильмы">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0"
+                BorderThickness="0 0 1 0"
+                Background="{DynamicResource MaterialDesignPaper}"
+                BorderBrush="{DynamicResource MaterialDesignDivider}">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Orientation="Vertical"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Center">
+                    <TextBlock Name="CounterTextBlock"
+                               Text="Найдено фильмов: 0 из 0"
+                               FontSize="18"
+                               VerticalAlignment="Center"/>
+
+                    <TextBox Name="SearchTextBox"
+                             ToolTip="Логин"
+                             FontSize="18"
+                             Width="200"
+                             Margin="0 20 0 0"
+                             TextChanged="SearchTextBoxTextChanged"
+                             Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                             materialDesign:HintAssist.Hint="Поиск по названию"
+                             materialDesign:HintAssist.HintHorizontalAlignment="Center"
+                             materialDesign:TextFieldAssist.HasClearButton="True">
+                    </TextBox>
+
+                    <ListBox Name="AgeRatingsListBox"
+                             Margin="0 20 0 0"
+                             SelectionMode="Multiple"
+                             SelectionChanged="AgeRatingsListBoxSelectionChanged"
+                             Style="{StaticResource MaterialDesignFilterChipPrimaryListBox}">
+                        <ListBoxItem Content="0+"
+                                     Tag="0"/>
+                        <ListBoxItem Content="6+"
+                                     Tag="6"/>
+                        <ListBoxItem Content="12+"
+                                     Tag="12"/>
+                        <ListBoxItem Content="16+"
+                                     Tag="16"/>
+                        <ListBoxItem Content="18+"
+                                     Tag="18"/>
+                    </ListBox>
+
+                    <GroupBox Header="Жанры"
+                              Height="200"
+                              Width="200"
+                              Margin="0 20 0 0"
+                              Style="{StaticResource MaterialDesignGroupBox}">
+                        <ListBox Name="GenresListBox"
+                                 SelectionMode="Multiple"
+                                 SelectionChanged="GenresListBoxSelectionChanged">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <CheckBox Content="{Binding Name}"
+                                              IsChecked="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListBoxItem}}"
+                                              IsHitTestVisible="False"/>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </GroupBox>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+        
         <DataGrid Name="FilmsDataGrid"
                   AutoGenerateColumns="False"
-                  IsReadOnly="True">
+                  IsReadOnly="True"
+                  Grid.Column="1">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Код"
                                     MinWidth="60"
