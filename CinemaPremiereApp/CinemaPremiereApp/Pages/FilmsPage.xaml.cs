@@ -12,9 +12,9 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Data.Entity;
 using System.ComponentModel;
+using System.IO;
 
 namespace CinemaPremiereApp.Pages
 {
@@ -30,6 +30,9 @@ namespace CinemaPremiereApp.Pages
         int currentPage = 1;
         int itemsPerPage = 10;
         int totalPages = 1;
+
+        // Временный путь для постера (в добавлении)
+        string selectedImagePath = "";
 
         public FilmsPage()
         {
@@ -240,6 +243,125 @@ namespace CinemaPremiereApp.Pages
             currentPage = 1;
 
             ApplyFilters();
+        }
+
+        private void AddFilmButtonClick(object sender, RoutedEventArgs e)
+        {
+            // Загрузка данных из БД
+            AddGenresListBox.ItemsSource = AppData.db.Genres
+                .OrderBy(g => g.Name)
+                .ToList();
+
+            // Очистка полей
+            AddTitleTextBox.Text = "";
+            AddReleaseDatePicker.SelectedDate = DateTime.Now;
+            AddAgeRatingsListBox.SelectedIndex = -1;
+            AddGenresListBox.UnselectAll();
+            selectedImagePath = "";
+            PosterPreviewImage.Source = new BitmapImage(new Uri("pack://application:,,,/Images/NoPhoto.png"));
+
+            // Отображение диалога
+            MainDialogHost.IsOpen = true;
+        }
+
+        private void SaveFilmButtonClick(object sender, RoutedEventArgs e)
+        {
+            // Проверки на наличие названия и рейтинг
+            if (string.IsNullOrWhiteSpace(AddTitleTextBox.Text))
+            {
+                MessageBox.Show("Введите название фильма");
+                return;
+            }
+            if (AddAgeRatingsListBox.SelectedItem == null)
+            {
+                MessageBox.Show("Выберите возрастной рейтинг");
+                return;
+            }
+
+            try
+            {
+                // Получаем выбранное возрастное ограничение
+                var selectedRatingItem = (ListBoxItem)AddAgeRatingsListBox.SelectedItem;
+                int ratingValue = Convert.ToInt32(selectedRatingItem.Tag);
+
+                // Ищем соответствующий объект в БД
+                var ageRating = AppData.db.AgeRatings.FirstOrDefault(r => r.Name == ratingValue);
+
+                // Содаем новый объект фильма
+                Films newFilm = new Films
+                {
+                    Title = AddTitleTextBox.Text.Trim(),
+                    ReleaseDate = AddReleaseDatePicker.SelectedDate ?? DateTime.Now,
+                    AgeRatings = ageRating,
+                };
+
+                // Проверка выбрал ли пользователь постер
+                if (!string.IsNullOrEmpty(selectedImagePath))
+                {
+                    try
+                    {
+                        // Формируем путь к папке постерами
+                        string folderPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images", "Posters");
+
+                        // Если папки нет - создаем
+                        if (!Directory.Exists(folderPath))
+                            Directory.CreateDirectory(folderPath);
+
+                        // Генерируем и записываем уникальное имя файла
+                        string extension = Path.GetExtension(selectedImagePath);
+                        string uniqueFileName = Guid.NewGuid().ToString() + extension;
+                        string destPath = Path.Combine(folderPath, uniqueFileName);
+
+                        // Копируем файл в папку проекта
+                        File.Copy(selectedImagePath, destPath);
+
+                        // Записываем в БД имя файлаа
+                        newFilm.PosterFileName = uniqueFileName;
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Ошибка: {ex}");
+                    }
+                }
+
+                // Добавляем жанры
+                foreach (Genres selectedGenre in AddGenresListBox.SelectedItems)
+                {
+                    newFilm.Genres.Add(selectedGenre);
+                }
+
+                // Сохраняем в БД
+                AppData.db.Films.Add(newFilm);
+                AppData.db.SaveChanges();
+
+                // Закрываем диалоговое окно и обновляем данные
+                MainDialogHost.IsOpen = false;
+                LoadData();
+
+                MessageBox.Show("Фильм успешно добавлен");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Возникла ошибка: {ex}");
+            }
+        }
+
+        private void AddPosterButtonClick(object sender, RoutedEventArgs e)
+        {
+            // Создаем окно диалога
+            var openFileDialog = new Microsoft.Win32.OpenFileDialog();
+
+            // Ставим фильтр для выбора файла
+            openFileDialog.Filter = "Изображения (*.jpg; *png; *jpeg)|*jpg; *png; *jpeg;";
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                // Сохраняем путь к файлу
+                selectedImagePath = openFileDialog.FileName;
+
+                // Вывод в превью
+                PosterPreviewImage.Source = new BitmapImage(new Uri(selectedImagePath));
+            }
         }
     }
 }
