@@ -34,6 +34,9 @@ namespace CinemaPremiereApp.Pages
         // Временный путь для постера (в добавлении)
         string selectedImagePath = "";
 
+        // Список для хранения строк, которые инвертировали за один клик
+        private HashSet<Films> _processedFilms = new HashSet<Films>();
+
         public FilmsPage()
         {
             InitializeComponent();
@@ -109,6 +112,9 @@ namespace CinemaPremiereApp.Pages
 
         public void ApplyFilters()
         {
+            // Сбрасываем выделение
+            FilmsDataGrid?.UnselectAll();
+
             if (FilmsDataGrid == null || SearchTextBox == null || PageInputTextBox == null)
                 return;
 
@@ -361,6 +367,80 @@ namespace CinemaPremiereApp.Pages
 
                 // Вывод в превью
                 PosterPreviewImage.Source = new BitmapImage(new Uri(selectedImagePath));
+            }
+        }
+
+        private void EditFilmMenuItemButtonClick(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void DeleteFilmMenuItemButtonClick(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void DeleteSelectionFilmsButtoncClick(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ClearSelectionButtonClick(object sender, RoutedEventArgs e)
+        {
+            FilmsDataGrid.UnselectAll();
+        }
+
+        private void FilmsDataGridSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            int count = FilmsDataGrid.SelectedItems.Count;
+
+            if (count > 0)
+            {
+                SelectionPanel.Visibility = Visibility.Visible;
+                SelectionCountTextBlock.Text = $"Выбрано: {count}";
+            }
+            else
+            {
+                SelectionPanel.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        private void PreviewMouseLeftButtonDownDataGrid(object sender, MouseButtonEventArgs e)
+        {
+            // Находим строку, по которой кликнули
+            DataGridRow row = sender as DataGridRow;
+
+            if (row != null)
+            {
+                // Очищаем историю текущего выделения
+                _processedFilms.Clear();
+
+                var film = row.DataContext as Films;
+
+                if (film != null)
+                {
+                    row.IsSelected = !row.IsSelected;
+                    _processedFilms.Add(film);
+                }
+
+                e.Handled = true;
+                row.Focus();
+            }
+        }
+
+        private void MouseEnterDataGrid(object sender, MouseEventArgs e)
+        {
+            // Если ЛКМ зажата
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                DataGridRow row = sender as DataGridRow;
+                var film = row?.DataContext as Films;
+
+                if (film != null && !_processedFilms.Contains(film))
+                {
+                    row.IsSelected = !row.IsSelected;
+                    _processedFilms.Add(film);
+                }
             }
         }
     }

@@ -247,12 +247,84 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
-
+                
                 <DataGrid Name="FilmsDataGrid"
                           AutoGenerateColumns="False"
                           IsReadOnly="True"
-                          Grid.Row="0">
+                          Grid.Row="0"
+                          SelectionChanged="FilmsDataGridSelectionChanged">
+
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridCell"
+                               BasedOn="{StaticResource MaterialDesignDataGridCell}">
+                            <Setter Property="FocusVisualStyle"
+                                    Value="{x:Null}"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected"
+                                         Value="True">
+                                    <Setter Property="Background"
+                                            Value="Transparent"/>
+                                    <Setter Property="Foreground"
+                                            Value="{DynamicResource MaterialDesignBody}"/>
+                                    <Setter Property="BorderBrush"
+                                            Value="Transparent"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                        <Style TargetType="DataGridRow"
+                               BasedOn="{StaticResource MaterialDesignDataGridRow}">
+                            <EventSetter Event="PreviewMouseLeftButtonDown"
+                                         Handler="PreviewMouseLeftButtonDownDataGrid"/>
+                            <EventSetter Event="MouseEnter"
+                                         Handler="MouseEnterDataGrid"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected"
+                                         Value="True">
+                                    <Setter Property="Background"
+                                            Value="Transparent"/>
+                                </Trigger>
+                                <Trigger Property="IsMouseOver"
+                                         Value="True">
+                                    <Setter Property="Background"
+                                            Value="{DynamicResource MaterialDesignDivider}"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.Resources>
+                    
+                    <DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Редактировать"
+                                      Click="EditFilmMenuItemButtonClick">
+                                <MenuItem.Icon>
+                                    <materialDesign:PackIcon Kind="Pencil"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="Удалить"
+                                      Click="DeleteFilmMenuItemButtonClick">
+                                <MenuItem.Icon>
+                                    <materialDesign:PackIcon Kind="Delete"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
+                    
                     <DataGrid.Columns>
+                        <DataGridTemplateColumn MinWidth="60" Width="60">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox IsChecked="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=DataGridRow}, Mode=TwoWay}"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center">
+                                        <CheckBox.LayoutTransform>
+                                            <ScaleTransform ScaleX="1.2"
+                                                            ScaleY="1.2"/>
+                                        </CheckBox.LayoutTransform>
+                                    </CheckBox>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        
                         <DataGridTextColumn Header="Код"
                                             MinWidth="60"
                                             Width="60"
@@ -296,6 +368,36 @@
                                             Binding="{Binding ReleaseDate, StringFormat=dd MMMM yyyy}"/>
                     </DataGrid.Columns>
                 </DataGrid>
+
+                <materialDesign:Card Name="SelectionPanel"
+                                     Visibility="Collapsed"
+                                     VerticalAlignment="Bottom"
+                                     HorizontalAlignment="Center"
+                                     Margin="0 0 0 20"
+                                     Padding="10 2"
+                                     UniformCornerRadius="15"
+                                     Background="Transparent"
+                                     BorderThickness="1"
+                                     BorderBrush="{DynamicResource MaterialDesign.Brush.Primary}"
+                                     Panel.ZIndex="10">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Name="SelectionCountTextBlock"
+                                   Text="Выбрано: 0"
+                                   Foreground="{DynamicResource MaterialDesign.Brush.Primary}"
+                                   FontSize="14"
+                                   VerticalAlignment="Center"
+                                   FontWeight="Bold"/>
+                        <Button Content="Удалить"
+                                Click="DeleteSelectionFilmsButtoncClick"
+                                Width="150"
+                                Style="{StaticResource MaterialDesignFlatButton}"
+                                Margin="10 0 0 0"/>
+                        <Button Content="Снять выделение"
+                                Click="ClearSelectionButtonClick"
+                                Width="150"
+                                Style="{StaticResource MaterialDesignFlatButton}"/>
+                    </StackPanel>
+                </materialDesign:Card>
 
                 <StackPanel Name="EmptyStackPanel"
                             Grid.Row="0"
