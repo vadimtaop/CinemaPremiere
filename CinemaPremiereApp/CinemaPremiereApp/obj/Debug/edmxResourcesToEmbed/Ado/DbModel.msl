@@ -20,14 +20,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Genres">
-      <EntityTypeMapping TypeName="CinemaPremiereDbModel.Genres">
-        <MappingFragment StoreEntitySet="Genres">
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="GenreId" ColumnName="GenreId" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="PaymentTypes">
       <EntityTypeMapping TypeName="CinemaPremiereDbModel.PaymentTypes">
         <MappingFragment StoreEntitySet="PaymentTypes">
@@ -56,17 +48,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Films">
-      <EntityTypeMapping TypeName="CinemaPremiereDbModel.Films">
-        <MappingFragment StoreEntitySet="Films">
-          <ScalarProperty Name="ReleaseDate" ColumnName="ReleaseDate" />
-          <ScalarProperty Name="PosterFileName" ColumnName="PosterFileName" />
-          <ScalarProperty Name="AgeRatingId" ColumnName="AgeRatingId" />
-          <ScalarProperty Name="Title" ColumnName="Title" />
-          <ScalarProperty Name="FilmId" ColumnName="FilmId" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Orders">
       <EntityTypeMapping TypeName="CinemaPremiereDbModel.Orders">
         <MappingFragment StoreEntitySet="Orders">
@@ -80,6 +61,25 @@
           <ScalarProperty Name="FilmId" ColumnName="FilmId" />
           <ScalarProperty Name="BuyDate" ColumnName="BuyDate" />
           <ScalarProperty Name="OrderId" ColumnName="OrderId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Films">
+      <EntityTypeMapping TypeName="CinemaPremiereDbModel.Films">
+        <MappingFragment StoreEntitySet="Films">
+          <ScalarProperty Name="ReleaseDate" ColumnName="ReleaseDate" />
+          <ScalarProperty Name="PosterFileName" ColumnName="PosterFileName" />
+          <ScalarProperty Name="AgeRatingId" ColumnName="AgeRatingId" />
+          <ScalarProperty Name="Title" ColumnName="Title" />
+          <ScalarProperty Name="FilmId" ColumnName="FilmId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Genres">
+      <EntityTypeMapping TypeName="CinemaPremiereDbModel.Genres">
+        <MappingFragment StoreEntitySet="Genres">
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="GenreId" ColumnName="GenreId" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

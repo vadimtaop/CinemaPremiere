@@ -377,12 +377,84 @@ namespace CinemaPremiereApp.Pages
 
         private void DeleteFilmMenuItemButtonClick(object sender, RoutedEventArgs e)
         {
+            var film = (sender as MenuItem)?.DataContext as Films;
 
+            if (film == null)
+            {
+                film = FilmsDataGrid.SelectedItem as Films;
+            }
+
+            if (film != null)
+            {
+                ExecuteDelete(new List<Films> { film });
+            }
+            else
+            {
+                MessageBox.Show("Не удалось определить фильм");
+            }
         }
 
         private void DeleteSelectionFilmsButtoncClick(object sender, RoutedEventArgs e)
         {
+            var selected = FilmsDataGrid.SelectedItems.Cast<Films>().ToList();
 
+            ExecuteDelete(selected);
+        }
+
+        // Общий метод удаления
+        private void ExecuteDelete(List<Films> filmsToDelete)
+        {
+            if (filmsToDelete == null || !filmsToDelete.Any())
+                return;
+
+            // Подтверждение пользователя
+            string message = filmsToDelete.Count == 1
+                ? $"Вы точно хотите удалить фильм \"{filmsToDelete[0].Title}\"?"
+                : $"Вы точно хотите удалить выбранные фильмы ({filmsToDelete.Count} шт.)?";
+
+            var result = MessageBox.Show(message, "Подтверждение удаления",
+                MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    // Удаление физического файла постера
+                    foreach (var film in filmsToDelete)
+                    {
+                        if (!string.IsNullOrEmpty(film.PosterFileName))
+                        {
+                            // Собираем полный путь к картинке
+                            string postersFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Image", "Posters");
+                            string fullPath = Path.Combine(postersFolder, film.PosterFileName);
+
+                            if (File.Exists(fullPath))
+                            {
+                                try
+                                {
+                                    File.Delete(fullPath);
+                                }
+                                catch (Exception ex)
+                                {
+                                    MessageBox.Show($"Ошибка {ex.Message}");
+                                }
+                            }
+                        }
+                        // Удаляем контекста БД
+                        AppData.db.Films.Remove(film);
+                    }
+                    // Сохраняем все изменения в БД
+                    AppData.db.SaveChanges();
+
+                    LoadData();
+
+                    MessageBox.Show("Данные успешно удалены");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Критическая ошибка {ex.Message}");
+                }
+            }
         }
 
         private void ClearSelectionButtonClick(object sender, RoutedEventArgs e)

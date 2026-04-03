@@ -25,8 +25,8 @@ namespace CinemaPremiereApp.Ado
         public string Note { get; set; }
         public int UserId { get; set; }
     
-        public virtual Films Films { get; set; }
         public virtual PaymentTypes PaymentTypes { get; set; }
         public virtual Users Users { get; set; }
+        public virtual Films Films { get; set; }
     }
 }

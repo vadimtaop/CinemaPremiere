@@ -83,7 +83,9 @@
     <Property Name="LockoutEnd" Type="datetime" />
   </EntityType>
   <Association Name="FK_FilmGenres_Films">
-    <End Role="Films" Type="Self.Films" Multiplicity="1" />
+    <End Role="Films" Type="Self.Films" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
     <End Role="FilmGenres" Type="Self.FilmGenres" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Films">

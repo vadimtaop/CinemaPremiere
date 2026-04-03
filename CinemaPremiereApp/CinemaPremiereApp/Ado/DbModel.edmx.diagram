@@ -7,17 +7,17 @@
       <Diagram DiagramId="21d82ac49e47430db6bdf099b4c461c2" Name="Diagram1">
         <EntityTypeShape EntityType="CinemaPremiereDbModel.sysdiagrams" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="CinemaPremiereDbModel.AgeRatings" Width="1.5" PointX="3.375" PointY="4.375" />
-        <EntityTypeShape EntityType="CinemaPremiereDbModel.Genres" Width="1.5" PointX="7.875" PointY="8.625" />
         <EntityTypeShape EntityType="CinemaPremiereDbModel.PaymentTypes" Width="1.5" PointX="5.625" PointY="0.75" />
         <EntityTypeShape EntityType="CinemaPremiereDbModel.Roles" Width="1.5" PointX="3.375" PointY="8.625" />
         <EntityTypeShape EntityType="CinemaPremiereDbModel.Users" Width="1.5" PointX="5.625" PointY="8.125" />
         <AssociationConnector Association="CinemaPremiereDbModel.FK_Users_Roles" />
-        <EntityTypeShape EntityType="CinemaPremiereDbModel.Films" Width="1.5" PointX="5.625" PointY="3.875" />
         <EntityTypeShape EntityType="CinemaPremiereDbModel.Orders" Width="1.5" PointX="7.875" PointY="4" />
-        <AssociationConnector Association="CinemaPremiereDbModel.FK_Films_AgeRatings" />
-        <AssociationConnector Association="CinemaPremiereDbModel.FK_Orders_Films" />
         <AssociationConnector Association="CinemaPremiereDbModel.FK_Orders_PaymentTypes" />
         <AssociationConnector Association="CinemaPremiereDbModel.FK_Orders_Users" />
+        <EntityTypeShape EntityType="CinemaPremiereDbModel.Films" Width="1.5" PointX="5.625" PointY="11.875" />
+        <EntityTypeShape EntityType="CinemaPremiereDbModel.Genres" Width="1.5" PointX="7.875" PointY="12.375" />
+        <AssociationConnector Association="CinemaPremiereDbModel.FK_Films_AgeRatings" />
+        <AssociationConnector Association="CinemaPremiereDbModel.FK_Orders_Films" />
         <AssociationConnector Association="CinemaPremiereDbModel.FilmGenres" />
         </Diagram>
     </edmx:Diagrams>
