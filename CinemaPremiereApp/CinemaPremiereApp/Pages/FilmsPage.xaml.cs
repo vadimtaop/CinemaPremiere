@@ -37,6 +37,9 @@ namespace CinemaPremiereApp.Pages
         // Список для хранения строк, которые инвертировали за один клик
         private HashSet<Films> _processedFilms = new HashSet<Films>();
 
+        // Переменная для редактирования
+        private Films _editingFilm = null;
+
         public FilmsPage()
         {
             InitializeComponent();
@@ -53,10 +56,14 @@ namespace CinemaPremiereApp.Pages
                 .Include(f => f.AgeRatings)
                 .ToList();
 
-            // Загрузка жанров в фильтр
-            GenresListBox.ItemsSource = AppData.db.Genres
+            // Загрузка жанров для фильтра
+            var genreList = AppData.db.Genres
                 .OrderBy(g => g.Name)
                 .ToList();
+            GenresListBox.ItemsSource = genreList;
+
+            // Загрузка жанров в диалоговое окно
+            AddGenresListBox.ItemsSource = genreList;
 
             ApplyFilters();
         }
@@ -253,10 +260,8 @@ namespace CinemaPremiereApp.Pages
 
         private void AddFilmButtonClick(object sender, RoutedEventArgs e)
         {
-            // Загрузка данных из БД
-            AddGenresListBox.ItemsSource = AppData.db.Genres
-                .OrderBy(g => g.Name)
-                .ToList();
+            _editingFilm = null;
+            selectedImagePath = null;
 
             // Очистка полей
             AddTitleTextBox.Text = "";
@@ -293,58 +298,107 @@ namespace CinemaPremiereApp.Pages
                 // Ищем соответствующий объект в БД
                 var ageRating = AppData.db.AgeRatings.FirstOrDefault(r => r.Name == ratingValue);
 
-                // Содаем новый объект фильма
-                Films newFilm = new Films
+                // Добавляение
+                if (_editingFilm == null)
                 {
-                    Title = AddTitleTextBox.Text.Trim(),
-                    ReleaseDate = AddReleaseDatePicker.SelectedDate ?? DateTime.Now,
-                    AgeRatings = ageRating,
-                };
-
-                // Проверка выбрал ли пользователь постер
-                if (!string.IsNullOrEmpty(selectedImagePath))
-                {
-                    try
+                    // Содаем новый объект фильма
+                    Films newFilm = new Films
                     {
-                        // Формируем путь к папке постерами
-                        string folderPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images", "Posters");
+                        Title = AddTitleTextBox.Text.Trim(),
+                        ReleaseDate = AddReleaseDatePicker.SelectedDate ?? DateTime.Now,
+                        AgeRatings = ageRating,
+                    };
 
-                        // Если папки нет - создаем
-                        if (!Directory.Exists(folderPath))
-                            Directory.CreateDirectory(folderPath);
+                    // Проверка выбрал ли пользователь постер
+                    if (!string.IsNullOrEmpty(selectedImagePath))
+                    {
+                        try
+                        {
+                            // Формируем путь к папке постерами
+                            string folderPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images", "Posters");
 
-                        // Генерируем и записываем уникальное имя файла
-                        string extension = Path.GetExtension(selectedImagePath);
-                        string uniqueFileName = Guid.NewGuid().ToString() + extension;
-                        string destPath = Path.Combine(folderPath, uniqueFileName);
+                            // Если папки нет - создаем
+                            if (!Directory.Exists(folderPath))
+                                Directory.CreateDirectory(folderPath);
 
-                        // Копируем файл в папку проекта
-                        File.Copy(selectedImagePath, destPath);
+                            // Генерируем и записываем уникальное имя файла
+                            string extension = Path.GetExtension(selectedImagePath);
+                            string uniqueFileName = Guid.NewGuid().ToString() + extension;
+                            string destPath = Path.Combine(folderPath, uniqueFileName);
 
-                        // Записываем в БД имя файлаа
-                        newFilm.PosterFileName = uniqueFileName;
+                            // Копируем файл в папку проекта
+                            File.Copy(selectedImagePath, destPath);
+
+                            // Записываем в БД имя файлаа
+                            newFilm.PosterFileName = uniqueFileName;
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"Ошибка: {ex}");
+                        }
                     }
-                    catch (Exception ex)
+
+                    // Добавляем жанры
+                    foreach (Genres selectedGenre in AddGenresListBox.SelectedItems)
                     {
-                        MessageBox.Show($"Ошибка: {ex}");
+                        newFilm.Genres.Add(selectedGenre);
+                    }
+
+                    // Добавляем фильм в контекст БД
+                    AppData.db.Films.Add(newFilm);
+                }
+                // Редактирование
+                else
+                {
+                    _editingFilm.Title = AddTitleTextBox.Text.Trim();
+                    _editingFilm.ReleaseDate = AddReleaseDatePicker.SelectedDate ?? DateTime.Now;
+                    _editingFilm.AgeRatings = ageRating;
+
+                    // Обновление жанров
+                    _editingFilm.Genres.Clear();
+                    foreach (Genres selectedGenre in AddGenresListBox.SelectedItems)
+                    {
+                        _editingFilm.Genres.Add(selectedGenre);
+                    }
+
+                    // Обновление постера (если выбран новый)
+                    if (!string.IsNullOrEmpty(selectedImagePath))
+                    {
+                        try
+                        {
+                            string folderPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images", "Posters");
+
+                            if (!Directory.Exists(folderPath))
+                                Directory.CreateDirectory(folderPath);
+
+                            // Коируем новый файл
+                            string extension = Path.GetExtension(selectedImagePath);
+                            string uniqueFileName = Guid.NewGuid().ToString() + extension;
+                            string destPath = Path.Combine(folderPath, uniqueFileName);
+
+                            File.Copy(selectedImagePath, destPath);
+
+                            // Обновляем имя в БД
+                            _editingFilm.PosterFileName = uniqueFileName;
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"Ошибка при смене постера {ex.Message}");
+                        }
                     }
                 }
-
-                // Добавляем жанры
-                foreach (Genres selectedGenre in AddGenresListBox.SelectedItems)
-                {
-                    newFilm.Genres.Add(selectedGenre);
-                }
-
-                // Сохраняем в БД
-                AppData.db.Films.Add(newFilm);
+                // Сохраняем изменения в БД
                 AppData.db.SaveChanges();
+
+                string status = _editingFilm == null ? "добавлен" : "обновлен";
 
                 // Закрываем диалоговое окно и обновляем данные
                 MainDialogHost.IsOpen = false;
+                _editingFilm = null;
+                selectedImagePath = null;
                 LoadData();
 
-                MessageBox.Show("Фильм успешно добавлен");
+                MessageBox.Show($"Фильм успешно {status}");
             }
             catch (Exception ex)
             {
@@ -372,11 +426,84 @@ namespace CinemaPremiereApp.Pages
 
         private void EditFilmMenuItemButtonClick(object sender, RoutedEventArgs e)
         {
+            // Получаем выбранный фильм
+            _editingFilm = FilmsDataGrid.SelectedItem as Films;
 
+            if (_editingFilm == null)
+            {
+                MessageBox.Show("Метод вызвался, но фильм не определен");
+                return;
+            }
+
+            // Заполняем поля данными
+            AddTitleTextBox.Text = _editingFilm.Title;
+            AddReleaseDatePicker.SelectedDate = _editingFilm.ReleaseDate;
+
+            // Сброс и выделение возрастного ограничения
+            AgeRatingsListBox.SelectedIndex = -1;
+
+            if (_editingFilm.AgeRatings != null)
+            {
+                foreach (var element in AddAgeRatingsListBox.Items)
+                {
+                    if (element is ListBoxItem listItem)
+                    {
+                        if (listItem.Tag != null && listItem.Tag.ToString() == _editingFilm.AgeRatings.Name.ToString())
+                        {
+                            AddAgeRatingsListBox.SelectedItem = listItem;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // Выделяем жанры
+            AddGenresListBox.UnselectAll();
+
+            foreach (var genre in _editingFilm.Genres)
+            {
+                var genreInList = AddGenresListBox.Items.Cast<Genres>().FirstOrDefault(g => g.GenreId == genre.GenreId);
+                if (genreInList != null)
+                {
+                    AddGenresListBox.SelectedItems.Add(genreInList);
+                }
+            }
+
+            // Выделяем возрастное ограничение
+            var ratingItem = AddAgeRatingsListBox.Items.Cast<ListBoxItem>()
+                .FirstOrDefault(i => i.Tag.ToString() == _editingFilm.AgeRatingId.ToString());
+            if (ratingItem != null)
+                ratingItem.IsSelected = true;
+
+            // Загружаем постер (если есть)
+            if (!string.IsNullOrEmpty(_editingFilm.PosterFileName))
+            {
+                string fullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+                    "Images", "Posters", _editingFilm.PosterFileName);
+
+                if (File.Exists(fullPath))
+                {
+                    PosterPreviewImage.Source = new BitmapImage(new Uri(fullPath));
+                }
+                else
+                {
+                    // Если файла почему-то нет физически
+                    PosterPreviewImage.Source = new BitmapImage(new Uri("/Images/NoPhoto.png", UriKind.Relative));
+                }
+            }
+            else
+            {
+                // Если в БД вообще нет имени файла
+                PosterPreviewImage.Source = new BitmapImage(new Uri("/Images/NoPhoto.png", UriKind.Relative));
+            }
+
+            // Открываем окно
+            MainDialogHost.IsOpen = true;
         }
 
         private void DeleteFilmMenuItemButtonClick(object sender, RoutedEventArgs e)
         {
+            // Получаем выбранный фильм
             var film = (sender as MenuItem)?.DataContext as Films;
 
             if (film == null)

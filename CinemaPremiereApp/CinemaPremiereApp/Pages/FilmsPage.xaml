@@ -247,13 +247,13 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
-                
+
                 <DataGrid Name="FilmsDataGrid"
                           AutoGenerateColumns="False"
                           IsReadOnly="True"
                           Grid.Row="0"
                           SelectionChanged="FilmsDataGridSelectionChanged">
-
+                    
                     <DataGrid.Resources>
                         <Style TargetType="DataGridCell"
                                BasedOn="{StaticResource MaterialDesignDataGridCell}">
