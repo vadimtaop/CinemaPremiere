@@ -300,7 +300,7 @@ namespace CinemaPremiereApp.Pages
 
             try
             {
-                // Получаем выбранное возрастное ограничение
+                // Получаем выбранный возрастной рейтинг
                 var selectedRatingItem = (ListBoxItem)AddAgeRatingsListBox.SelectedItem;
                 int ratingValue = Convert.ToInt32(selectedRatingItem.Tag);
 
@@ -448,7 +448,7 @@ namespace CinemaPremiereApp.Pages
             AddTitleTextBox.Text = _editingFilm.Title;
             AddReleaseDatePicker.SelectedDate = _editingFilm.ReleaseDate;
 
-            // Сброс и выделение возрастного ограничения
+            // Сброс и выделение возрастного рейтинга
             AgeRatingsListBox.SelectedIndex = -1;
 
             if (_editingFilm.AgeRatings != null)
@@ -478,7 +478,7 @@ namespace CinemaPremiereApp.Pages
                 }
             }
 
-            // Выделяем возрастное ограничение
+            // Выделяем возрастной рейтинг
             var ratingItem = AddAgeRatingsListBox.Items.Cast<ListBoxItem>()
                 .FirstOrDefault(i => i.Tag.ToString() == _editingFilm.AgeRatingId.ToString());
             if (ratingItem != null)
@@ -681,7 +681,7 @@ namespace CinemaPremiereApp.Pages
                         // Заполнеяем шапку (1 строка)
                         worksheet.Cell(1, 1).Value = "Название";
                         worksheet.Cell(1, 2).Value = "Жанры";
-                        worksheet.Cell(1, 3).Value = "Возрастное ограничение";
+                        worksheet.Cell(1, 3).Value = "Возрастной рейтинг";
                         worksheet.Cell(1, 4).Value = "Дата выхода";
 
                         // Настраиваем стиль шапки
@@ -819,6 +819,82 @@ namespace CinemaPremiereApp.Pages
                 catch (Exception ex)
                 {
                     MessageBox.Show($"Ошибка {ex.Message}");
+                }
+            }
+        }
+
+        private void ImportFromCsvButtonClick(object sender, RoutedEventArgs e)
+        {
+            var openFileDialog = new Microsoft.Win32.OpenFileDialog()
+            {
+                Filter = "CSV файл (*.csv)|*.csv",
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    // Читаем все строки и пропускаем шапку
+                    var lines = File.ReadAllLines(openFileDialog.FileName, Encoding.UTF8)
+                        .Skip(1).ToList();
+
+                    int count = 0;
+
+                    foreach (var line in lines)
+                    {
+                        var parts = line.Split(';');
+
+                        // Пропускаем битые строки
+                        if (parts.Length < 6)
+                            continue;
+
+                        string title = parts[1].Trim();
+                        string ratingRaw = parts[2].Trim();
+                        string poster = parts[3].Trim();
+                        string dateRaw = parts[4].Trim();
+                        string genresList = parts[5].Trim();
+
+                        // Используем ParseExact, чтобы формат "день.месяц.год" всегда читался верно
+                        DateTime date = DateTime.ParseExact(dateRaw, "dd.MM.yyyy",
+                            System.Globalization.CultureInfo.InvariantCulture);
+
+                        // Ищем рейтинг
+                        int ageId = int.Parse(ratingRaw);
+                        var dbRating = AppData.db.AgeRatings.FirstOrDefault(r => r.AgeRatingId == ageId);
+
+                        // Создаем новый фильм
+                        Films newFilm = new Films
+                        {
+                            Title = title,
+                            ReleaseDate = date,
+                            AgeRatings = dbRating,
+                            PosterFileName = poster
+                        };
+
+                        // Обработка жанров
+                        var genreNames = genresList.Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
+                        foreach (var gName in genreNames)
+                        {
+                            string trimmedGenre = gName.Trim();
+                            var dbGenres = AppData.db.Genres.FirstOrDefault(g => g.Name == trimmedGenre);
+                            
+                            if (dbGenres != null)
+                            {
+                                newFilm.Genres.Add(dbGenres);
+                            }
+                        }
+
+                        AppData.db.Films.Add(newFilm);
+                        count++;
+                    }
+
+                    AppData.db.SaveChanges();
+                    LoadData();
+                    MessageBox.Show("Успешный импорт");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Ошибка {ex}");
                 }
             }
         }

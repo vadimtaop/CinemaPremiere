@@ -251,6 +251,10 @@
                                 Margin="0 20 0 0"
                                 Click="ExportToJsonButtonClick"
                                 Style="{StaticResource MaterialDesignRaisedButton}"/>
+                        <Button Content="Импорт из CSV"
+                                Margin="0 20 0 0"
+                                Click="ImportFromCsvButtonClick"
+                                Style="{StaticResource MaterialDesignRaisedButton}"/>
                     </StackPanel>
                 </ScrollViewer>
             </Border>
@@ -367,7 +371,7 @@
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Header="Возрастное ограничение"
+                        <DataGridTextColumn Header="Возрастной рейтинг"
                                             MinWidth="120"
                                             Width="190"
                                             Binding="{Binding AgeRatings.Name}"/>
