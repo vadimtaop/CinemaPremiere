@@ -15,13 +15,16 @@ using System.Windows.Navigation;
 using System.Data.Entity;
 using System.ComponentModel;
 using System.IO;
+using DocumentFormat.OpenXml.Spreadsheet;
+using ClosedXML.Excel;
+using Newtonsoft.Json;
 
 namespace CinemaPremiereApp.Pages
 {
     /// <summary>
     /// Логика взаимодействия для FilmsPage.xaml
     /// </summary>
-    public partial class FilmsPage : Page
+    public partial class FilmsPage : System.Windows.Controls.Page
     { 
         // Основной список фильмов из БД
         List<Films> allFilms = new List<Films>();
@@ -39,6 +42,9 @@ namespace CinemaPremiereApp.Pages
 
         // Переменная для редактирования
         private Films _editingFilm = null;
+
+        // Переменная для хранения отфильтрованных строк до пагинации
+        private List<Films> _filteredFilms;
 
         public FilmsPage()
         {
@@ -172,7 +178,10 @@ namespace CinemaPremiereApp.Pages
                 default:
                     sorted = filtered;
                     break;
-            } 
+            }
+
+            // Сохраняем полный список фильмов для экспорта
+            _filteredFilms = sorted.ToList();
 
             // Считаем страницы
             int filteredCount = filtered.Count;
@@ -639,6 +648,177 @@ namespace CinemaPremiereApp.Pages
                 {
                     row.IsSelected = !row.IsSelected;
                     _processedFilms.Add(film);
+                }
+            }
+        }
+
+        private void ExportToExcelButtonClick(object sender, RoutedEventArgs e)
+        {
+            // Собираем отфильтрованные данные
+            if (_filteredFilms == null || !_filteredFilms.Any())
+            {
+                MessageBox.Show("Нет данных для экспорта");
+                return;
+            }
+
+            // Создаем диалоговое окно сохранения
+            var saveFileDialog = new Microsoft.Win32.SaveFileDialog()
+            {
+                Filter = "Книга Excel (*.xlsx)|*.xlsx",
+                FileName = $"Отчет_по_фильмам _{DateTime.Now:yyyy_MM_dd}"
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    // Создаем пустую книгу Excel в памяти
+                    using (var workbook = new XLWorkbook())
+                    {
+                        // Добавляем лист
+                        var worksheet = workbook.Worksheets.Add("Фильмы");
+
+                        // Заполнеяем шапку (1 строка)
+                        worksheet.Cell(1, 1).Value = "Название";
+                        worksheet.Cell(1, 2).Value = "Жанры";
+                        worksheet.Cell(1, 3).Value = "Возрастное ограничение";
+                        worksheet.Cell(1, 4).Value = "Дата выхода";
+
+                        // Настраиваем стиль шапки
+                        var headerRange = worksheet.Range("A1:D1");
+                        headerRange.Style.Font.Bold = true;
+
+                        // Заполняем строки данными
+                        int currentRow = 2;
+                        foreach (var f in _filteredFilms)
+                        {
+                            worksheet.Cell(currentRow, 1).Value = f.Title;
+                            // Жанры склеиваем в одну строку через запятую
+                            worksheet.Cell(currentRow, 2).Value = string.Join(", ", f.Genres.Select(g => g.Name));
+                            worksheet.Cell(currentRow, 3).Value = f.AgeRatings?.Name.ToString() + "+";
+                            worksheet.Cell(currentRow, 4).Value = f.ReleaseDate.ToShortDateString();
+
+                            currentRow++;
+                        }
+
+                        // Автоматически подбираем ширину столбцов под текст
+                        worksheet.Columns().AdjustToContents();
+
+                        // Сохраняем файл по пути, который выбрал пользователь
+                        workbook.SaveAs(saveFileDialog.FileName);
+                    }
+
+                    MessageBox.Show("Файл сохранен ЭКСЕЛЬ");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Ошибка {ex.Message}");
+                }
+            }
+        }
+
+        private void ExportToCsvButtonClick(object sender, RoutedEventArgs e)
+        {
+            // Собираем отфильтрованные данные
+            if (_filteredFilms == null || !_filteredFilms.Any())
+            {
+                MessageBox.Show("Нет данных для экспорта");
+                return;
+            }
+
+            // Создаем диалоговое окно сохранения
+            var saveFileDialog = new Microsoft.Win32.SaveFileDialog()
+            {
+                Filter = "CSV файл (*.csv)|*.csv",
+                FileName = $"Films_Export_{DateTime.Now:yyyy_MM_dd}"
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    var csv = new StringBuilder();
+
+                    // Заполняем шапку (1 строка)
+                    csv.AppendLine("FilmId;Title;AgeRatingId;PosterFileName;ReleaseDate;Genres");
+
+                    // Заполняем данные
+                    foreach (var f in _filteredFilms)
+                    {
+                        string genres = string.Join(", ", f.Genres.Select(g => g.Name));
+
+                        // Формируем строку
+                        string line = string.Format("{0};{1};{2};{3};{4};{5}",
+                            f.FilmId,
+                            f.Title,
+                            f.AgeRatingId,
+                            f.PosterFileName,
+                            f.ReleaseDate.ToShortDateString(),
+                            genres);
+
+                        csv.AppendLine(line);
+                    }
+
+                    // Сохранение
+                    File.WriteAllText(saveFileDialog.FileName, csv.ToString(), Encoding.UTF8);
+
+                    MessageBox.Show("Данные сохранены CSV");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Ошибка {ex.Message}");
+                }
+            }
+        }
+
+        private void ExportToJsonButtonClick(object sender, RoutedEventArgs e)
+        {
+            // Собираем отфильтрованные данные
+            if (_filteredFilms == null || !_filteredFilms.Any())
+            {
+                MessageBox.Show("Нет данных для экспорта");
+                return;
+            }
+
+            // Создаем диалоговое окно сохранения
+            var saveFileDialog = new Microsoft.Win32.SaveFileDialog()
+            {
+                Filter = "JSON файл (*.json)|*.json",
+                FileName = $"Films_Export_{DateTime.Now:yyyy_MM_dd}"
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    // Создаем чистый список с нужными полями
+                    var dataToExport = _filteredFilms.Select(f => new
+                    {
+                        f.FilmId,
+                        f.Title,
+                        f.PosterFileName,
+                        f.ReleaseDate,
+                        AgeRating = f.AgeRatings?.Name,
+                        Genres = f.Genres.Select(g => g.Name).ToList()
+                    }).ToList();
+
+                    // Настройки сериализации
+                    var setting = new JsonSerializerSettings
+                    {
+                        Formatting = Formatting.Indented
+                    };
+
+                    // Превращаем список объектов в строку
+                    string json = JsonConvert.SerializeObject(dataToExport, setting);
+
+                    // Сохранение
+                    File.WriteAllText(saveFileDialog.FileName, json);
+
+                    MessageBox.Show("Данные экспортированы JSON");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Ошибка {ex.Message}");
                 }
             }
         }

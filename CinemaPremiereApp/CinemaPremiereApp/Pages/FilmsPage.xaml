@@ -238,6 +238,19 @@
                                 Margin="0 20 0 0"
                                 Click="AddFilmButtonClick"
                                 Style="{StaticResource MaterialDesignRaisedButton}"/>
+
+                        <Button Content="Экспорт в Эксель"
+                                Margin="0 20 0 0"
+                                Click="ExportToExcelButtonClick"
+                                Style="{StaticResource MaterialDesignRaisedButton}"/>
+                        <Button Content="Экспорт в CSV"
+                                Margin="0 20 0 0"
+                                Click="ExportToCsvButtonClick"
+                                Style="{StaticResource MaterialDesignRaisedButton}"/>
+                        <Button Content="Экспорт в JSON"
+                                Margin="0 20 0 0"
+                                Click="ExportToJsonButtonClick"
+                                Style="{StaticResource MaterialDesignRaisedButton}"/>
                     </StackPanel>
                 </ScrollViewer>
             </Border>
@@ -325,10 +338,6 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                         
-                        <DataGridTextColumn Header="Код"
-                                            MinWidth="60"
-                                            Width="60"
-                                            Binding="{Binding FilmId}"/>
                         <DataGridTemplateColumn Header="Постер"
                                                 MinWidth="120"
                                                 MaxWidth="400"
