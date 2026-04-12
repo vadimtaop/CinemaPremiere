@@ -3,6 +3,7 @@ using CinemaPremiereApp.Classes;
 using CinemaPremiereApp.Windows;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -29,10 +30,12 @@ namespace CinemaPremiereApp.Pages
             InitializeComponent();
         }
 
-        private void LoginButtonClick(object sender, RoutedEventArgs e)
+        private async void LoginButtonClick(object sender, RoutedEventArgs e)
         {
             try
             {
+                Mouse.OverrideCursor = Cursors.Wait;
+
                 string login = LoginTextBox.Text.Trim();
                 string password = PasswordTextBox.Password.Trim();
 
@@ -41,22 +44,25 @@ namespace CinemaPremiereApp.Pages
                 if (!IsFieldValid(password, "Пароль"))
                     return;
 
-                var user = AppData.db.Users.FirstOrDefault(u => u.Login == login);
+                var user = await AppData.db.Users.FirstOrDefaultAsync(u => u.Login == login);
 
                 if (user != null)
                 {
                     if (user.LockoutEnd >= DateTime.Now)
                     {
-                        MessageClass.ErrorMessage($"Ошибка\nВы временно заблокированы\nПовторите попытку позже");
+                        MessageClass.ErrorMessage($"Ошибка\nВы временно заблокированы. Повторите попытку позже");
                         return;
                     }
 
-                    if (user.Password == PasswordHash(password))
+                    string passwordHash = await Task.Run(() =>
+                        PasswordHash(password));
+
+                    if (user.Password == passwordHash)
                     {
                         user.FailedAttempts = 0;
                         user.LockoutEnd = null;
 
-                        AppData.db.SaveChanges();
+                        await AppData.db.SaveChangesAsync();
 
                         MessageClass.SuccessMessage($"Успех\nДобро пожаловать в приложение!");
 
@@ -71,7 +77,7 @@ namespace CinemaPremiereApp.Pages
                     {
                         user.FailedAttempts++;
 
-                        AppData.db.SaveChanges();
+                        await AppData.db.SaveChangesAsync();
 
                         if (user.FailedAttempts >= 3)
                         {
@@ -79,7 +85,7 @@ namespace CinemaPremiereApp.Pages
 
                             AppData.db.SaveChanges();
 
-                            MessageClass.ErrorMessage($"Ошибка\nПревышение допустымых попыток\nВы временно заблокированы\nПовторите попытку позже");
+                            MessageClass.ErrorMessage($"Ошибка\nПревышение допустымых попыток. Вы временно заблокированы. Повторите попытку позже");
                             return;
                         }
 
@@ -93,10 +99,11 @@ namespace CinemaPremiereApp.Pages
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Произошла неизвестная ошибка: {ex.Message}",
-                    "Кинотеатр \"Премьера\"",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
+                MessageClass.ErrorMessage($"Ошибка\n{ex.Message}");
+            }
+            finally
+            {
+                Mouse.OverrideCursor = null;
             }
         }
 
@@ -109,9 +116,9 @@ namespace CinemaPremiereApp.Pages
                 return false;
             }
             
-            if (value.Length < 4 || value.Length > 50)
+            if (value.Length < 4)
             {
-                MessageClass.ErrorMessage($"Ошибка\nДлина поля '{fieldName}' должна быть от 4 до 50 символов");
+                MessageClass.ErrorMessage($"Ошибка\nДлина поля '{fieldName}' должна быть не менее 4-х символов");
                 return false;
             }
 

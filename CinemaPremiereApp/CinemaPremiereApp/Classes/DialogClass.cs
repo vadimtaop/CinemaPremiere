@@ -67,7 +67,7 @@ namespace CinemaPremiereApp.Classes
             buttonsPanel.Children.Add(yesButton);
             dialogContent.Children.Add(buttonsPanel);
 
-            var result = await DialogHost.Show(dialogContent, "RootDialog");
+            var result = await DialogHost.Show(dialogContent, "GlobalDialogHost");
 
             return result is bool boolResult && boolResult;
         }

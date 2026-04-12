@@ -18,7 +18,7 @@
         WindowStartupLocation="CenterScreen">
     <materialDesign:DialogHost Name="MainDialogHost"
                                CloseOnClickAway="True"
-                               Identifier="RootDialog">
+                               Identifier="GlobalDialogHost">
         <materialDesign:DrawerHost Name="MainDrawerHost">
             <materialDesign:DrawerHost.LeftDrawerContent>
                 <StackPanel Width="200">

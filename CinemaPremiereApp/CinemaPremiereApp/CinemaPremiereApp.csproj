@@ -160,6 +160,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Classes\CenteredWrapPanel.cs" />
     <Compile Include="Classes\DialogClass.cs" />
     <Compile Include="Classes\MessageClass.cs" />
     <Compile Include="Pages\AuthPage.xaml.cs">

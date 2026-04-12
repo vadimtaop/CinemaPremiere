@@ -47,68 +47,78 @@ namespace CinemaPremiereApp.Classes
         // Настройки уведомления
         public static void SetMessage(Snackbar snackbar, Color color, string message, PackIconKind packIconKind)
         {
-            try
+            // Используем Dispatcher, чтобы выполнение было в главном потоке
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                // Очистка очереди
-                snackbar.MessageQueue.Clear();
-
-                // Установка цвета фона
-                snackbar.Background = new SolidColorBrush(color);
-
-                // Установка цвета шрифта
-                snackbar.Foreground = new SolidColorBrush(Colors.White);
-
-                // Создания контейнера
-                StackPanel stackPanel = new StackPanel
+                try
                 {
-                    Orientation = Orientation.Horizontal,
-                    HorizontalAlignment = HorizontalAlignment.Center,
-                    VerticalAlignment = VerticalAlignment.Center
-                };
+                    // Очистка очереди
+                    snackbar.MessageQueue.Clear();
 
-                // Создание иконки
-                PackIcon icon = new PackIcon
+                    // Сбрасываем фиксированную высоту, чтобы растянуть уведомление
+                    snackbar.Height = double.NaN;
+
+                    // Установка цвета фона и шрифта
+                    snackbar.Background = new SolidColorBrush(color);
+                    snackbar.Foreground = new SolidColorBrush(Colors.White);
+
+                    // Создания контейнера
+                    Grid grid = new Grid();
+
+                    grid.ColumnDefinitions.Add(new ColumnDefinition
+                    {
+                        Width = GridLength.Auto
+                    });
+
+                    grid.ColumnDefinitions.Add(new ColumnDefinition
+                    {
+                        Width = new GridLength(1, GridUnitType.Star)
+                    });
+
+                    // Создание иконки
+                    PackIcon icon = new PackIcon
+                    {
+                        Kind = packIconKind,
+                        Width = 24,
+                        Height = 24,
+                        VerticalAlignment = VerticalAlignment.Center,
+                        Margin = new Thickness(0, 0, 10, 0)
+                    };
+                    Grid.SetColumn(icon, 0);
+
+                    // Создание текста
+                    TextBlock textBlock = new TextBlock
+                    {
+                        Text = message,
+                        VerticalAlignment = VerticalAlignment.Center,
+                        HorizontalAlignment = HorizontalAlignment.Center,
+                        TextAlignment = TextAlignment.Center,
+                        FontSize = 16,
+                    };
+                    Grid.SetColumn(textBlock, 1);
+
+                    // Добавляем элементы в контейнер
+                    grid.Children.Add(icon);
+                    grid.Children.Add(textBlock);
+
+                    // Отображение уведомления
+                    snackbar.MessageQueue.Enqueue(
+                        content: grid,
+                        actionContent: null,
+                        actionHandler: null,
+                        actionArgument: null,
+                        promote: true,
+                        neverConsiderToBeDuplicate: false,
+                        durationOverride: TimeSpan.FromSeconds(3.5));
+                }
+                catch (Exception ex)
                 {
-                    Kind = packIconKind,
-                    //Kind = PackIconKind.Warning,
-                    //Kind = PackIconKind.Check,
-                    Width = 24,
-                    Height = 24,
-                    VerticalAlignment = VerticalAlignment.Center,
-                    Margin = new Thickness(0, 0, 10, 0)
-                };
-
-                // Создание текста
-                TextBlock textBlock = new TextBlock
-                {
-                    Text = message,
-                    VerticalAlignment = VerticalAlignment.Center,
-                    HorizontalAlignment = HorizontalAlignment.Center,
-                    TextAlignment = TextAlignment.Center,
-                    FontSize = 16,
-                };
-
-                // Добавляем элементы в контейнер
-                stackPanel.Children.Add(icon);
-                stackPanel.Children.Add(textBlock);
-
-                // Отображение уведомления
-                snackbar.MessageQueue.Enqueue(
-                    content: stackPanel,
-                    actionContent: null,
-                    actionHandler: null,
-                    actionArgument: null,
-                    promote: true,
-                    neverConsiderToBeDuplicate: false,
-                    durationOverride: TimeSpan.FromSeconds(3));
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Произошла неизвестная ошибка: {ex.Message}",
-                    "Кинотеатр \"Премьера\"",
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Error);
-            }
+                    MessageBox.Show($"Произошла неизвестная ошибка при выводе уведомления: {ex.Message}",
+                        "Кинотеатр \"Премьера\"",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                }
+            });
         }
     }
 }

@@ -52,6 +52,8 @@
                              Margin="0 40 0 0"
                              ToolTip="Логин"
                              FontSize="18"
+                             MaxLength="50"
+                             materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed"
                              Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                              materialDesign:HintAssist.Hint="Логин"
                              materialDesign:TextFieldAssist.HasClearButton="True">
@@ -60,6 +62,8 @@
                                  Margin="0 20 0 0"
                                  ToolTip="Пароль"
                                  FontSize="18"
+                                 MaxLength="50"
+                                 materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed"
                                  Style="{StaticResource MaterialDesignFloatingHintRevealPasswordBox}"
                                  materialDesign:HintAssist.Hint="Пароль"
                                  materialDesign:TextFieldAssist.HasClearButton="True"/>

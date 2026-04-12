@@ -98,4 +98,5 @@ C:\Users\Vadim\Desktop\CinemaPremiere\CinemaPremiereApp\CinemaPremiereApp\bin\De
 C:\Users\Vadim\Desktop\CinemaPremiere\CinemaPremiereApp\CinemaPremiereApp\bin\Debug\System.Numerics.Vectors.xml
 C:\Users\Vadim\Desktop\CinemaPremiere\CinemaPremiereApp\CinemaPremiereApp\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
 C:\Users\Vadim\Desktop\CinemaPremiere\CinemaPremiereApp\CinemaPremiereApp\bin\Debug\ru\EntityFramework.SqlServer.resources.dll
+C:\Users\Vadim\Desktop\CinemaPremiere\CinemaPremiereApp\CinemaPremiereApp\obj\Debug\GeneratedInternalTypeHelper.g.cs
 C:\Users\Vadim\Desktop\CinemaPremiere\CinemaPremiereApp\CinemaPremiereApp\obj\Debug\CinemaPremiereApp.exe.config
