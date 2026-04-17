@@ -23,20 +23,26 @@
                     Background="{DynamicResource MaterialDesignPaper}">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="250"/>
+                        <ColumnDefinition Width="270"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
 
                     <TextBlock Text="Добавление нового фильма"
                                FontSize="20"
                                FontWeight="Bold"
-                               Grid.ColumnSpan="2"/>
+                               Grid.ColumnSpan="2"
+                               Grid.Row="0"/>
 
                     <StackPanel Orientation="Vertical"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center"
                                 Margin="0 0 0 0"
-                                Grid.Column="0">
+                                Grid.Column="0"
+                                Grid.Row="1">
                         <Border Width="215"
                                 Height="320"
                                 BorderThickness="1"
@@ -55,6 +61,7 @@
                     </StackPanel>
 
                     <StackPanel Grid.Column="1"
+                                Grid.RowSpan="2"
                                 HorizontalAlignment="Center"
                                 Margin="0 50 0 0">
                         <TextBox Name="AddTitleTextBox"
@@ -262,16 +269,16 @@
                                       materialDesign:HintAssist.Hint="Сортировка"
                                       Margin="0 15 0 0"
                                       FontSize="14"
+                                      SelectedIndex="0"
                                       SelectionChanged="SortComboBoxSelectionChanged"
-                                      Style="{StaticResource MaterialDesignComboBox}">
+                                      Style="{StaticResource MaterialDesignFloatingHintComboBox}">
                                 <ComboBoxItem Content="Без сортировки"
-                                              Tag="0"
-                                              IsSelected="True"/>
-                                <ComboBoxItem Content="Сначала новые"
+                                              Tag="0"/>
+                                <ComboBoxItem Content="Сначала новые (по дате выхода)"
                                               Tag="1"/>
-                                <ComboBoxItem Content="По названию"
+                                <ComboBoxItem Content="По названию (А-Я)"
                                               Tag="2"/>
-                                <ComboBoxItem Content="Возраст (по возрастанию)"
+                                <ComboBoxItem Content="Возрастной рейтинг (по возрастанию)"
                                               Tag="3"/>
                             </ComboBox>
                         </StackPanel>
@@ -479,36 +486,6 @@
                     </DataGrid.Columns>
                 </DataGrid>
 
-                <materialDesign:Card Name="SelectionPanel"
-                                     Visibility="Collapsed"
-                                     VerticalAlignment="Bottom"
-                                     HorizontalAlignment="Center"
-                                     Margin="0 0 0 20"
-                                     Padding="10 2"
-                                     UniformCornerRadius="15"
-                                     Background="Transparent"
-                                     BorderThickness="1"
-                                     BorderBrush="{DynamicResource MaterialDesign.Brush.Primary}"
-                                     Panel.ZIndex="10">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Name="SelectionCountTextBlock"
-                                   Text="Выбрано: 0"
-                                   Foreground="{DynamicResource MaterialDesign.Brush.Primary}"
-                                   FontSize="14"
-                                   VerticalAlignment="Center"
-                                   FontWeight="Bold"/>
-                        <Button Content="Удалить"
-                                Click="DeleteSelectionFilmsButtoncClick"
-                                Width="150"
-                                Style="{StaticResource MaterialDesignFlatButton}"
-                                Margin="10 0 0 0"/>
-                        <Button Content="Снять выделение"
-                                Click="ClearSelectionButtonClick"
-                                Width="150"
-                                Style="{StaticResource MaterialDesignFlatButton}"/>
-                    </StackPanel>
-                </materialDesign:Card>
-
                 <StackPanel Name="EmptyStackPanel"
                             Grid.Row="0"
                             HorizontalAlignment="Center"
@@ -538,6 +515,36 @@
                             Click="ResetFiltersButtonClick"/>
                 </StackPanel>
 
+                <materialDesign:Card Name="SelectionPanel"
+                                     Visibility="Collapsed"
+                                     VerticalAlignment="Bottom"
+                                     HorizontalAlignment="Center"
+                                     Margin="0 0 0 20"
+                                     Padding="10 2"
+                                     UniformCornerRadius="15"
+                                     Background="Transparent"
+                                     BorderThickness="1"
+                                     BorderBrush="{DynamicResource MaterialDesign.Brush.Primary}"
+                                     Panel.ZIndex="10">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Name="SelectionCountTextBlock"
+                                   Text="Выбрано: 0"
+                                   Foreground="{DynamicResource MaterialDesign.Brush.Primary}"
+                                   FontSize="14"
+                                   VerticalAlignment="Center"
+                                   FontWeight="Bold"/>
+                        <Button Content="Удалить"
+                                Click="DeleteSelectionFilmsButtoncClick"
+                                Width="150"
+                                Style="{StaticResource MaterialDesignFlatButton}"
+                                Margin="10 0 0 0"/>
+                        <Button Content="Снять выделение"
+                                Click="ClearSelectionButtonClick"
+                                Width="150"
+                                Style="{StaticResource MaterialDesignFlatButton}"/>
+                    </StackPanel>
+                </materialDesign:Card>
+                
                 <Border Grid.Row="1"
                         Margin="10"
                         VerticalAlignment="Center"
@@ -548,10 +555,10 @@
                         <TextBlock Name="CounterTextBlock"
                                    Text="Найдено: 0 из 0"
                                    FontSize="18"
-                                   VerticalAlignment="Center"/>
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Left"/>
 
-                        <StackPanel Grid.Row="1"
-                                    Orientation="Horizontal"
+                        <StackPanel Orientation="Horizontal"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center">
                             <Button Content="&lt;&lt;"

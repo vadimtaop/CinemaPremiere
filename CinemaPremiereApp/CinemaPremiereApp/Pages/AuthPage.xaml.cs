@@ -89,7 +89,7 @@ namespace CinemaPremiereApp.Pages
                             return;
                         }
 
-                        MessageClass.ErrorMessage($"Ошибка\nНеверный пароль\nПовторите попытку");
+                        MessageClass.ErrorMessage($"Ошибка\nНеверный пароль. Повторите попытку");
                     }
                 }
                 else

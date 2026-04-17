@@ -64,23 +64,31 @@ namespace CinemaPremiereApp.Pages
         // Метод загрузки данных из БД
         public async Task LoadDataAsync()
         {
-            // Загрузка фильмов в список
-            allFilms = await AppData.db.Films
-                .Include(f => f.Genres)
-                .Include(f => f.AgeRatings)
-                .OrderByDescending(f => f.FilmId)
-                .ToListAsync();
+            try
+            {
+                // Загрузка фильмов в список
+                allFilms = await AppData.db.Films
+                    .Include(f => f.Genres)
+                    .Include(f => f.AgeRatings)
+                    .OrderByDescending(f => f.FilmId)
+                    .ToListAsync();
 
-            // Загрузка жанров для фильтра
-            var genreList = await AppData.db.Genres
-                .OrderBy(g => g.Name)
-                .ToListAsync();
-            GenresListBox.ItemsSource = genreList;
+                // Загрузка жанров для фильтра
+                var genreList = await AppData.db.Genres
+                    .OrderBy(g => g.Name)
+                    .ToListAsync();
 
-            // Загрузка жанров в диалоговое окно
-            AddGenresListBox.ItemsSource = genreList;
+                GenresListBox.ItemsSource = genreList;
 
-            ApplyFilters();
+                // Загрузка жанров в диалоговое окно
+                AddGenresListBox.ItemsSource = genreList;
+
+                ApplyFilters();
+            }
+            catch (Exception ex)
+            {
+                MessageClass.ErrorMessage($"Ошибка\n{ex.Message}");
+            }
         }
 
         private async void SearchTextBoxTextChanged(object sender, TextChangedEventArgs e)
@@ -301,9 +309,7 @@ namespace CinemaPremiereApp.Pages
             if (selectedItem != null)
             {
                 itemsPerPage = Convert.ToInt32(selectedItem.Tag);
-
                 currentPage = 1;
-
                 ApplyFilters();
             }
         }
