@@ -67,6 +67,18 @@ namespace CinemaPremiereApp.Pages
                 var payments = await AppData.db.PaymentTypes.ToListAsync();
                 PaymentTypeListBox.ItemsSource = payments;
 
+                // Загружаем список фильмов в окно добавления
+                AddFilmComboBox.ItemsSource = await AppData.db.Films
+                    .OrderBy(f => f.Title)
+                    .ToListAsync();
+
+                // Список шаблонных цен (заменить в настройках)
+                var defaultPrices = new List<int> { 250, 260, 300 };
+                PriceTemplatesItemsControl.ItemsSource = defaultPrices;
+
+                // Загружаем тип оплаты для окна добавления
+                AddPaymentTypeComboBox.ItemsSource = payments;
+
                 ApplyFilters();
             }
             catch (Exception ex)
@@ -81,6 +93,9 @@ namespace CinemaPremiereApp.Pages
                 return;
 
             string searchText = SearchTextBox.Text.ToLower().Trim();
+
+            // Получаем состояние чекбокса
+            bool onlyWithNotes = OnlyWithNotesCheckBox.IsChecked == true;
 
             var selectedPaymentIds = PaymentTypeListBox.SelectedItems
                 .Cast<PaymentTypes>()
@@ -121,6 +136,10 @@ namespace CinemaPremiereApp.Pages
                         query = query.Where(o => o.Films.Title.ToLower().Contains(searchText));
                     }
                 }
+
+                // Фильтр по наличию заметок
+                if (onlyWithNotes)
+                    query = query.Where(o => !string.IsNullOrWhiteSpace(o.Note));
 
                 // Фильтр по дате сеанса
                 if (startSessionDate.HasValue)
@@ -254,6 +273,9 @@ namespace CinemaPremiereApp.Pages
 
         private void FilterSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (!_isResetting && DatePresetComboBox != null)
+                DatePresetComboBox.SelectedIndex = 0;
+
             ApplyFilters();
         }
 
@@ -266,16 +288,14 @@ namespace CinemaPremiereApp.Pages
             EndSessionDatePicker.SelectedDate = null;
             StartBuyDatePicker.SelectedDate = null;
             EndBuyDatePicker.SelectedDate = null;
+            DatePresetComboBox.SelectedIndex = 0;
             PaymentTypeListBox.SelectedItems.Clear();
             SortComboBox.SelectedIndex = 0;
+            ShowNotesCheckBox.IsChecked = true;
+            OnlyWithNotesCheckBox.IsChecked = false;
 
             _isResetting = false;
             ApplyFilters();
-        }
-
-        private void DeleteSelectionOrdersButtoncClick(object sender, RoutedEventArgs e)
-        {
-
         }
 
         private void FirstPageButtonClick(object sender, RoutedEventArgs e)
@@ -338,16 +358,6 @@ namespace CinemaPremiereApp.Pages
                 currentPage = 1;
                 ApplyFilters();
             }
-        }
-
-        private void EditOrderMenuItemButtonClick(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void DeleteOrderMenuItemButtonClick(object sender, RoutedEventArgs e)
-        {
-
         }
 
         private void PreviewMouseRightButtonDownDataGrid(object sender, MouseButtonEventArgs e)
@@ -432,6 +442,288 @@ namespace CinemaPremiereApp.Pages
         private void ClearSelectionButtonClick(object sender, RoutedEventArgs e)
         {
             OrdersDataGrid.UnselectAll();
+        }
+
+        private void AddOrderButtonClick(object sender, RoutedEventArgs e)
+        {
+            _editingOrder = null;
+
+            // Очистка полей
+            AddFilmComboBox.SelectedIndex = -1;
+            AddSessionDatePicker.SelectedDate = DateTime.Now;
+            AddBuyDatePicker.SelectedDate = DateTime.Now;
+            AddPriceTextBox.Text = string.Empty;
+            AddCountTicketsUpDown.Value = 1;
+            AddPaymentTypeComboBox.SelectedIndex = -1;
+            AddNoteTextBox.Text = string.Empty;
+
+            // Отображение диалога
+            MainDialogHost.IsOpen = true;
+        }
+
+        private void QuickPriceButtonClick(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button button)
+            {
+                AddPriceTextBox.Text = button.Tag.ToString();
+
+                AddCountTicketsUpDown.Focus();
+            }
+        }
+
+        private void CalculateTotalSum(object sender, TextChangedEventArgs e)
+        {
+            // Проверка на пустые поля
+            if (AddPriceTextBox == null ||
+                AddCountTicketsUpDown == null ||
+                AddTotalSumTextBox == null)
+                return;
+
+            decimal.TryParse(AddPriceTextBox?.Text, out decimal price);
+            int count = (int)AddCountTicketsUpDown.Value;
+
+            AddTotalSumTextBox.Text = (price * count).ToString("N0");
+        }
+
+        private void AddCountTicketUpDownValueChanged(object sender, RoutedPropertyChangedEventArgs<int> e)
+        {
+            if (AddCountTicketsUpDown == null)
+                return;
+
+            if (AddCountTicketsUpDown.Value > AddCountTicketsUpDown.Maximum)
+                AddCountTicketsUpDown.Value = AddCountTicketsUpDown.Maximum;
+
+            if (AddCountTicketsUpDown.Value < AddCountTicketsUpDown.Minimum)
+                AddCountTicketsUpDown.Value = AddCountTicketsUpDown.Minimum;
+
+            CalculateTotalSum(null, null);
+        }
+
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            // Разрешаем вводить только цифры
+            e.Handled = !int.TryParse(e.Text, out _);
+        }
+
+        private void SpaceValidationPreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            // Блокируем пробел
+            if (e.Key == Key.Space)
+            {
+                e.Handled = true;
+            }
+        }
+
+        private async void SaveOrderButtonClick(object sender, RoutedEventArgs e)
+        {
+            // Проверки на заполненные поля
+            if (AddFilmComboBox.SelectedItem == null)
+            {
+                MessageClass.ErrorMessage($"Ошибка\nВыберите фильм");
+                return;
+            }
+            if (AddSessionDatePicker.SelectedDate == null)
+            {
+                MessageClass.ErrorMessage($"Ошибка\nВведите дату сеанса");
+                return;
+            }
+            if (AddBuyDatePicker.SelectedDate == null)
+            {
+                MessageClass.ErrorMessage($"Ошибка\nВыберите дату покупки");
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(AddPriceTextBox.Text))
+            {
+                MessageClass.ErrorMessage($"Ошибка\nВведите стоимость билета");
+                return;
+            }
+            if (AddPaymentTypeComboBox.SelectedItem == null)
+            {
+                MessageClass.ErrorMessage($"Ошибка\nВыберите способ оплаты");
+                return;
+            }
+
+            try
+            {
+                var selectedFilm = AddFilmComboBox.SelectedItem as Films;
+                var selectedPayment = AddPaymentTypeComboBox.SelectedItem as PaymentTypes;
+
+                if (_editingOrder == null)
+                {
+                    // Добавление
+                    Orders newOrder = new Orders
+                    {
+                        FilmId = selectedFilm.FilmId,
+                        SessionDate = AddSessionDatePicker.SelectedDate.Value,
+                        BuyDate = AddBuyDatePicker.SelectedDate.Value,
+                        Price = decimal.Parse(AddPriceTextBox.Text),
+                        CountTickets = (int)AddCountTicketsUpDown.Value,
+                        PaymentTypeId = selectedPayment.PaymentTypeId,
+                        Note = AddNoteTextBox.Text,
+                        UserId = 1
+                    };
+
+                    AppData.db.Orders.Add(newOrder);
+                }
+                else
+                {
+                    // Редактирование
+                    _editingOrder.FilmId = selectedFilm.FilmId;
+                    _editingOrder.SessionDate = AddSessionDatePicker.SelectedDate.Value;
+                    _editingOrder.BuyDate = AddBuyDatePicker.SelectedDate ?? DateTime.Now;
+                    _editingOrder.Price = decimal.Parse(AddPriceTextBox.Text);
+                    _editingOrder.CountTickets = (int)AddCountTicketsUpDown.Value;
+                    _editingOrder.PaymentTypeId = selectedPayment.PaymentTypeId;
+                    _editingOrder.Note = AddNoteTextBox.Text;
+                }
+                
+                // Сохраняем изменения в БД
+                await AppData.db.SaveChangesAsync();
+
+                string status = _editingOrder == null ? "добавлен" : "обновлен";
+
+                MainDialogHost.IsOpen = false;
+                _editingOrder = null;
+
+                await LoadDataAsync();
+
+                MessageClass.SuccessMessage($"Успех\nЗаказ {status}");
+            }
+            catch (Exception ex)
+            {
+                MessageClass.ErrorMessage($"Ошибка\n{ex.Message}");
+            }
+        }
+
+        private void EditOrderMenuItemButtonClick(object sender, RoutedEventArgs e)
+        {
+            // Получаем выбранный заказ
+            _editingOrder = (sender as MenuItem)?.DataContext as Orders;
+
+            if (_editingOrder == null)
+                return;
+
+            // Заполняем поля
+            AddFilmComboBox.SelectedItem = AddFilmComboBox.Items.Cast<Films>()
+                .FirstOrDefault(f => f.FilmId == _editingOrder.FilmId);
+
+            AddSessionDatePicker.SelectedDate = _editingOrder.SessionDate;
+            AddBuyDatePicker.SelectedDate = _editingOrder.BuyDate;
+
+            AddPriceTextBox.Text = _editingOrder.Price.ToString();
+            AddCountTicketsUpDown.Value = _editingOrder.CountTickets;
+
+            AddPaymentTypeComboBox.SelectedItem = AddPaymentTypeComboBox.Items.Cast<PaymentTypes>()
+                .FirstOrDefault(p => p.PaymentTypeId == _editingOrder.PaymentTypeId);
+
+            AddNoteTextBox.Text = _editingOrder.Note;
+
+            // Отображение диалога
+            MainDialogHost.IsOpen = true;
+        }
+
+        private async void DeleteOrderMenuItemButtonClick(object sender, RoutedEventArgs e)
+        {
+            // Получаем выбранный фильм
+            var order = (sender as MenuItem)?.DataContext as Orders ?? _editingOrder;
+
+            if (order != null)
+                await ExecuteDeleteAsync(new List<Orders> { order });
+        }
+
+        private async void DeleteSelectionOrdersButtoncClick(object sender, RoutedEventArgs e)
+        {
+            var selected = OrdersDataGrid.SelectedItems.Cast<Orders>().ToList();
+
+            if (selected.Any())
+                await ExecuteDeleteAsync(selected);
+        }
+
+        // Общий метод удаления
+        private async Task ExecuteDeleteAsync(List<Orders> ordersToDelete)
+        {
+            if (ordersToDelete == null || !ordersToDelete.Any())
+                return;
+
+            // Подтверждение пользователя
+            string message = ordersToDelete.Count == 1
+                ? $"Вы точно хотите удалить заказ #{ordersToDelete[0].OrderId}?"
+                : $"Вы точно хотите удалить выбранные заказы ({ordersToDelete.Count} шт.)?";
+
+            bool isConfirmed = await DialogClass.ShowConfirmDialog(
+                "Удаление данных",
+                message,
+                "Удалить",
+                "Отмена");
+
+            if (isConfirmed)
+            {
+                try
+                {
+                    foreach (var order in ordersToDelete)
+                        AppData.db.Orders.Remove(order);
+
+                    await AppData.db.SaveChangesAsync();
+
+                    await LoadDataAsync();
+                    MessageClass.SuccessMessage($"Успех\nДанные удалены");
+                }
+                catch (Exception ex)
+                {
+                    MessageClass.ErrorMessage($"Ошибка\n{ex.Message}");
+                }
+            }
+        }
+
+        private void FilterCheckBoxClick(object sender, RoutedEventArgs e)
+        {
+            ApplyFilters();
+        }
+
+        private void DatePresetComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (DatePresetComboBox == null ||
+                StartBuyDatePicker == null ||
+                EndBuyDatePicker == null)
+                return;
+
+            var selectedItem = DatePresetComboBox.SelectedItem as ComboBoxItem;
+
+            if (selectedItem == null || selectedItem.Tag == null)
+                return;
+
+            string tag = selectedItem.Tag.ToString();
+
+            if (tag == "Custom")
+                return;
+
+            _isResetting = true;
+
+            DateTime today = DateTime.Today;
+
+            switch (tag)
+            {
+                case "Today":
+                    StartBuyDatePicker.SelectedDate = today;
+                    EndBuyDatePicker.SelectedDate = today;
+                    break;
+                case "Yesterday":
+                    StartBuyDatePicker.SelectedDate = today.AddDays(-1);
+                    EndBuyDatePicker.SelectedDate = today.AddDays(-1);
+                    break;
+                case "Week":
+                    int diff = (7 + (today.DayOfWeek - DayOfWeek.Monday)) % 7;
+                    StartBuyDatePicker.SelectedDate = today.AddDays(-1 * diff);
+                    EndBuyDatePicker.SelectedDate = today;
+                    break;
+                case "Month":
+                    StartBuyDatePicker.SelectedDate = new DateTime(today.Year, today.Month, 1);
+                    EndBuyDatePicker.SelectedDate = today;
+                    break;
+            }
+
+            _isResetting = false;
+            ApplyFilters();
         }
     }
 }

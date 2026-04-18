@@ -97,5 +97,10 @@ namespace CinemaPremiereApp.Windows
             MainDrawerHost.IsLeftDrawerOpen = false;
             MenuListBox.SelectedItem = null;
         }
+
+        private void MainSnackbarPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            MainSnackbar.IsActive = false;
+        }
     }
 }

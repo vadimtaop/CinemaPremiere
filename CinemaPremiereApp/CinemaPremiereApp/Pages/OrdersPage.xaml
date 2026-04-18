@@ -17,9 +17,150 @@
     <materialDesign:DialogHost Identifier="OrdersPageDialogHost"
                                Name="MainDialogHost">
         <materialDesign:DialogHost.DialogContent>
-            <StackPanel>
-                
-            </StackPanel>
+            <Border Padding="20"
+                    MinWidth="700"
+                    MinHeight="400"
+                    Background="{DynamicResource MaterialDesignPaper}">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="50"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="Добавление нового заказа"
+                               FontSize="20"
+                               FontWeight="Bold"
+                               Grid.Row="0"/>
+
+                    <StackPanel HorizontalAlignment="Center"
+                                Margin="0 0 0 0"
+                                Grid.Row="1">
+                        <ComboBox Name="AddFilmComboBox"
+                                  FontSize="14"
+                                  materialDesign:HintAssist.Hint="Название фильма"
+                                  DisplayMemberPath="Title"
+                                  IsEditable="True"
+                                  IsTextSearchEnabled="True"
+                                  TextSearch.TextPath="Title"
+                                  materialDesign:TextFieldAssist.HasClearButton="True"
+                                  Style="{StaticResource MaterialDesignFloatingHintComboBox}"/>
+
+                        <Grid Margin="0 20 0 0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <DatePicker Name="AddSessionDatePicker"
+                                        materialDesign:HintAssist.Hint="Дата сеанса"
+                                        FontSize="14"
+                                        Grid.Column="0"
+                                        Margin="0 0 5 0"/>
+                            
+                            <DatePicker Name="AddBuyDatePicker"
+                                        materialDesign:HintAssist.Hint="Дата покупки"
+                                        FontSize="14"
+                                        Grid.Column="1"
+                                        Margin="5 0 0 0"/>
+                        </Grid>
+                        
+                        <StackPanel Margin="0 20 0 0">
+                            <TextBlock Text="Фиксированные цены"
+                                       FontSize="14"
+                                       Opacity="0.6"
+                                       HorizontalAlignment="Center"/>
+
+                            <ItemsControl Name="PriceTemplatesItemsControl"
+                                          HorizontalAlignment="Center"
+                                          Margin="0 10 0 0">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button Content="{Binding}"
+                                                Tag="{Binding}"
+                                                Click="QuickPriceButtonClick"
+                                                Height="30"
+                                                FontSize="14"
+                                                Margin="5 0 5 0"
+                                                Style="{StaticResource MaterialDesignOutlinedButton}"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+
+                        <Grid Margin="0 20 0 0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Name="AddPriceTextBox"
+                                     FontSize="14"
+                                     Grid.Column="0"
+                                     Margin="0 0 0 0"
+                                     TextChanged="CalculateTotalSum"
+                                     PreviewKeyDown="SpaceValidationPreviewKeyDown"
+                                     PreviewTextInput="NumberValidationTextBox"
+                                     materialDesign:HintAssist.Hint="Стоимость билета"
+                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+                            
+                            <materialDesign:NumericUpDown Name="AddCountTicketsUpDown"
+                                                          FontSize="14"
+                                                          Grid.Column="1"
+                                                          Margin="10 0 10 0"
+                                                          Minimum="1"
+                                                          Maximum="300"
+                                                          Value="1"
+                                                          PreviewTextInput="NumberValidationTextBox"
+                                                          PreviewKeyDown="SpaceValidationPreviewKeyDown"
+                                                          materialDesign:HintAssist.Hint="Кол-во билетов"
+                                                          ValueChanged="AddCountTicketUpDownValueChanged"
+                                                          Style="{StaticResource MaterialDesignFloatingHintNumericUpDown}"/>
+
+                            <TextBox Name="AddTotalSumTextBox"
+                                     FontSize="14"
+                                     Grid.Column="2"
+                                     IsReadOnly="True"
+                                     materialDesign:HintAssist.Hint="Итоговая сумма"
+                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+                        </Grid>
+                        
+                        <ComboBox Name="AddPaymentTypeComboBox"
+                                  FontSize="14"
+                                  Margin="0 10 0 0"
+                                  DisplayMemberPath="Name"
+                                  materialDesign:HintAssist.Hint="Способ оплаты"
+                                  Style="{StaticResource MaterialDesignFloatingHintComboBox}"/>
+
+                        <TextBox Name="AddNoteTextBox"
+                                 FontSize="14"
+                                 Margin="0 10 0 0"
+                                 TextWrapping="Wrap"
+                                 Width="500"
+                                 MaxHeight="100"
+                                 materialDesign:HintAssist.Hint="Заметка"
+                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Right"
+                                Margin="0 20 0 0"
+                                Grid.Row="2">
+                        <Button Content="Отмена"
+                                IsCancel="True"
+                                Style="{StaticResource MaterialDesignFlatButton}"
+                                Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"/>
+                        <Button Content="Сохранить"
+                                Click="SaveOrderButtonClick"
+                                Margin="10 0 0 0"
+                                IsDefault="True"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
         </materialDesign:DialogHost.DialogContent>
 
         <Grid>
@@ -56,14 +197,14 @@
                                      materialDesign:TextFieldAssist.HasClearButton="True"/>
 
                             <TextBlock Text="Дата сеанса"
-                                       Margin="0 20 0 0"
+                                       Margin="0 15 0 0"
                                        Opacity="0.6"
                                        FontSize="14"
                                        TextAlignment="Center"/>
-
-                            <DockPanel Margin="0 0 0 0">
+                            
+                            <DockPanel Margin="0 5 0 0">
                                 <DatePicker Name="StartSessionDatePicker"
-                                            Width="100"
+                                            Width="95"
                                             HorizontalAlignment="Left"
                                             FontSize="14"
                                             materialDesign:HintAssist.Hint="Дата с..."
@@ -71,7 +212,7 @@
                                             Style="{StaticResource MaterialDesignFloatingHintDatePicker}"/>
 
                                 <DatePicker Name="EndSessionDatePicker"
-                                            Width="100"
+                                            Width="95"
                                             HorizontalAlignment="Right"
                                             FontSize="14"
                                             materialDesign:HintAssist.Hint="Дата по..."
@@ -80,14 +221,14 @@
                             </DockPanel>
 
                             <TextBlock Text="Дата покупки"
-                                       Margin="0 20 0 0"
+                                       Margin="0 15 0 0"
                                        Opacity="0.6"
                                        FontSize="14"
                                        TextAlignment="Center"/>
 
-                            <DockPanel Margin="0 0 0 0">
+                            <DockPanel Margin="0 5 0 0">
                                 <DatePicker Name="StartBuyDatePicker"
-                                            Width="100"
+                                            Width="95"
                                             HorizontalAlignment="Left"
                                             FontSize="14"
                                             materialDesign:HintAssist.Hint="Дата с..."
@@ -95,15 +236,29 @@
                                             Style="{StaticResource MaterialDesignFloatingHintDatePicker}"/>
 
                                 <DatePicker Name="EndBuyDatePicker"
-                                            Width="100"
+                                            Width="95"
                                             HorizontalAlignment="Right"
                                             FontSize="14"
                                             materialDesign:HintAssist.Hint="Дата по..."
                                             SelectedDateChanged="FilterSelectionChanged"
                                             Style="{StaticResource MaterialDesignFloatingHintDatePicker}"/>
                             </DockPanel>
-                            
-                            <Expander Header="Тип оплаты"
+
+                            <ComboBox Name="DatePresetComboBox"
+                                      Margin="0 15 0 0"
+                                      SelectedIndex="1"
+                                      FontSize="14"
+                                      SelectionChanged="DatePresetComboBoxSelectionChanged"
+                                      materialDesign:HintAssist.Hint="Период покупки"
+                                      Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                                <ComboBoxItem Content="Произвольный" Tag="Custom"/>
+                                <ComboBoxItem Content="Сегодня" Tag="Today"/>
+                                <ComboBoxItem Content="Вчера" Tag="Yesterday"/>
+                                <ComboBoxItem Content="Эта неделя" Tag="Week"/>
+                                <ComboBoxItem Content="Этот месяц" Tag="Month"/>
+                            </ComboBox>
+
+                            <Expander Header="Способ оплаты"
                                       Margin="0 10 0 0"
                                       IsExpanded="True"
                                       Style="{StaticResource MaterialDesignExpander}">
@@ -188,6 +343,18 @@
                                 <ComboBoxItem Content="Тип оплаты (А-Я)"
                                               Tag="6"/>
                             </ComboBox>
+
+                            <CheckBox Name="ShowNotesCheckBox"
+                                      Content="Отображать заметки"
+                                      IsChecked="True"
+                                      FontSize="14"
+                                      Margin="0 10 0 0"/>
+
+                            <CheckBox Name="OnlyWithNotesCheckBox"
+                                      Content="Только с заметками"
+                                      Click="FilterCheckBoxClick"
+                                      FontSize="14"
+                                      Margin="0 5 0 0"/>
                         </StackPanel>
 
                         <Separator Background="{DynamicResource MaterialDesignDivider}"/>
@@ -211,10 +378,10 @@
                                                      Width="16"
                                                      Height="16"/>
                                 <TextBlock Name="TotalSumTextBlock"
-                                       Text="Выручка: 0 ₽"
-                                       FontSize="14"
-                                       Margin="5 0 0 0"
-                                       VerticalAlignment="Center"/>
+                                           Text="Выручка: 0 ₽"
+                                           FontSize="14"
+                                           Margin="5 0 0 0"
+                                           VerticalAlignment="Center"/>
                             </StackPanel>
 
                             <StackPanel Orientation="Horizontal"
@@ -247,6 +414,19 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
+
+                <Button Margin="0 0 30 10"
+                        Grid.Row="0"
+                        Panel.ZIndex="10"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Bottom"
+                        Click="AddOrderButtonClick"
+                        ToolTip="Добавить заказ"
+                        Style="{StaticResource MaterialDesignFloatingActionButton}">
+                    <materialDesign:PackIcon Kind="Plus"
+                                             Width="24"
+                                             Height="24"/>
+                </Button>
 
                 <DataGrid Name="OrdersDataGrid"
                           Grid.Row="0"
@@ -377,6 +557,11 @@
                                                         </DataTrigger>
                                                         <DataTrigger Binding="{Binding Note}"
                                                                      Value="">
+                                                            <Setter Property="Visibility"
+                                                                    Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding IsChecked, ElementName=ShowNotesCheckBox}"
+                                                                     Value="False">
                                                             <Setter Property="Visibility"
                                                                     Value="Collapsed"/>
                                                         </DataTrigger>

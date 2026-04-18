@@ -113,7 +113,7 @@ namespace CinemaPremiereApp.Classes
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Произошла неизвестная ошибка при выводе уведомления: {ex.Message}",
+                    MessageBox.Show($"Произошла ошибка при выводе уведомления: {ex.Message}",
                         "Кинотеатр \"Премьера\"",
                         MessageBoxButton.OK,
                         MessageBoxImage.Error);

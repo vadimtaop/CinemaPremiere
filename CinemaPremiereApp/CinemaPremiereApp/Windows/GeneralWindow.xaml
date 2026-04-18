@@ -187,6 +187,8 @@
 
                 <materialDesign:Snackbar Name="MainSnackbar"
                                          Grid.RowSpan="2"
+                                         Margin="0 0 0 10"
+                                         PreviewMouseLeftButtonDown="MainSnackbarPreviewMouseLeftButtonDown"
                                          MessageQueue="{materialDesign:MessageQueue}"/>
             </Grid>
         </materialDesign:DrawerHost>
