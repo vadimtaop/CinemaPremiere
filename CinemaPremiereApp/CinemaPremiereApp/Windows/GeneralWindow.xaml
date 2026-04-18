@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CinemaPremiereApp.Windows"
+        xmlns:properties="clr-namespace:CinemaPremiereApp.Properties"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         Background="{DynamicResource MaterialDesignPaper}"
@@ -21,17 +22,26 @@
                                Identifier="GlobalDialogHost">
         <materialDesign:DrawerHost Name="MainDrawerHost">
             <materialDesign:DrawerHost.LeftDrawerContent>
-                <StackPanel Width="200">
+                <Grid Width="200">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
                     <materialDesign:ColorZone Mode="PrimaryMid"
-                                              Padding="10">
+                                              Padding="10"
+                                              Grid.Row="0">
                         <TextBlock Text="Меню"
                                    FontSize="22"
                                    FontWeight="Bold"
                                    HorizontalAlignment="Center"/>
                     </materialDesign:ColorZone>
 
-                    <ListBox Name="MenuListBox"
+                    <ListBox Name="TopMenuListBox"
+                             Grid.Row="1"
                              Margin="0 10 0 0"
+                             VerticalAlignment="Top"
                              SelectionChanged="MenuListBoxSelectionChanged">
                         <ListBoxItem Name="OrdersItem">
                             <StackPanel Orientation="Horizontal"
@@ -69,56 +79,67 @@
                                            VerticalAlignment="Center"/>
                             </StackPanel>
                         </ListBoxItem>
-                        <ListBoxItem Name="SettingsItem">
-                            <StackPanel Orientation="Horizontal"
-                                        Margin="10">
-                                <materialDesign:PackIcon Kind="Settings"
-                                                         Width="24"
-                                                         Height="24"/>
-                                <TextBlock Text="Настройки"
-                                           FontSize="16"
-                                           Margin="20 0 0 0"
-                                           VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </ListBoxItem>
-                        <ListBoxItem Name="AboutAppItem">
-                            <StackPanel Orientation="Horizontal"
-                                        Margin="10">
-                                <materialDesign:PackIcon Kind="ApplicationCog"
-                                                         Width="24"
-                                                         Height="24"/>
-                                <TextBlock Text="О программе"
-                                           FontSize="16"
-                                           Margin="20 0 0 0"
-                                           VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </ListBoxItem>
-                        <ListBoxItem Name="HelpItem">
-                            <StackPanel Orientation="Horizontal"
-                                        Margin="10">
-                                <materialDesign:PackIcon Kind="HelpCircle"
-                                                         Width="24"
-                                                         Height="24"/>
-                                <TextBlock Text="Помощь"
-                                           FontSize="16"
-                                           Margin="20 0 0 0"
-                                           VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </ListBoxItem>
-                        <ListBoxItem Name="ExitItem">
-                            <StackPanel Orientation="Horizontal"
-                                        Margin="10">
-                                <materialDesign:PackIcon Kind="ExitToApp"
-                                                         Width="24"
-                                                         Height="24"/>
-                                <TextBlock Text="Выйти"
-                                           FontSize="16"
-                                           Margin="20 0 0 0"
-                                           VerticalAlignment="Center"/>
-                            </StackPanel>
-                        </ListBoxItem>
                     </ListBox>
-                </StackPanel>
+
+                    <StackPanel Grid.Row="2"
+                                Margin="0 0 0 10"
+                                VerticalAlignment="Bottom">
+                        <Separator Style="{StaticResource MaterialDesignLightSeparator}"
+                                   Margin="10 0"/>
+
+                        <ListBox Name="BottomMenuListBox"
+                                 SelectionChanged="MenuListBoxSelectionChanged">
+                            <ListBoxItem Name="SettingsItem">
+                                <StackPanel Orientation="Horizontal"
+                                            Margin="10">
+                                    <materialDesign:PackIcon Kind="Settings"
+                                                             Width="24"
+                                                             Height="24"/>
+                                    <TextBlock Text="Настройки"
+                                               FontSize="16"
+                                               Margin="20 0 0 0"
+                                               VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </ListBoxItem>
+                            <ListBoxItem Name="AboutAppItem">
+                                <StackPanel Orientation="Horizontal"
+                                            Margin="10">
+                                    <materialDesign:PackIcon Kind="ApplicationCog"
+                                                             Width="24"
+                                                             Height="24"/>
+                                    <TextBlock Text="О программе"
+                                               FontSize="16"
+                                               Margin="20 0 0 0"
+                                               VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </ListBoxItem>
+                            <ListBoxItem Name="HelpItem">
+                                <StackPanel Orientation="Horizontal"
+                                            Margin="10">
+                                    <materialDesign:PackIcon Kind="HelpCircle"
+                                                             Width="24"
+                                                             Height="24"/>
+                                    <TextBlock Text="Помощь"
+                                               FontSize="16"
+                                               Margin="20 0 0 0"
+                                               VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </ListBoxItem>
+                            <ListBoxItem Name="ExitItem">
+                                <StackPanel Orientation="Horizontal"
+                                            Margin="10">
+                                    <materialDesign:PackIcon Kind="ExitToApp"
+                                                             Width="24"
+                                                             Height="24"/>
+                                    <TextBlock Text="Выйти"
+                                               FontSize="16"
+                                               Margin="20 0 0 0"
+                                               VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </ListBoxItem>
+                        </ListBox>
+                    </StackPanel>
+                </Grid>
             </materialDesign:DrawerHost.LeftDrawerContent>
 
             <Grid>
@@ -157,7 +178,7 @@
                                       HorizontalAlignment="Right"
                                       VerticalAlignment="Center"
                                       Margin="0 0 20 0"
-                                      IsChecked="True"
+                                      IsChecked="{Binding Source={x:Static properties:Settings.Default}, Path=IsDarkMode, Mode=OneWay}"
                                       Style="{StaticResource MaterialDesignFlatPrimaryToggleButton}"
                                       Click="ThemeToggleButtonClick">
                             <materialDesign:PackIcon Width="28"

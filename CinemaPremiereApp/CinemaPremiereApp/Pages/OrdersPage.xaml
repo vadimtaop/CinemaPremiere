@@ -251,11 +251,16 @@
                                       SelectionChanged="DatePresetComboBoxSelectionChanged"
                                       materialDesign:HintAssist.Hint="Период покупки"
                                       Style="{StaticResource MaterialDesignFloatingHintComboBox}">
-                                <ComboBoxItem Content="Произвольный" Tag="Custom"/>
-                                <ComboBoxItem Content="Сегодня" Tag="Today"/>
-                                <ComboBoxItem Content="Вчера" Tag="Yesterday"/>
-                                <ComboBoxItem Content="Эта неделя" Tag="Week"/>
-                                <ComboBoxItem Content="Этот месяц" Tag="Month"/>
+                                <ComboBoxItem Content="Произвольный"
+                                              Tag="Custom"/>
+                                <ComboBoxItem Content="Сегодня"
+                                              Tag="Today"/>
+                                <ComboBoxItem Content="Вчера"
+                                              Tag="Yesterday"/>
+                                <ComboBoxItem Content="Эта неделя"
+                                              Tag="Week"/>
+                                <ComboBoxItem Content="Этот месяц"
+                                              Tag="Month"/>
                             </ComboBox>
 
                             <Expander Header="Способ оплаты"

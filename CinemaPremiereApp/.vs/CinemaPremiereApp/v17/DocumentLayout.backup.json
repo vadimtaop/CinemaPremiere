@@ -3,20 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\CinemaPremiereApp\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{91A8D746-A9B3-4269-AA16-6E68CB15ADF8}|CinemaPremiereApp\\CinemaPremiereApp.csproj|C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\CinemaPremiereApp\\cinemapremiereapp\\pages\\orderspage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{91A8D746-A9B3-4269-AA16-6E68CB15ADF8}|CinemaPremiereApp\\CinemaPremiereApp.csproj|solutionrelative:cinemapremiereapp\\pages\\orderspage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+      "AbsoluteMoniker": "D:0:0:{91A8D746-A9B3-4269-AA16-6E68CB15ADF8}|CinemaPremiereApp\\CinemaPremiereApp.csproj|c:\\users\\vadim\\desktop\\cinemapremiere\\cinemapremiereapp\\cinemapremiereapp\\windows\\generalwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{91A8D746-A9B3-4269-AA16-6E68CB15ADF8}|CinemaPremiereApp\\CinemaPremiereApp.csproj|solutionrelative:cinemapremiereapp\\windows\\generalwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{91A8D746-A9B3-4269-AA16-6E68CB15ADF8}|CinemaPremiereApp\\CinemaPremiereApp.csproj|c:\\users\\vadim\\desktop\\cinemapremiere\\cinemapremiereapp\\cinemapremiereapp\\pages\\orderspage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{91A8D746-A9B3-4269-AA16-6E68CB15ADF8}|CinemaPremiereApp\\CinemaPremiereApp.csproj|solutionrelative:cinemapremiereapp\\pages\\orderspage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{91A8D746-A9B3-4269-AA16-6E68CB15ADF8}|CinemaPremiereApp\\CinemaPremiereApp.csproj|C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\CinemaPremiereApp\\cinemapremiereapp\\pages\\filmspage.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|",
-      "RelativeMoniker": "D:0:0:{91A8D746-A9B3-4269-AA16-6E68CB15ADF8}|CinemaPremiereApp\\CinemaPremiereApp.csproj|solutionrelative:cinemapremiereapp\\pages\\filmspage.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{91A8D746-A9B3-4269-AA16-6E68CB15ADF8}|CinemaPremiereApp\\CinemaPremiereApp.csproj|C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\CinemaPremiereApp\\cinemapremiereapp\\pages\\filmspage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{91A8D746-A9B3-4269-AA16-6E68CB15ADF8}|CinemaPremiereApp\\CinemaPremiereApp.csproj|solutionrelative:cinemapremiereapp\\pages\\filmspage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+      "AbsoluteMoniker": "D:0:0:{91A8D746-A9B3-4269-AA16-6E68CB15ADF8}|CinemaPremiereApp\\CinemaPremiereApp.csproj|c:\\users\\vadim\\desktop\\cinemapremiere\\cinemapremiereapp\\cinemapremiereapp\\windows\\generalwindow.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|",
+      "RelativeMoniker": "D:0:0:{91A8D746-A9B3-4269-AA16-6E68CB15ADF8}|CinemaPremiereApp\\CinemaPremiereApp.csproj|solutionrelative:cinemapremiereapp\\windows\\generalwindow.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,56 +18,31 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "FilmsPage.xaml",
-              "DocumentMoniker": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\CinemaPremiereApp\\CinemaPremiereApp\\Pages\\FilmsPage.xaml",
-              "RelativeDocumentMoniker": "CinemaPremiereApp\\Pages\\FilmsPage.xaml",
-              "ToolTip": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\CinemaPremiereApp\\CinemaPremiereApp\\Pages\\FilmsPage.xaml",
-              "RelativeToolTip": "CinemaPremiereApp\\Pages\\FilmsPage.xaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2026-04-14T18:43:18.213Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "FilmsPage.xaml.cs",
-              "DocumentMoniker": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\CinemaPremiereApp\\CinemaPremiereApp\\Pages\\FilmsPage.xaml.cs",
-              "RelativeDocumentMoniker": "CinemaPremiereApp\\Pages\\FilmsPage.xaml.cs",
-              "ToolTip": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\CinemaPremiereApp\\CinemaPremiereApp\\Pages\\FilmsPage.xaml.cs",
-              "RelativeToolTip": "CinemaPremiereApp\\Pages\\FilmsPage.xaml.cs",
-              "ViewState": "AgIAADUDAAAAAAAAAAAAAPYBAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-14T19:48:27.039Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "OrdersPage.xaml.cs",
-              "DocumentMoniker": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\CinemaPremiereApp\\CinemaPremiereApp\\Pages\\OrdersPage.xaml.cs",
-              "RelativeDocumentMoniker": "CinemaPremiereApp\\Pages\\OrdersPage.xaml.cs",
-              "ToolTip": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\CinemaPremiereApp\\CinemaPremiereApp\\Pages\\OrdersPage.xaml.cs",
-              "RelativeToolTip": "CinemaPremiereApp\\Pages\\OrdersPage.xaml.cs",
-              "ViewState": "AgIAALABAAAAAAAAAAAswL0BAAAAAAAAAAAAAA==",
+              "Title": "GeneralWindow.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\CinemaPremiereApp\\CinemaPremiereApp\\Windows\\GeneralWindow.xaml.cs",
+              "RelativeDocumentMoniker": "CinemaPremiereApp\\Windows\\GeneralWindow.xaml.cs",
+              "ToolTip": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\CinemaPremiereApp\\CinemaPremiereApp\\Windows\\GeneralWindow.xaml.cs",
+              "RelativeToolTip": "CinemaPremiereApp\\Windows\\GeneralWindow.xaml.cs",
+              "ViewState": "AgIAAEwAAAAAAAAAAAAgwGAAAABJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-14T18:53:04.216Z",
+              "WhenOpened": "2026-04-18T19:41:27.601Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "OrdersPage.xaml",
-              "DocumentMoniker": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\CinemaPremiereApp\\CinemaPremiereApp\\Pages\\OrdersPage.xaml",
-              "RelativeDocumentMoniker": "CinemaPremiereApp\\Pages\\OrdersPage.xaml",
-              "ToolTip": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\CinemaPremiereApp\\CinemaPremiereApp\\Pages\\OrdersPage.xaml",
-              "RelativeToolTip": "CinemaPremiereApp\\Pages\\OrdersPage.xaml",
+              "Title": "GeneralWindow.xaml",
+              "DocumentMoniker": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\CinemaPremiereApp\\CinemaPremiereApp\\Windows\\GeneralWindow.xaml",
+              "RelativeDocumentMoniker": "CinemaPremiereApp\\Windows\\GeneralWindow.xaml",
+              "ToolTip": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\CinemaPremiereApp\\CinemaPremiereApp\\Windows\\GeneralWindow.xaml",
+              "RelativeToolTip": "CinemaPremiereApp\\Windows\\GeneralWindow.xaml",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2026-04-14T18:41:02.716Z",
+              "WhenOpened": "2026-04-18T18:58:43.696Z",
               "EditorCaption": ""
             }
           ]

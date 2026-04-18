@@ -1,4 +1,5 @@
 ﻿using CinemaPremiereApp.Classes;
+using CinemaPremiereApp.Properties;
 using MaterialDesignThemes.Wpf;
 using System;
 using System.Collections.Generic;
@@ -45,6 +46,9 @@ namespace CinemaPremiereApp.Windows
                 theme.SetBaseTheme(isDark ? BaseTheme.Dark : BaseTheme.Light);
 
                 paletteHelper.SetTheme(theme);
+
+                Settings.Default.IsDarkMode = isDark;
+                Settings.Default.Save();
             }
         }
 
@@ -56,46 +60,51 @@ namespace CinemaPremiereApp.Windows
         // Метод перехода по пунктам меню
         private async void MenuListBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (MenuListBox.SelectedItem == null)
+            var currentListBox = sender as ListBox;
+            if (currentListBox == null || currentListBox.SelectedItem == null)
                 return;
 
-            if (OrdersItem.IsSelected)
-            {
-                MainFrame.Navigate(new Pages.OrdersPage());
-            }
+            if (currentListBox == TopMenuListBox)
+                BottomMenuListBox.SelectedIndex = -1;
+            else
+                TopMenuListBox.SelectedIndex = -1;
 
-            if (FilmsItem.IsSelected)
+            var selectedItem = currentListBox.SelectedItem as ListBoxItem;
+            if (selectedItem != null)
             {
-                MainFrame.Navigate(new Pages.FilmsPage());
-            }
-
-            if (ScheduleItem.IsSelected)
-            {
-                MainFrame.Navigate(new Pages.OrdersPage());
-            }
-
-            if (SettingsItem.IsSelected)
-            {
-                MainFrame.Navigate(new Pages.OrdersPage());
-            }
-
-            if (ExitItem.IsSelected)
-            {
-                bool isConfirmed = await DialogClass.ShowConfirmDialog("Выход из системы",
-                    "Вы уверены, что хотите выйти из учетной записи?",
-                    "Да, выйти",
-                    "Отмена");
-
-                if (isConfirmed)
+                switch (selectedItem.Name)
                 {
-                    MenuButton.Visibility = Visibility.Collapsed;
+                    case "OrdersItem":
+                        MainFrame.Navigate(new Pages.OrdersPage());
+                        break;
+                    case "FilmsItem":
+                        MainFrame.Navigate(new Pages.FilmsPage());
+                        break;
+                    case "ScheduleItem":
+                        MainFrame.Navigate(new Pages.OrdersPage());
+                        break;
+                    case "SettingsItem":
+                        MainFrame.Navigate(new Pages.SettingsPage());
+                        break;
+                    case "ExitItem":
+                        bool isConfirmed = await DialogClass.ShowConfirmDialog("Выход из системы",
+                            "Вы уверены, что хотите выйти из учетной записи?",
+                            "Да, выйти",
+                            "Отмена");
 
-                    MainFrame.Navigate(new Pages.AuthPage());
+                        if (isConfirmed)
+                        {
+                            MenuButton.Visibility = Visibility.Collapsed;
+
+                            MainFrame.Navigate(new Pages.AuthPage());
+                        }
+                        break;
                 }
-            }
 
-            MainDrawerHost.IsLeftDrawerOpen = false;
-            MenuListBox.SelectedItem = null;
+                MainDrawerHost.IsLeftDrawerOpen = false;
+                TopMenuListBox.SelectedItem = null;
+                BottomMenuListBox.SelectedItem = null;
+            }
         }
 
         private void MainSnackbarPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
