@@ -81,7 +81,7 @@ namespace CinemaPremiereApp.Windows
                         MainFrame.Navigate(new Pages.FilmsPage());
                         break;
                     case "ScheduleItem":
-                        MainFrame.Navigate(new Pages.OrdersPage());
+                        MainFrame.Navigate(new Pages.SchedulePage());
                         break;
                     case "SettingsItem":
                         MainFrame.Navigate(new Pages.SettingsPage());

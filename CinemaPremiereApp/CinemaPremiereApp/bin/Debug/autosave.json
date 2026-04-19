@@ -1,0 +1,151 @@
+{
+  "SavedMovies": [
+    {
+      "Title": "Три богатыря и свет клином",
+      "ImagePath": "file:///C:/Users/Vadim/Desktop/CinemaPremiere/CinemaPremiereApp/CinemaPremiereApp/bin/Debug/Images/Posters/7527356.jpg",
+      "AgeRating": "6+",
+      "Genre": "Приключения"
+    },
+    {
+      "Title": "Буратино",
+      "ImagePath": "file:///C:/Users/Vadim/Desktop/CinemaPremiere/CinemaPremiereApp/CinemaPremiereApp/bin/Debug/Images/Posters/5354680.jpg",
+      "AgeRating": "6+",
+      "Genre": "Сказка"
+    },
+    {
+      "Title": "Чебурашка 2",
+      "ImagePath": "file:///C:/Users/Vadim/Desktop/CinemaPremiere/CinemaPremiereApp/CinemaPremiereApp/bin/Debug/Images/Posters/5379012.jpg",
+      "AgeRating": "6+",
+      "Genre": "Семейная комедия"
+    },
+    {
+      "Title": "Флибубу",
+      "ImagePath": "file:///C:/Users/Vadim/Desktop/CinemaPremiere/CinemaPremiereApp/CinemaPremiereApp/bin/Debug/Images/Posters/6275403.jpg",
+      "AgeRating": "6+",
+      "Genre": "Мультфильм"
+    },
+    {
+      "Title": "Простоквашино",
+      "ImagePath": "file:///C:/Users/Vadim/Desktop/CinemaPremiere/CinemaPremiereApp/CinemaPremiereApp/bin/Debug/Images/Posters/5498755.jpg",
+      "AgeRating": "6+",
+      "Genre": "Приключения, Семейный"
+    },
+    {
+      "Title": "Чарли Чудо-пёс",
+      "ImagePath": "file:///C:/Users/Vadim/Desktop/CinemaPremiere/CinemaPremiereApp/CinemaPremiereApp/bin/Debug/Images/Posters/9124157.jpg",
+      "AgeRating": "6+",
+      "Genre": "Анимационное приключение"
+    },
+    {
+      "Title": "Изумрудный город: Дорога из желтого кирпича",
+      "ImagePath": "pack://application:,,,/Images/NoPhoto.png",
+      "AgeRating": "0+",
+      "Genre": "Анимационное приключение"
+    }
+  ],
+  "SavedDays": [
+    {
+      "DateText": "23 АПРЕЛЯ",
+      "Sessions": [
+        {
+          "Time": "14:00",
+          "Title": "Три богатыря и свет клином",
+          "Price": "250 р."
+        },
+        {
+          "Time": "14:00",
+          "Title": "Буратино",
+          "Price": "250 р."
+        },
+        {
+          "Time": "14:00",
+          "Title": "Простоквашино",
+          "Price": "250 р."
+        },
+        {
+          "Time": "14:00",
+          "Title": "Три богатыря и свет клином",
+          "Price": "250 р."
+        }
+      ]
+    },
+    {
+      "DateText": "2 ЯНВАРЯ",
+      "Sessions": [
+        {
+          "Time": "14:00",
+          "Title": "Буратино",
+          "Price": "250 р."
+        },
+        {
+          "Time": "14:00",
+          "Title": "Чебурашка 2",
+          "Price": "250 р."
+        },
+        {
+          "Time": "14:00",
+          "Title": "Изумрудный город: Дорога из желтого кирпича",
+          "Price": "250 р."
+        },
+        {
+          "Time": "14:00",
+          "Title": "Флибубу",
+          "Price": "250 р."
+        }
+      ]
+    },
+    {
+      "DateText": "3 ЯНВАРЯ",
+      "Sessions": [
+        {
+          "Time": "14:00",
+          "Title": "Чебурашка 2",
+          "Price": "250 р."
+        },
+        {
+          "Time": "14:00",
+          "Title": "Простоквашино",
+          "Price": "250 р."
+        },
+        {
+          "Time": "14:00",
+          "Title": "Флибубу",
+          "Price": "250 р."
+        },
+        {
+          "Time": "14:00",
+          "Title": "Три богатыря и свет клином",
+          "Price": "250 р."
+        }
+      ]
+    },
+    {
+      "DateText": "4 ЯНВАРЯ",
+      "Sessions": [
+        {
+          "Time": "14:00",
+          "Title": "Простоквашино",
+          "Price": "250 р."
+        },
+        {
+          "Time": "14:00",
+          "Title": "Флибубу",
+          "Price": "250 р."
+        },
+        {
+          "Time": "14:00",
+          "Title": "Три богатыря и свет клином",
+          "Price": "250 р."
+        },
+        {
+          "Time": "14:00",
+          "Title": "Буратино",
+          "Price": "250 р."
+        }
+      ]
+    }
+  ],
+  "MainTitle": "РАСПИСАНИЕ",
+  "Subtitle": "КИНОТЕАТР «ПРЕМЬЕРА»",
+  "Phone": "8 (831-97) 5-18-86"
+}
