@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\CinemaPremiereApp\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{91A8D746-A9B3-4269-AA16-6E68CB15ADF8}|CinemaPremiereApp\\CinemaPremiereApp.csproj|c:\\users\\vadim\\desktop\\cinemapremiere\\cinemapremiereapp\\cinemapremiereapp\\classes\\messageclass.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{91A8D746-A9B3-4269-AA16-6E68CB15ADF8}|CinemaPremiereApp\\CinemaPremiereApp.csproj|solutionrelative:cinemapremiereapp\\classes\\messageclass.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{91A8D746-A9B3-4269-AA16-6E68CB15ADF8}|CinemaPremiereApp\\CinemaPremiereApp.csproj|c:\\users\\vadim\\desktop\\cinemapremiere\\cinemapremiereapp\\cinemapremiereapp\\pages\\schedulepage.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|",
       "RelativeMoniker": "D:0:0:{91A8D746-A9B3-4269-AA16-6E68CB15ADF8}|CinemaPremiereApp\\CinemaPremiereApp.csproj|solutionrelative:cinemapremiereapp\\pages\\schedulepage.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|"
     }
@@ -19,12 +23,25 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "MessageClass.cs",
+              "DocumentMoniker": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\CinemaPremiereApp\\CinemaPremiereApp\\Classes\\MessageClass.cs",
+              "RelativeDocumentMoniker": "CinemaPremiereApp\\Classes\\MessageClass.cs",
+              "ToolTip": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\CinemaPremiereApp\\CinemaPremiereApp\\Classes\\MessageClass.cs",
+              "RelativeToolTip": "CinemaPremiereApp\\Classes\\MessageClass.cs",
+              "ViewState": "AgIAAGUAAAAAAAAAAAAIwHEAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-25T13:10:14.151Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "SchedulePage.xaml.cs",
               "DocumentMoniker": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\CinemaPremiereApp\\CinemaPremiereApp\\Pages\\SchedulePage.xaml.cs",
               "RelativeDocumentMoniker": "CinemaPremiereApp\\Pages\\SchedulePage.xaml.cs",
               "ToolTip": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\CinemaPremiereApp\\CinemaPremiereApp\\Pages\\SchedulePage.xaml.cs",
               "RelativeToolTip": "CinemaPremiereApp\\Pages\\SchedulePage.xaml.cs",
-              "ViewState": "AgIAABgBAAAAAAAAAAAowCgBAAAqAAAAAAAAAA==",
+              "ViewState": "AgIAABgBAAAAAAAAAAAowCcBAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-25T11:35:18.656Z",
               "EditorCaption": ""

@@ -109,7 +109,7 @@ namespace CinemaPremiereApp.Classes
                         actionArgument: null,
                         promote: true,
                         neverConsiderToBeDuplicate: false,
-                        durationOverride: TimeSpan.FromSeconds(3.5));
+                        durationOverride: TimeSpan.FromSeconds(5));
                 }
                 catch (Exception ex)
                 {
