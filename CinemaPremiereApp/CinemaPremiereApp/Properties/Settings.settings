@@ -8,5 +8,11 @@
     <Setting Name="PrimaryColor" Type="System.String" Scope="User">
       <Value Profile="(Default)">Blue</Value>
     </Setting>
+    <Setting Name="CustomAuthImagePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="TemplatePrices" Type="System.String" Scope="User">
+      <Value Profile="(Default)">250, 300, 350</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

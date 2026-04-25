@@ -124,7 +124,7 @@ namespace CinemaPremiereApp.Pages
             {
                 try
                 {
-                    var data = new
+                    var data = new ScheduleSaveData
                     {
                         SavedMovies = Movies.ToList(),
                         SavedDays = Days.ToList(),
@@ -173,7 +173,11 @@ namespace CinemaPremiereApp.Pages
             }
             catch (Exception ex)
             {
-                MessageClass.ErrorMessage($"Ошибка\n{ex.Message}");
+                await DialogClass.ShowConfirmDialog(
+                    "Ошибка при загрузке данных расписания",
+                    $"{ex.Message}",
+                    "Понятно",
+                    "Отмена");
             }
         }
 
@@ -190,7 +194,11 @@ namespace CinemaPremiereApp.Pages
             }
             catch (Exception ex)
             {
-                MessageClass.ErrorMessage($"Ошибка\n{ex.Message}");
+                await DialogClass.ShowConfirmDialog(
+                    "Ошибка при загрузке данных фильмов",
+                    $"{ex.Message}",
+                    "Понятно",
+                    "Отмена");
             }
         }
 
@@ -250,12 +258,15 @@ namespace CinemaPremiereApp.Pages
             session.PropertyChanged += OnSessionPropertyChanged;
         }
 
-        private void ExportButtonClick(object sender, RoutedEventArgs e)
+        private async void ExportButtonClick(object sender, RoutedEventArgs e)
         {
             try
             {
                 // Прячем кнопки удаления перед рендером
                 ToggleUIElements(Visibility.Collapsed);
+
+                // Даем мгновение, чтобы перерисовать интерфейс без кнопок
+                await Task.Delay(50);
 
                 // Создаем диалог сохранения файла
                 SaveFileDialog saveFileDialog = new SaveFileDialog
@@ -267,6 +278,8 @@ namespace CinemaPremiereApp.Pages
 
                 if (saveFileDialog.ShowDialog() == true)
                 {
+                    Mouse.OverrideCursor = Cursors.Wait;
+
                     // Получаем размеры нашего холста (если 0 - берем 1920x1080)
                     double width = ExportGrid.ActualWidth > 0 ? ExportGrid.ActualWidth : 1920;
                     double height = ExportGrid.ActualHeight > 0 ? ExportGrid.ActualHeight : 1080;
@@ -278,38 +291,47 @@ namespace CinemaPremiereApp.Pages
                     // Фотографируем контейнер
                     renderTargetBitmap.Render(ExportGrid);
 
-                    // Определяем формат
-                    BitmapEncoder encoder;
+                    // Делаем объект доступным для других потоков
+                    renderTargetBitmap.Freeze();
+
+                    // Подготовка энкодера
                     string extension = System.IO.Path.GetExtension(saveFileDialog.FileName).ToLower();
+                    string filePath = saveFileDialog.FileName;
 
-                    if (extension == ".png")
+                    // Асинхронное сохранение
+                    await Task.Run(() =>
                     {
-                        encoder = new PngBitmapEncoder();
-                    }
-                    else
-                    {
-                        encoder = new JpegBitmapEncoder { QualityLevel = 100 };
-                    }
+                        BitmapEncoder encoder;
+                        if (extension == ".png")
+                            encoder = new PngBitmapEncoder();
+                        else
+                            encoder = new JpegBitmapEncoder { QualityLevel = 100 };
 
-                    encoder.Frames.Add(BitmapFrame.Create(renderTargetBitmap));
+                        encoder.Frames.Add(BitmapFrame.Create(renderTargetBitmap));
 
-                    // Сохранение файла
-                    using (FileStream stream = new FileStream(saveFileDialog.FileName, FileMode.Create))
-                    {
-                        encoder.Save(stream);
-                    }
+                        // Сохранение файла
+                        using (FileStream stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            encoder.Save(stream);
+                        }
+                    });
 
                     MessageClass.SuccessMessage($"Успех\nРасписание сохранено в формате {extension.ToUpper()}");
                 }
             }
             catch (Exception ex)
             {
-                MessageClass.ErrorMessage($"Ошибка\n{ex.Message}");
+                await DialogClass.ShowConfirmDialog(
+                    "Ошибка при попытке экспорта",
+                    $"{ex.Message}",
+                    "Понятно",
+                    "Отмена");
             }
             finally
             {
                 // Всегда возвращаем кнопки назад
                 ToggleUIElements(Visibility.Visible);
+                Mouse.OverrideCursor = null;
             }
         }
 
@@ -343,6 +365,13 @@ namespace CinemaPremiereApp.Pages
 
         private async void AddSelectedMovieButtonClick(object sender, RoutedEventArgs e)
         {
+            // Ограничение на количество фильмов
+            if (Movies.Count >= 9)
+            {
+                MessageClass.WarningMessage("Предупреждение\nМаксимальное ограничение - 9 фильмов");
+                return;
+            }
+
             // Берем выбранный фильм из ListBox в диалоге
             var selectedFilm = FilmsListBox.SelectedItem as Films;
 
@@ -366,7 +395,7 @@ namespace CinemaPremiereApp.Pages
             }
             else
             {
-                MessageClass.ErrorMessage($"Ошибка\nВыберите фильм из списка");
+                MessageClass.WarningMessage($"Предупреждение\nВыберите фильм из списка");
             }
         }
 
@@ -403,7 +432,11 @@ namespace CinemaPremiereApp.Pages
                 }
                 catch (Exception ex)
                 {
-                    MessageClass.ErrorMessage($"Ошибка\n{ex.Message}");
+                    await DialogClass.ShowConfirmDialog(
+                        "Ошибка при удалении постеров",
+                        $"{ex.Message}",
+                        "Понятно",
+                        "Отмена");
                 }
             }
         }
@@ -434,7 +467,11 @@ namespace CinemaPremiereApp.Pages
                 }
                 catch (Exception ex)
                 {
-                    MessageClass.ErrorMessage($"Ошибка\n{ex.Message}");
+                    await DialogClass.ShowConfirmDialog(
+                        "Ошибка при удалении сеансов",
+                        $"{ex.Message}",
+                        "Понятно",
+                        "Отмена");
                 }
             }
         }
@@ -448,7 +485,7 @@ namespace CinemaPremiereApp.Pages
             }
             else
             {
-                MessageClass.ErrorMessage($"Ошибка\nМаксимальное ограничение в 4 дня");
+                MessageClass.WarningMessage($"Предупреждение\nМаксимальное ограничение - 4 дня");
             }
         }
 
@@ -458,6 +495,13 @@ namespace CinemaPremiereApp.Pages
 
             if (day != null)
             {
+                // Ограничение на количество сеансов
+                if (day.Sessions.Count >= 6)
+                {
+                    MessageClass.WarningMessage("Предупреждение\nМаксимальное ограничение - 6 сеансов");
+                    return;
+                }
+
                 var newSession = new ScheduleSession
                 {
                     Time = "14:00",
@@ -511,7 +555,11 @@ namespace CinemaPremiereApp.Pages
                 }
                 catch (Exception ex)
                 {
-                    MessageClass.ErrorMessage($"Ошибка\n{ex.Message}");
+                    await DialogClass.ShowConfirmDialog(
+                        "Ошибка при ",
+                        $"{ex.Message}",
+                        "Понятно",
+                        "Отмена");
                 }
             }
         }
@@ -519,6 +567,164 @@ namespace CinemaPremiereApp.Pages
         private async void SyncSaveEvent(object sender, RoutedEventArgs e)
         {
             await SaveScheduleAsync();
+        }
+
+        private async void ExportToJsonButtonClick(object sender, RoutedEventArgs e)
+        {
+            // Создаем диалоговое окно сохранения
+            var saveFileDialog = new Microsoft.Win32.SaveFileDialog()
+            {
+                Filter = "JSON файл (*.json)|*.json",
+                FileName = $"Расписание_{DateTime.Now:dd_MM_yyyy}"
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    Mouse.OverrideCursor = Cursors.Wait;
+
+                    // Считываем данные в главном потоке
+                    var moviesSnapshot = Movies.ToList();
+                    var daysSnapshot = Days.ToList();
+                    string title = TitleTextBox.Text;
+                    string subtitle = SubtitleTextBox.Text;
+                    string phone = PhoneTextBox.Text;
+
+                    await Task.Run(() =>
+                    {
+                        // Создаем чистый список с нужными полями
+                        var data = new ScheduleSaveData
+                        {
+                            SavedMovies = moviesSnapshot,
+                            SavedDays = daysSnapshot,
+                            MainTitle = title,
+                            Subtitle = subtitle,
+                            Phone = phone
+                        };
+
+                        // Превращаем список объектов в строку
+                        string json = JsonConvert.SerializeObject(data, Formatting.Indented);
+
+                        // Сохранение
+                        File.WriteAllText(saveFileDialog.FileName, json, Encoding.UTF8);
+                    });
+
+                    MessageClass.SuccessMessage($"Успех\nРасписание сохранено в формате JSON");
+                }
+                catch (Exception ex)
+                {
+                    await DialogClass.ShowConfirmDialog(
+                        "Ошибка при попытке экспорта",
+                        $"{ex.Message}",
+                        "Понятно",
+                        "Отмена");
+                }
+                finally
+                {
+                    Mouse.OverrideCursor = null;
+                }
+            }
+        }
+
+        private async void ImportFromJsonButtonClick(object sender, RoutedEventArgs e)
+        {
+            var openFileDialog = new Microsoft.Win32.OpenFileDialog()
+            {
+                Filter = "JSON файл (*.json)|*.json",
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    Mouse.OverrideCursor = Cursors.Wait;
+
+                    // Читаем файл
+                    string json = await Task.Run(() => File.ReadAllText(openFileDialog.FileName, Encoding.UTF8));
+
+                    // Превращаем текст обратно в объекты
+                    var data = JsonConvert.DeserializeObject<ScheduleSaveData>(json);
+
+                    if (data != null)
+                    {
+                        // Восстанавливаем постеры
+                        Movies.Clear();
+                        if (data.SavedMovies != null)
+                        {
+                            foreach (var m in data.SavedMovies)
+                                Movies.Add(m);
+                        }
+
+                        // Восстанавливаем дни и сеансы
+                        Days.Clear();
+                        if (data.SavedDays != null)
+                        {
+                            foreach (var d in data.SavedDays)
+                            {
+                                Days.Add(d);
+
+                                if (d.Sessions != null)
+                                {
+                                    foreach (var sess in d.Sessions)
+                                        SubcribeSession(sess);
+                                }
+                            }
+                        }
+
+                        // Восстаналиваем тексты
+                        TitleTextBox.Text = data.MainTitle;
+                        SubtitleTextBox.Text = data.Subtitle;
+                        PhoneTextBox.Text = data.Phone;
+
+                        // Принудительно перезаписываем внутренний autosave.json
+                        await SaveScheduleAsync();
+
+                        MessageClass.SuccessMessage($"Успех\nРасписание загружено");
+                    }
+                    else
+                    {
+                        MessageClass.ErrorMessage($"Ошибка\nНе удалось прочитать файл");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    await DialogClass.ShowConfirmDialog(
+                        "Ошибка при попытке импорта",
+                        $"{ex.Message}",
+                        "Понятно",
+                        "Отмена");
+                }
+                finally
+                {
+                    Mouse.OverrideCursor = null;
+                }
+            }
+        }
+
+        private void MovieSearchTextBoxTextChanged(object sender, TextChangedEventArgs e)
+        {
+            // Проверяем, что список фильмов вообще загружен
+            if (FilmsListBox.ItemsSource == null)
+                return;
+
+            // Получаем визуальное представление списка
+            var view = System.Windows.Data.CollectionViewSource.GetDefaultView(FilmsListBox.ItemsSource);
+
+            // Берем текст из поиска
+            string filterText = MovieSearchTextBox.Text.ToLower().Trim();
+
+            // Устанавливаем фильтр
+            view.Filter = item =>
+            {
+                // Если поиск пустой - показываем всё
+                if (string.IsNullOrWhiteSpace(filterText))
+                    return true;
+
+                var film = item as Films;
+
+                return film != null && film.Title.ToLower().Contains(filterText);
+            };
         }
     }
 }

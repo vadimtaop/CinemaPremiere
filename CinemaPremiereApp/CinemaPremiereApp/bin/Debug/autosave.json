@@ -37,10 +37,10 @@
       "Genre": "Анимационное приключение"
     },
     {
-      "Title": "Изумрудный город: Дорога из желтого кирпича",
-      "ImagePath": "pack://application:,,,/Images/NoPhoto.png",
-      "AgeRating": "0+",
-      "Genre": "Анимационное приключение"
+      "Title": "Комментируй это",
+      "ImagePath": "file:///C:/Users/Vadim/Desktop/CinemaPremiere/CinemaPremiereApp/CinemaPremiereApp/bin/Debug/Images/Posters/7132188.jpg",
+      "AgeRating": "12+",
+      "Genre": "Комедия"
     }
   ],
   "SavedDays": [
@@ -84,7 +84,7 @@
         },
         {
           "Time": "14:00",
-          "Title": "Изумрудный город: Дорога из желтого кирпича",
+          "Title": "Комментируй это",
           "Price": "250 р."
         },
         {

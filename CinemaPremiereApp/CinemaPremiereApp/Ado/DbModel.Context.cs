@@ -29,9 +29,9 @@ namespace CinemaPremiereApp.Ado
         public virtual DbSet<AgeRatings> AgeRatings { get; set; }
         public virtual DbSet<PaymentTypes> PaymentTypes { get; set; }
         public virtual DbSet<Roles> Roles { get; set; }
-        public virtual DbSet<Users> Users { get; set; }
         public virtual DbSet<Orders> Orders { get; set; }
         public virtual DbSet<Films> Films { get; set; }
         public virtual DbSet<Genres> Genres { get; set; }
+        public virtual DbSet<Users> Users { get; set; }
     }
 }

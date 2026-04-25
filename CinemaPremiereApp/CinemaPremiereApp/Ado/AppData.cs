@@ -9,5 +9,7 @@ namespace CinemaPremiereApp.Ado
     public static class AppData
     {
         public static CinemaPremiereDbEntities db = new CinemaPremiereDbEntities();
+
+        public static Users CurrentUser { get; set; }
     }
 }

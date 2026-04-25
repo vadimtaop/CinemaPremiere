@@ -163,6 +163,9 @@
     <Compile Include="Classes\CenteredWrapPanel.cs" />
     <Compile Include="Classes\DialogClass.cs" />
     <Compile Include="Classes\MessageClass.cs" />
+    <Compile Include="Pages\AboutPage.xaml.cs">
+      <DependentUpon>AboutPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\AuthPage.xaml.cs">
       <DependentUpon>AuthPage.xaml</DependentUpon>
     </Compile>
@@ -240,6 +243,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Pages\AboutPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Pages\AuthPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

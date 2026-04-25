@@ -36,18 +36,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Users">
-      <EntityTypeMapping TypeName="CinemaPremiereDbModel.Users">
-        <MappingFragment StoreEntitySet="Users">
-          <ScalarProperty Name="LockoutEnd" ColumnName="LockoutEnd" />
-          <ScalarProperty Name="FailedAttempts" ColumnName="FailedAttempts" />
-          <ScalarProperty Name="Password" ColumnName="Password" />
-          <ScalarProperty Name="Login" ColumnName="Login" />
-          <ScalarProperty Name="RoleId" ColumnName="RoleId" />
-          <ScalarProperty Name="UserId" ColumnName="UserId" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Orders">
       <EntityTypeMapping TypeName="CinemaPremiereDbModel.Orders">
         <MappingFragment StoreEntitySet="Orders">
@@ -91,5 +79,17 @@
         <ScalarProperty Name="FilmId" ColumnName="FilmId" />
       </EndProperty>
     </AssociationSetMapping>
+    <EntitySetMapping Name="Users">
+      <EntityTypeMapping TypeName="CinemaPremiereDbModel.Users">
+        <MappingFragment StoreEntitySet="Users">
+          <ScalarProperty Name="LockoutEnd" ColumnName="LockoutEnd" />
+          <ScalarProperty Name="FailedAttempts" ColumnName="FailedAttempts" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="Login" ColumnName="Login" />
+          <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

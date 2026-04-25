@@ -11,14 +11,13 @@
       mc:Ignorable="d" 
       d:DesignHeight="670"
       d:DesignWidth="1280"
-      Title="AuthPage"
+      Title="Авторизация"
       FocusManager.FocusedElement="{Binding ElementName=LoginTextBox}">
-
     <Grid>
         <materialDesign:Card HorizontalAlignment="Center"
                              VerticalAlignment="Center"
                              UniformCornerRadius="15"
-                             Padding="30"
+                             Width="600"
                              materialDesign:ElevationAssist.Elevation="Dp8">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -27,15 +26,14 @@
                 </Grid.ColumnDefinitions>
 
                 <Grid Grid.Column="0">
-                    <Border CornerRadius="20"
-                            Height="400"
+                    <Border CornerRadius="15 0 0 15"
+                            Height="420"
                             Width="300"
-                            Margin="10"
-                            HorizontalAlignment="Center"    
-                            VerticalAlignment="Center">
+                            Name="AuthImageBorder">
                         <Border.Background>
                             <ImageBrush ImageSource="/Images/CheburashkaWallpaper.jpg"
-                                        Stretch="UniformToFill"/>
+                                        Stretch="UniformToFill"
+                                        RenderOptions.BitmapScalingMode="HighQuality"/>
                         </Border.Background>
                     </Border>
                 </Grid>
@@ -44,10 +42,10 @@
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
                             Grid.Column="1">
-                    <TextBlock Text="Авторизация"
-                               FontSize="24"
+                    <TextBlock Text="Вход в систему"
+                               FontSize="26"
                                HorizontalAlignment="Center"/>
-
+                    
                     <TextBox Name="LoginTextBox"
                              Margin="0 40 0 0"
                              ToolTip="Логин"
@@ -56,9 +54,11 @@
                              materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed"
                              Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                              materialDesign:HintAssist.Hint="Логин"
-                             materialDesign:TextFieldAssist.HasClearButton="True">
+                             materialDesign:TextFieldAssist.HasClearButton="True"
+                             materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                             materialDesign:TextFieldAssist.LeadingIcon="Account">
                     </TextBox>
-                    <PasswordBox Name="PasswordTextBox"
+                    <PasswordBox Name="PasswordBox"
                                  Margin="0 20 0 0"
                                  ToolTip="Пароль"
                                  FontSize="18"
@@ -66,10 +66,13 @@
                                  materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed"
                                  Style="{StaticResource MaterialDesignFloatingHintRevealPasswordBox}"
                                  materialDesign:HintAssist.Hint="Пароль"
-                                 materialDesign:TextFieldAssist.HasClearButton="True"/>
+                                 materialDesign:TextFieldAssist.HasClearButton="True"
+                                 materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                                 materialDesign:TextFieldAssist.LeadingIcon="Password"/>
 
                     <Button Content="Войти"
                             Width="200"
+                            FontSize="18"
                             Margin="0 40 0 0"
                             Click="LoginButtonClick"
                             Cursor="Hand"

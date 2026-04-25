@@ -14,41 +14,470 @@
       d:DesignHeight="670"
       d:DesignWidth="1280"
       Title="Настройки">
-    <materialDesign:DialogHost Identifier="OrdersPageDialogHost"
+    <materialDesign:DialogHost Identifier="SettingsPageDialogHost"
                                Name="MainDialogHost">
-        <Grid>
-            <StackPanel Margin="20">
-                <TextBlock Text="Настройки"
-                           FontSize="20"
-                           FontWeight="Bold"
-                           Margin="0 0 0 20"/>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="30">
 
-                <TextBlock Text="Выберите основной цвет приложения:"
-                           Margin="0 0 0 5"/>
+                <StackPanel Orientation="Horizontal"
+                            Margin="0 0 0 20">
+                    <materialDesign:PackIcon Kind="Settings"
+                                             Height="30"
+                                             Width="30"
+                                             VerticalAlignment="Center"/>
+                    <TextBlock Text="Настройки системы"
+                               FontSize="28"
+                               FontWeight="Bold"
+                               Margin="10 0 0 0"
+                               VerticalAlignment="Center"/>
+                </StackPanel>
 
-                <ComboBox Name="ColorComboBox"
-                          Width="200"
-                          HorizontalAlignment="Left"
-                          SelectionChanged="ColorComboBoxSelectionChanged">
-                    <ComboBoxItem Content="Синий" Tag="Blue"/>
-                    <ComboBoxItem Content="Морской" Tag="Indigo"/>
-                    <ComboBoxItem Content="Голубой" Tag="LightBlue"/>
-                    <ComboBoxItem Content="Бирюзовый" Tag="Cyan"/>
-                    <ComboBoxItem Content="Морская волна" Tag="Teal"/>
-                    
-                    <ComboBoxItem Content="Фиолетовый" Tag="DeepPurple"/>
-                    <ComboBoxItem Content="Розовый" Tag="Pink"/>
-                    <ComboBoxItem Content="Красный" Tag="Red"/>
-                    <ComboBoxItem Content="Оранжевый" Tag="Orange"/>
-                    <ComboBoxItem Content="Янтарный" Tag="Amber"/>
-                    <ComboBoxItem Content="Глубокий оранжевый" Tag="DeepOrange"/>
-                    
-                    <ComboBoxItem Content="Зеленый" Tag="Green"/>
-                    <ComboBoxItem Content="Салатовый" Tag="Lime"/>
-                    <ComboBoxItem Content="Коричневый" Tag="Brown"/>
-                    <ComboBoxItem Content="Серо-голубой" Tag="BlueGrey"/>
-                </ComboBox>
+                <WrapPanel Orientation="Horizontal">
+                    <materialDesign:Card Width="450"
+                                         Margin="0 0 20 20"
+                                         Padding="20"
+                                         UniformCornerRadius="15">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="0 0 0 15">
+                                <materialDesign:PackIcon Kind="Palette"
+                                                         Height="20"
+                                                         Width="20"
+                                                         VerticalAlignment="Center"/>
+                                <TextBlock Text="Внешний вид"
+                                           FontSize="18"
+                                           FontWeight="Bold"
+                                           Margin="5 0 0 0"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+
+                            <Separator Background="{DynamicResource MaterialDesignDivider}"
+                                       Margin="0 0 0 15"/>
+
+                            <TextBlock Text="Основной цвет приложения:"
+                                       Opacity="0.7"
+                                       FontSize="14"/>
+
+                            <ComboBox Name="ColorComboBox"
+                                      Width="250"
+                                      Margin="0 5 0 20"
+                                      Height="40"
+                                      FontSize="14"
+                                      HorizontalAlignment="Left"
+                                      SelectionChanged="ColorComboBoxSelectionChanged"
+                                      materialDesign:HintAssist.Hint="Цветовая схема"
+                                      HorizontalContentAlignment="Left"
+                                      Style="{StaticResource MaterialDesignFloatingHintComboBox}">
+                                <ComboBoxItem Tag="Blue">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse Width="16"
+                                                 Height="16"
+                                                 Fill="#2196F3"
+                                                 Margin="0 0 10 0"
+                                                 VerticalAlignment="Center"/>
+                                        <TextBlock Text="Синий"
+                                                   VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </ComboBoxItem>
+
+                                <ComboBoxItem Tag="Indigo">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse Width="16"
+                                                 Height="16"
+                                                 Fill="#3F51B5"
+                                                 Margin="0 0 10 0"
+                                                 VerticalAlignment="Center"/>
+                                        <TextBlock Text="Морской"
+                                                   VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </ComboBoxItem>
+
+                                <ComboBoxItem Tag="LightBlue">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse Width="16"
+                                                 Height="16"
+                                                 Fill="#03A9F4"
+                                                 Margin="0 0 10 0"
+                                                 VerticalAlignment="Center"/>
+                                        <TextBlock Text="Голубой"
+                                                   VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </ComboBoxItem>
+
+                                <ComboBoxItem Tag="Cyan">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse Width="16"
+                                                 Height="16"
+                                                 Fill="#00BCD4"
+                                                 Margin="0 0 10 0"
+                                                 VerticalAlignment="Center"/>
+                                        <TextBlock Text="Бирюзовый"
+                                                   VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </ComboBoxItem>
+
+                                <ComboBoxItem Tag="Teal">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse Width="16"
+                                                 Height="16"
+                                                 Fill="#009688"
+                                                 Margin="0 0 10 0"
+                                                 VerticalAlignment="Center"/>
+                                        <TextBlock Text="Морская волна"
+                                                   VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </ComboBoxItem>
+
+                                <ComboBoxItem Tag="DeepPurple">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse Width="16"
+                                                 Height="16"
+                                                 Fill="#673AB7"
+                                                 Margin="0 0 10 0"
+                                                 VerticalAlignment="Center"/>
+                                        <TextBlock Text="Фиолетовый"
+                                                   VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </ComboBoxItem>
+
+                                <ComboBoxItem Tag="Pink">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse Width="16"
+                                                 Height="16"
+                                                 Fill="#E91E63"
+                                                 Margin="0 0 10 0"
+                                                 VerticalAlignment="Center"/>
+                                        <TextBlock Text="Розовый"
+                                                   VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </ComboBoxItem>
+
+                                <ComboBoxItem Tag="Red">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse Width="16"
+                                                 Height="16"
+                                                 Fill="#F44336"
+                                                 Margin="0 0 10 0"
+                                                 VerticalAlignment="Center"/>
+                                        <TextBlock Text="Красный"
+                                                   VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </ComboBoxItem>
+
+                                <ComboBoxItem Tag="Orange">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse Width="16"
+                                                 Height="16"
+                                                 Fill="#FF9800"
+                                                 Margin="0 0 10 0"
+                                                 VerticalAlignment="Center"/>
+                                        <TextBlock Text="Оранжевый"
+                                                   VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </ComboBoxItem>
+
+                                <ComboBoxItem Tag="Amber">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse Width="16"
+                                                 Height="16"
+                                                 Fill="#FFC107"
+                                                 Margin="0 0 10 0"
+                                                 VerticalAlignment="Center"/>
+                                        <TextBlock Text="Янтарный"
+                                                   VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </ComboBoxItem>
+
+                                <ComboBoxItem Tag="DeepOrange">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse Width="16"
+                                                 Height="16"
+                                                 Fill="#FF5722"
+                                                 Margin="0 0 10 0"
+                                                 VerticalAlignment="Center"/>
+                                        <TextBlock Text="Глубокий оранжевый"
+                                                   VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </ComboBoxItem>
+
+                                <ComboBoxItem Tag="Green">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse Width="16"
+                                                 Height="16"
+                                                 Fill="#4CAF50"
+                                                 Margin="0 0 10 0"
+                                                 VerticalAlignment="Center"/>
+                                        <TextBlock Text="Зеленый"
+                                                   VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </ComboBoxItem>
+
+                                <ComboBoxItem Tag="Lime">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse Width="16"
+                                                 Height="16"
+                                                 Fill="#CDDC39"
+                                                 Margin="0 0 10 0"
+                                                 VerticalAlignment="Center"/>
+                                        <TextBlock Text="Салатовый"
+                                                   VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </ComboBoxItem>
+
+                                <ComboBoxItem Tag="Brown">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse Width="16"
+                                                 Height="16"
+                                                 Fill="#795548"
+                                                 Margin="0 0 10 0"
+                                                 VerticalAlignment="Center"/>
+                                        <TextBlock Text="Коричневый"
+                                                   VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </ComboBoxItem>
+
+                                <ComboBoxItem Tag="BlueGrey">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse Width="16"
+                                                 Height="16"
+                                                 Fill="#607D8B"
+                                                 Margin="0 0 10 0"
+                                                 VerticalAlignment="Center"/>
+                                        <TextBlock Text="Серо-голубой"
+                                                   VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </ComboBoxItem>
+
+                            </ComboBox>
+
+                            <TextBlock Text="Фон страницы входа:"
+                                       Opacity="0.7"
+                                       FontSize="14"/>
+                            <Grid Margin="0 5 0 0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Border Grid.Column="0"
+                                        Background="{DynamicResource MaterialDesignDivider}"
+                                        CornerRadius="4"
+                                        Padding="10 0"
+                                        Height="36">
+                                    <TextBlock Text="По умолчанию"
+                                               Name="AuthImagePathTextBlock"
+                                               VerticalAlignment="Center"
+                                               Opacity="0.8"
+                                               FontSize="14"
+                                               TextTrimming="CharacterEllipsis"/>
+                                </Border>
+                                <Button Content="..."
+                                        Grid.Column="1"
+                                        Margin="5 0 0 0"
+                                        Click="ChangeAuthImageButtonClick"
+                                        Style="{StaticResource MaterialDesignRaisedButton}"
+                                        Padding="10 0"
+                                        Height="36"
+                                        Width="36"
+                                        ToolTip="Выбрать изображение"/>
+
+                                <Button Grid.Column="2"
+                                        Click="ResetAuthImageButtonClick"
+                                        Margin="5 0 0 0"
+                                        Style="{StaticResource MaterialDesignRaisedButton}"
+                                        Padding="10 0"
+                                        Height="36"
+                                        Width="36"
+                                        ToolTip="Восстановить по умолчанию">
+                                    <materialDesign:PackIcon Kind="Restore"/>
+                                </Button>
+                            </Grid>
+                        </StackPanel>
+                    </materialDesign:Card>
+
+                    <materialDesign:Card Width="450"
+                                         Margin="0 0 20 20"
+                                         Padding="20"
+                                         UniformCornerRadius="15">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="0 0 0 15">
+                                <materialDesign:PackIcon Kind="CashRegister"
+                                                         Height="20"
+                                                         Width="20"
+                                                         VerticalAlignment="Center"/>
+                                <TextBlock Text="Касса и Заказы"
+                                           FontSize="18"
+                                           FontWeight="Bold"
+                                           Margin="5 0 0 0"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+
+                            <Separator Background="{DynamicResource MaterialDesignDivider}"
+                                       Margin="0 0 0 15"/>
+
+                            <TextBlock Text="Быстрые цены (через запятую):"
+                                       Opacity="0.7"
+                                       FontSize="14"/>
+                            <TextBox Name="TemplatePricesTextBox"
+                                     Margin="0 5 0 15"
+                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                     materialDesign:HintAssist.Hint="Например: 200, 250, 300 (макс. 6)"
+                                     materialDesign:TextFieldAssist.HasClearButton="True"
+                                     MaxLength="30"
+                                     materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed"
+                                     FontSize="14"
+                                     LostFocus="TemplatePricesTextBoxLostFocus"/>
+                        </StackPanel>
+                    </materialDesign:Card>
+
+                    <materialDesign:Card Width="450"
+                                         Margin="0 0 20 20"
+                                         Padding="20"
+                                         UniformCornerRadius="15">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="0 0 0 15">
+                                <materialDesign:PackIcon Kind="ShieldAccount"
+                                                         Height="20"
+                                                         Width="20"
+                                                         VerticalAlignment="Center"/>
+                                <TextBlock Text="Безопасность"
+                                           FontSize="18"
+                                           FontWeight="Bold"
+                                           Margin="5 0 0 0"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+
+                            <Separator Background="{DynamicResource MaterialDesignDivider}"
+                                       Margin="0 0 0 15"/>
+
+                            <TextBlock Text="Смена пароля:"
+                                       Opacity="0.7"
+                                       FontSize="14"
+                                       Margin="0 0 0 5"/>
+
+                            <PasswordBox Name="OldPasswordBox"
+                                         Margin="0 5 0 10"
+                                         ToolTip="Пароль"
+                                         FontSize="14"
+                                         MaxLength="50"
+                                         materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed"
+                                         Style="{StaticResource MaterialDesignFloatingHintRevealPasswordBox}"
+                                         materialDesign:HintAssist.Hint="Старый пароль"
+                                         materialDesign:TextFieldAssist.HasClearButton="True"
+                                         materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                                         materialDesign:TextFieldAssist.LeadingIcon="Key"/>
+
+                            <PasswordBox Name="NewPasswordBox"
+                                         Margin="0 5 0 10"
+                                         ToolTip="Пароль"
+                                         FontSize="14"
+                                         MaxLength="50"
+                                         materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed"
+                                         Style="{StaticResource MaterialDesignFloatingHintRevealPasswordBox}"
+                                         materialDesign:HintAssist.Hint="Новый пароль"
+                                         materialDesign:TextFieldAssist.HasClearButton="True"
+                                         materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                                         materialDesign:TextFieldAssist.LeadingIcon="LockPlus"/>
+
+                            <PasswordBox Name="ConfirmPasswordBox"
+                                         Margin="0 5 0 15"
+                                         ToolTip="Пароль"
+                                         FontSize="14"
+                                         MaxLength="50"
+                                         materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed"
+                                         Style="{StaticResource MaterialDesignFloatingHintRevealPasswordBox}"
+                                         materialDesign:HintAssist.Hint="Подтвердите новый пароль"
+                                         materialDesign:TextFieldAssist.HasClearButton="True"
+                                         materialDesign:TextFieldAssist.HasLeadingIcon="True"
+                                         materialDesign:TextFieldAssist.LeadingIcon="LockCheck"/>
+
+                            <Button Margin="0 0 0 10"
+                                    Click="ChangePasswordButtonClick"
+                                    Style="{StaticResource MaterialDesignRaisedButton}">
+                                <Button.ContentTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="Check"
+                                                                     VerticalAlignment="Center"/>
+                                            <TextBlock Text="Сохранить пароль"
+                                                       FontSize="14"
+                                                       Margin="5 0 0 0"
+                                                       VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
+                            </Button>
+                        </StackPanel>
+                    </materialDesign:Card>
+
+                    <materialDesign:Card Width="450"
+                                         Margin="0 0 20 20"
+                                         Padding="20"
+                                         UniformCornerRadius="15">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="0 0 0 15">
+                                <materialDesign:PackIcon Kind="Database"
+                                                         Height="20"
+                                                         Width="20"
+                                                         VerticalAlignment="Center"/>
+                                <TextBlock Text="Обслуживание базы данных"
+                                           FontSize="18"
+                                           FontWeight="Bold"
+                                           Margin="5 0 0 0"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+
+                            <Separator Background="{DynamicResource MaterialDesignDivider}"
+                                       Margin="0 0 0 15"/>
+
+                            <TextBlock Text="Рекомендуется делать резервную копию раз в неделю"
+                                       Opacity="0.7"
+                                       FontSize="14"
+                                       TextWrapping="Wrap"
+                                       Margin="0 0 0 15"/>
+
+                            <Button Margin="0 0 0 10"
+                                    Click="BackupDatabaseButtonClick"
+                                    Style="{StaticResource MaterialDesignRaisedButton}">
+                                <Button.ContentTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="Download"
+                                                                     VerticalAlignment="Center"/>
+                                            <TextBlock Text="Создать резервную копию"
+                                                       FontSize="14"
+                                                       Margin="5 0 0 0"
+                                                       VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
+                            </Button>
+
+                            <Button Margin="0 0 0 10"
+                                    Click="RestoreDatabaseButtonClick"
+                                    Style="{StaticResource MaterialDesignOutlinedButton}">
+                                <Button.ContentTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="Upload"
+                                                                     VerticalAlignment="Center"/>
+                                            <TextBlock Text="Восстановить из копии"
+                                                       FontSize="14"
+                                                       Margin="5 0 0 0"
+                                                       VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </Button.ContentTemplate>
+                            </Button>
+                        </StackPanel>
+                    </materialDesign:Card>
+                </WrapPanel>
+
             </StackPanel>
-        </Grid>
+        </ScrollViewer>
     </materialDesign:DialogHost>
 </Page>

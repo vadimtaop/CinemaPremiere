@@ -1,9 +1,11 @@
 ﻿using CinemaPremiereApp.Ado;
 using CinemaPremiereApp.Classes;
+using CinemaPremiereApp.Properties;
 using CinemaPremiereApp.Windows;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -28,6 +30,39 @@ namespace CinemaPremiereApp.Pages
         public AuthPage()
         {
             InitializeComponent();
+
+            LoadCustomBackground();
+        }
+
+        private void LoadCustomBackground()
+        {
+            try
+            {
+                // Берем путь из настроек
+                string savedPath = Settings.Default.CustomAuthImagePath;
+
+                // Проверяем путь и существование файла
+                if (!string.IsNullOrEmpty(savedPath) && File.Exists(savedPath))
+                {
+                    // Создаем источник изображения из файла
+                    BitmapImage bitmap = new BitmapImage();
+                    bitmap.BeginInit();
+                    bitmap.UriSource = new Uri(savedPath);
+
+                    bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmap.EndInit();
+
+                    // Устанавливаем изображение
+                    if (AuthImageBorder.Background is ImageBrush brush)
+                    {
+                        brush.ImageSource = bitmap;
+                    }
+                }
+            }
+            catch
+            {
+
+            }
         }
 
         private async void LoginButtonClick(object sender, RoutedEventArgs e)
@@ -37,7 +72,7 @@ namespace CinemaPremiereApp.Pages
                 Mouse.OverrideCursor = Cursors.Wait;
 
                 string login = LoginTextBox.Text.Trim();
-                string password = PasswordTextBox.Password.Trim();
+                string password = PasswordBox.Password.Trim();
 
                 if (!IsFieldValid(login, "Логин"))
                     return;
@@ -55,7 +90,7 @@ namespace CinemaPremiereApp.Pages
                     }
 
                     string passwordHash = await Task.Run(() =>
-                        PasswordHash(password));
+                        textToHash(password));
 
                     if (user.Password == passwordHash)
                     {
@@ -63,6 +98,8 @@ namespace CinemaPremiereApp.Pages
                         user.LockoutEnd = null;
 
                         await AppData.db.SaveChangesAsync();
+
+                        AppData.CurrentUser = user;
 
                         MessageClass.SuccessMessage($"Успех\nДобро пожаловать в приложение!");
 
@@ -99,7 +136,11 @@ namespace CinemaPremiereApp.Pages
             }
             catch (Exception ex)
             {
-                MessageClass.ErrorMessage($"Ошибка\n{ex.Message}");
+                await DialogClass.ShowConfirmDialog(
+                    "Ошибка в авторизации",
+                    $"{ex.Message}",
+                    "Понятно",
+                    "Отмена");
             }
             finally
             {
@@ -112,23 +153,23 @@ namespace CinemaPremiereApp.Pages
         {
             if (string.IsNullOrWhiteSpace(value))
             {
-                MessageClass.ErrorMessage($"Ошибка\nВведите данные в поле '{fieldName}'");
+                MessageClass.WarningMessage($"Предупреждение\nВведите данные в поле '{fieldName}'");
                 return false;
             }
             
             if (value.Length < 4)
             {
-                MessageClass.ErrorMessage($"Ошибка\nДлина поля '{fieldName}' должна быть не менее 4-х символов");
+                MessageClass.WarningMessage($"Предупреждение\nДлина поля '{fieldName}' должна быть не менее 4-х символов");
                 return false;
             }
 
             return true;
         }
 
-        // Метод хеширования пароля
-        private string PasswordHash(string password)
+        // Метод хеширования текста
+        private string textToHash(string text)
         {
-            var bytes = SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(password));
+            var bytes = SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(text));
             return BitConverter.ToString(bytes).Replace("-", "").ToLower();
         }
     }

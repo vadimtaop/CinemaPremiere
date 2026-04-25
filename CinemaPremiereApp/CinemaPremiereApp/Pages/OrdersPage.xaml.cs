@@ -1,8 +1,12 @@
 ﻿using CinemaPremiereApp.Ado;
 using CinemaPremiereApp.Classes;
+using CinemaPremiereApp.Properties;
+using ClosedXML.Excel;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -24,6 +28,20 @@ namespace CinemaPremiereApp.Pages
     /// </summary>
     public partial class OrdersPage : Page
     {
+        // Вспомогательный класс для экспорта/импорта
+        public class OrderDto
+        {
+            public int OrderId { get; set; }
+            public string FilmTitle { get; set; }
+            public DateTime SessionDate { get; set; }
+            public DateTime BuyDate { get; set; }
+            public decimal Price { get; set; }
+            public int CountTickets { get; set; }
+            public decimal TotalSum { get; set; }
+            public string PaymentTypeName { get; set; }
+            public string Note { get; set; }
+        }
+
         // Основной список из базы
         List<Orders> allOrders = new List<Orders>();
 
@@ -72,8 +90,26 @@ namespace CinemaPremiereApp.Pages
                     .OrderBy(f => f.Title)
                     .ToListAsync();
 
-                // Список шаблонных цен (заменить в настройках)
-                var defaultPrices = new List<int> { 250, 260, 300 };
+                // Считываем список шаблонных цен из настроек
+                var defaultPrices = new List<int>();
+                string savedPrices = Settings.Default.TemplatePrices;
+
+                if (!string.IsNullOrWhiteSpace(savedPrices))
+                {
+                    foreach (var part in savedPrices.Split(new[] { ',', ' ' },
+                        StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        if (int.TryParse(part, out int price))
+                            defaultPrices.Add(price);
+                    }
+                }
+
+                // Если пользователь оставил пустую строку
+                if (defaultPrices.Count == 0)
+                {
+                    defaultPrices = new List<int> { 250, 300, 350};
+                }
+
                 PriceTemplatesItemsControl.ItemsSource = defaultPrices;
 
                 // Загружаем тип оплаты для окна добавления
@@ -83,7 +119,11 @@ namespace CinemaPremiereApp.Pages
             }
             catch (Exception ex)
             {
-                MessageClass.ErrorMessage($"Ошибка\n{ex.Message}");
+                await DialogClass.ShowConfirmDialog(
+                    "Ошибка при загрузке данных",
+                    $"{ex.Message}",
+                    "Понятно",
+                    "Отмена");
             }
         }
 
@@ -238,8 +278,26 @@ namespace CinemaPremiereApp.Pages
             PageInfoTextBlock.Text = $"из {totalPages}";
             CounterTextBlock.Text = $"Найдено: {result.TotalCount} из {allOrders.Count}";
 
-            TotalSumTextBlock.Text = $"Выручка: {result.TotalSum:N0} ₽";
-            TotalTicketsTextBlock.Text = $"Билетов: {result.TotalTickets} шт.";
+            // Обновляем статистику
+            // Расчет для банка
+            var bankData = result.FullFilteredList.Where(o => o.PaymentTypes.Name.ToLower().Contains("банк"));
+            decimal bankSum = bankData.Sum(o => (decimal)o.TotalSum);
+            int bankCount = bankData.Sum(o => o.CountTickets);
+
+            // Расчет для внешки
+            var vneshkaData = result.FullFilteredList.Where(o => o.PaymentTypes.Name.ToLower().Contains("внеш"));
+            decimal vneshkaSum = vneshkaData.Sum(o => (decimal)o.TotalSum);
+            int vneshkaCount = vneshkaData.Sum(o => o.CountTickets);
+
+            // Расчет для пушки
+            var pushkaData = result.FullFilteredList.Where(o => o.PaymentTypes.Name.ToLower().Contains("пушк"));
+            decimal pushkaSum = pushkaData.Sum(o => (decimal)o.TotalSum);
+            int pushkaCount = pushkaData.Sum(o => o.CountTickets);
+
+            TotalSummaryTextBlock.Text = $"Всего: {result.TotalSum:N0} ₽ / {result.TotalTickets} шт.";
+            BankStatsTextBlock.Text = $"Банк: {bankSum:N0} ₽ / {bankCount} шт.";
+            CashStatsTextBlock.Text = $"Внешка: {vneshkaSum:N0} ₽ / {vneshkaCount} шт.";
+            PushkinStatsTextBlock.Text = $"Пушка: {pushkaSum:N0} ₽ / {pushkaCount} шт.";
 
             // Проверка на пустой список
             if (result.TotalCount == 0)
@@ -519,27 +577,27 @@ namespace CinemaPremiereApp.Pages
             // Проверки на заполненные поля
             if (AddFilmComboBox.SelectedItem == null)
             {
-                MessageClass.ErrorMessage($"Ошибка\nВыберите фильм");
+                MessageClass.WarningMessage($"Предупреждение\nВыберите фильм");
                 return;
             }
             if (AddSessionDatePicker.SelectedDate == null)
             {
-                MessageClass.ErrorMessage($"Ошибка\nВведите дату сеанса");
+                MessageClass.WarningMessage($"Предупреждение\nВведите дату сеанса");
                 return;
             }
             if (AddBuyDatePicker.SelectedDate == null)
             {
-                MessageClass.ErrorMessage($"Ошибка\nВыберите дату покупки");
+                MessageClass.WarningMessage($"Предупреждение\nВыберите дату покупки");
                 return;
             }
             if (string.IsNullOrWhiteSpace(AddPriceTextBox.Text))
             {
-                MessageClass.ErrorMessage($"Ошибка\nВведите стоимость билета");
+                MessageClass.WarningMessage($"Предупреждение\nВведите стоимость билета");
                 return;
             }
             if (AddPaymentTypeComboBox.SelectedItem == null)
             {
-                MessageClass.ErrorMessage($"Ошибка\nВыберите способ оплаты");
+                MessageClass.WarningMessage($"Предупреждение\nВыберите способ оплаты");
                 return;
             }
 
@@ -591,7 +649,11 @@ namespace CinemaPremiereApp.Pages
             }
             catch (Exception ex)
             {
-                MessageClass.ErrorMessage($"Ошибка\n{ex.Message}");
+                await DialogClass.ShowConfirmDialog(
+                    "Ошибка при сохранении заказа",
+                    $"{ex.Message}",
+                    "Понятно",
+                    "Отмена");
             }
         }
 
@@ -670,7 +732,11 @@ namespace CinemaPremiereApp.Pages
                 }
                 catch (Exception ex)
                 {
-                    MessageClass.ErrorMessage($"Ошибка\n{ex.Message}");
+                    await DialogClass.ShowConfirmDialog(
+                        "Ошибка при удалении заказа",
+                        $"{ex.Message}",
+                        "Понятно",
+                        "Отмена");
                 }
             }
         }
@@ -724,6 +790,297 @@ namespace CinemaPremiereApp.Pages
 
             _isResetting = false;
             ApplyFilters();
+        }
+
+        private async void ExportToExcelButtonClick(object sender, RoutedEventArgs e)
+        {
+            // Собираем отфильтрованные данные
+            if (_filteredOrders == null || !_filteredOrders.Any())
+            {
+                MessageClass.WarningMessage($"Предупреждение\nНет данных для экспорта");
+                return;
+            }
+
+            // Создаем диалоговое окно сохранения
+            var saveFileDialog = new Microsoft.Win32.SaveFileDialog()
+            {
+                Filter = "Книга Excel (*.xlsx)|*.xlsx",
+                FileName = $"Экспорт_заказов_Excel_{DateTime.Now:dd_MM_yyyy}"
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    Mouse.OverrideCursor = Cursors.Wait;
+
+                    await Task.Run(() =>
+                    {
+                        // Создаем пустую книгу Excel в памяти
+                        using (var workbook = new XLWorkbook())
+                        {
+                            // Добавляем лист
+                            var worksheet = workbook.Worksheets.Add("Заказы");
+
+                            // Заполнеяем шапку (1 строка)
+                            worksheet.Cell(1, 1).Value = "# Заказа";
+                            worksheet.Cell(1, 2).Value = "Название фильма";
+                            worksheet.Cell(1, 3).Value = "Дата сеанса";
+                            worksheet.Cell(1, 4).Value = "Дата покупки";
+                            worksheet.Cell(1, 5).Value = "Цена";
+                            worksheet.Cell(1, 6).Value = "Кол-во билетов";
+                            worksheet.Cell(1, 7).Value = "Сумма";
+                            worksheet.Cell(1, 8).Value = "Тип оплаты";
+                            worksheet.Cell(1, 9).Value = "Заметка";
+
+                            // Настраиваем стиль шапки
+                            var headerRange = worksheet.Range("A1:I1");
+                            headerRange.Style.Font.Bold = true;
+
+                            // Заполняем строки данными
+                            int currentRow = 2;
+                            foreach (var o in _filteredOrders)
+                            {
+                                worksheet.Cell(currentRow, 1).Value = o.OrderId;
+                                worksheet.Cell(currentRow, 2).Value = o.Films?.Title;
+                                worksheet.Cell(currentRow, 3).Value = o.SessionDate.ToShortDateString();
+                                worksheet.Cell(currentRow, 4).Value = o.BuyDate.ToShortDateString();
+                                worksheet.Cell(currentRow, 5).Value = o.Price;
+                                worksheet.Cell(currentRow, 6).Value = o.CountTickets;
+                                worksheet.Cell(currentRow, 7).Value = o.TotalSum;
+                                worksheet.Cell(currentRow, 8).Value = o.PaymentTypes?.Name;
+                                worksheet.Cell(currentRow, 9).Value = o.Note;
+
+                                currentRow++;
+                            }
+
+                            // Автоматически подбираем ширину столбцов под текст
+                            worksheet.Columns().AdjustToContents();
+
+                            // Сохраняем файл по пути, который выбрал пользователь
+                            workbook.SaveAs(saveFileDialog.FileName);
+                        }
+                    });
+
+                    MessageClass.SuccessMessage($"Успех\nДанные сохранены в формате Excel");
+                }
+
+                catch (Exception ex)
+                {
+                    await DialogClass.ShowConfirmDialog(
+                        "Ошибка при попытке экспорта",
+                        $"{ex.Message}",
+                        "Понятно",
+                        "Отмена");
+                }
+                finally
+                {
+                    Mouse.OverrideCursor = null;
+                }
+            }
+        }
+
+        private async void ExportToCsvButtonClick(object sender, RoutedEventArgs e)
+        {
+            // Собираем отфильтрованные данные
+            if (_filteredOrders == null || !_filteredOrders.Any())
+            {
+                MessageClass.WarningMessage($"Предупреждение\nНет данных для экспорта");
+                return;
+            }
+
+            // Создаем диалоговое окно сохранения
+            var saveFileDialog = new Microsoft.Win32.SaveFileDialog()
+            {
+                Filter = "CSV файл (*.csv)|*.csv",
+                FileName = $"Экспорт_заказов_CSV_{DateTime.Now:dd_MM_yyyy}"
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    Mouse.OverrideCursor = Cursors.Wait;
+
+                    await Task.Run(() =>
+                    {
+                        var csv = new StringBuilder();
+
+                        // Заполняем шапку (1 строка)
+                        csv.AppendLine("Film;SessionDate;BuyDate;Price;CountTickets;PaymentType;Note");
+
+                        // Заполняем данные
+                        foreach (var o in _filteredOrders)
+                        {
+                            // Формируем строку
+                            string line = string.Format("{0};{1};{2};{3};{4};{5};{6}",
+                                o.Films?.Title,
+                                o.SessionDate,
+                                o.BuyDate,
+                                o.Price,
+                                o.CountTickets,
+                                o.PaymentTypes?.Name,
+                                o.Note);
+
+                            csv.AppendLine(line);
+                        }
+
+                        // Сохранение
+                        File.WriteAllText(saveFileDialog.FileName, csv.ToString(), Encoding.UTF8);
+                    });
+
+                    MessageClass.SuccessMessage($"Успех\nДанные сохранены в формате CSV");
+                }
+                catch (Exception ex)
+                {
+                    await DialogClass.ShowConfirmDialog(
+                        "Ошибка при попытке экспорта",
+                        $"{ex.Message}",
+                        "Понятно",
+                        "Отмена");
+                }
+                finally
+                {
+                    Mouse.OverrideCursor = null;
+                }
+            }
+        }
+
+        private async void ExportToJsonButtonClick(object sender, RoutedEventArgs e)
+        {
+            // Собираем отфильтрованные данные
+            if (_filteredOrders == null || !_filteredOrders.Any())
+            {
+                MessageClass.WarningMessage($"Предупреждение\nНет данных для экспорта");
+                return;
+            }
+
+            // Создаем диалоговое окно сохранения
+            var saveFileDialog = new Microsoft.Win32.SaveFileDialog()
+            {
+                Filter = "JSON файл (*.json)|*.json",
+                FileName = $"Экспорт_заказов_JSON_{DateTime.Now:dd_MM_yyyy}"
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    Mouse.OverrideCursor = Cursors.Wait;
+
+                    await Task.Run(() =>
+                    {
+                        // Создаем чистый список с нужными полями
+                        var dataToExport = _filteredOrders.Select(o => new OrderDto
+                        {
+                            OrderId = o.OrderId,
+                            FilmTitle = o.Films?.Title,
+                            SessionDate = o.SessionDate,
+                            BuyDate = o.BuyDate,
+                            Price = o.Price,
+                            CountTickets = o.CountTickets,
+                            TotalSum = (decimal)o.TotalSum,
+                            PaymentTypeName = o.PaymentTypes?.Name,
+                            Note = o.Note
+                        }).ToList();
+
+                        // Настройки сериализации
+                        var setting = new JsonSerializerSettings
+                        {
+                            Formatting = Formatting.Indented
+                        };
+
+                        // Превращаем список объектов в строку
+                        string json = JsonConvert.SerializeObject(dataToExport, setting);
+
+                        // Сохранение
+                        File.WriteAllText(saveFileDialog.FileName, json);
+                    });
+
+                    MessageClass.SuccessMessage($"Успех\nДанные сохранены в формате JSON");
+                }
+                catch (Exception ex)
+                {
+                    await DialogClass.ShowConfirmDialog(
+                        "Ошибка при попытке экспорта",
+                        $"{ex.Message}",
+                        "Понятно",
+                        "Отмена");
+                }
+                finally
+                {
+                    Mouse.OverrideCursor = null;
+                }
+            }
+        }
+
+        private async void ImportFromCsvButtonClick(object sender, RoutedEventArgs e)
+        {
+            var openFileDialog = new Microsoft.Win32.OpenFileDialog()
+            {
+                Filter = "CSV файл (*.csv)|*.csv",
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                try
+                {
+                    Mouse.OverrideCursor = Cursors.Wait;
+
+                    // Читаем все строки и пропускаем шапку
+                    var lines = await Task.Run(() =>
+                        File.ReadAllLines(openFileDialog.FileName, Encoding.UTF8).Skip(1).ToList());
+
+                    // Кэшируем данные из БД
+                    var filmsDict = await AppData.db.Films.ToDictionaryAsync(f => f.Title.ToLower());
+                    var paymentsDict = await AppData.db.PaymentTypes.ToDictionaryAsync(p => p.Name.ToLower());
+
+                    int added = 0;
+                    foreach (var line in lines)
+                    {
+                        var parts = line.Split(';');
+
+                        // Пропускаем битые строки
+                        if (parts.Length < 6)
+                            continue;
+
+                        // Ищем по названиям из CSV
+                        if (filmsDict.TryGetValue(parts[0].Trim().ToLower(), out var film) &&
+                            paymentsDict.TryGetValue(parts[5].Trim().ToLower(), out var payment))
+                        {
+                            AppData.db.Orders.Add(new Orders
+                            {
+                                FilmId = film.FilmId,
+                                SessionDate = DateTime.Parse(parts[1]),
+                                BuyDate = DateTime.Parse(parts[2]),
+                                Price = decimal.Parse(parts[3]),
+                                CountTickets = int.Parse(parts[4]),
+                                PaymentTypeId = payment.PaymentTypeId,
+                                Note = parts.Length > 6 ? parts[6] : "",
+                                UserId = 1
+                            });
+                            added++;
+                        }
+                    }
+
+                    await AppData.db.SaveChangesAsync();
+                    await LoadDataAsync();
+
+                    MessageClass.SuccessMessage($"Успех\nЗаказов импортировано: {added}");
+                }
+                catch (Exception ex)
+                {
+                    await DialogClass.ShowConfirmDialog(
+                        "Ошибка при попытке импорта",
+                        $"{ex.Message}",
+                        "Понятно",
+                        "Отмена");
+                }
+                finally
+                {
+                    Mouse.OverrideCursor = null;
+                }
+            }
         }
     }
 }

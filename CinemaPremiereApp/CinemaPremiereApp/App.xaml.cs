@@ -46,7 +46,10 @@ namespace CinemaPremiereApp
             }
             catch (Exception ex)
             {
-                MessageClass.ErrorMessage($"Ошибка\n{ex.Message}");
+                MessageBox.Show($"Произошла ошибка настроек автозапуска:\n{ex.Message}",
+                    "Кинотеатр \"Премьера\"",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
             }
         }
     }

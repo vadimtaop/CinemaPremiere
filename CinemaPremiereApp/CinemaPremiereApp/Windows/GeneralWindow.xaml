@@ -32,10 +32,17 @@
                     <materialDesign:ColorZone Mode="PrimaryMid"
                                               Padding="10"
                                               Grid.Row="0">
-                        <TextBlock Text="Меню"
-                                   FontSize="22"
-                                   FontWeight="Bold"
-                                   HorizontalAlignment="Center"/>
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Center">
+                            <materialDesign:PackIcon Kind="ViewDashboard"
+                                                     VerticalAlignment="Center"
+                                                     Height="20"
+                                                     Width="20"
+                                                     Margin="0 0 5 0"/>
+                            <TextBlock Text="Меню"
+                                       FontSize="22"
+                                       FontWeight="Bold"/>
+                        </StackPanel>
                     </materialDesign:ColorZone>
 
                     <ListBox Name="TopMenuListBox"
@@ -101,25 +108,13 @@
                                                VerticalAlignment="Center"/>
                                 </StackPanel>
                             </ListBoxItem>
-                            <ListBoxItem Name="AboutAppItem">
-                                <StackPanel Orientation="Horizontal"
-                                            Margin="10">
-                                    <materialDesign:PackIcon Kind="ApplicationCog"
-                                                             Width="24"
-                                                             Height="24"/>
-                                    <TextBlock Text="О программе"
-                                               FontSize="16"
-                                               Margin="20 0 0 0"
-                                               VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </ListBoxItem>
-                            <ListBoxItem Name="HelpItem">
+                            <ListBoxItem Name="AboutItem">
                                 <StackPanel Orientation="Horizontal"
                                             Margin="10">
                                     <materialDesign:PackIcon Kind="HelpCircle"
                                                              Width="24"
                                                              Height="24"/>
-                                    <TextBlock Text="Помощь"
+                                    <TextBlock Text="О программе"
                                                FontSize="16"
                                                Margin="20 0 0 0"
                                                VerticalAlignment="Center"/>
@@ -138,6 +133,19 @@
                                 </StackPanel>
                             </ListBoxItem>
                         </ListBox>
+
+                        <TextBlock Text='© 2026 Кинотеатр "Премьера"'
+                                   HorizontalAlignment="Center"
+                                   FontSize="12"
+                                   FontWeight="SemiBold"
+                                   Opacity="0.4"
+                                   Margin="0 5 0 0"/>
+                        <TextBlock Text='Все права защищены'
+                                   HorizontalAlignment="Center"
+                                   FontSize="12"
+                                   FontWeight="SemiBold"
+                                   Opacity="0.4"
+                                   Margin="0 3 0 0"/>
                     </StackPanel>
                 </Grid>
             </materialDesign:DrawerHost.LeftDrawerContent>
@@ -168,11 +176,18 @@
                                                      Height="40"/>
                         </Button>
 
-                        <TextBlock HorizontalAlignment="Center"
-                                   VerticalAlignment="Center"
-                                   Text="Кинотеатр «Премьера»"
-                                   FontWeight="Bold"
-                                   FontSize="24"/>
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center">
+                            <materialDesign:PackIcon Kind="MovieOpen"
+                                                     VerticalAlignment="Center"
+                                                     Width="28"
+                                                     Height="28"
+                                                     Margin="0 0 10 0"/>
+                            <TextBlock Text="Кинотеатр «Премьера»"
+                                       FontWeight="Bold"
+                                       FontSize="28"/>
+                        </StackPanel>
 
                         <ToggleButton Name="ThemeToggleButton"
                                       HorizontalAlignment="Right"

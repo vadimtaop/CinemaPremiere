@@ -87,7 +87,11 @@ namespace CinemaPremiereApp.Pages
             }
             catch (Exception ex)
             {
-                MessageClass.ErrorMessage($"Ошибка\n{ex.Message}");
+                await DialogClass.ShowConfirmDialog(
+                    "Ошибка при загрузке данных",
+                    $"{ex.Message}",
+                    "Понятно",
+                    "Отмена");
             }
         }
 
@@ -108,7 +112,11 @@ namespace CinemaPremiereApp.Pages
             }
             catch (Exception ex)
             {
-                MessageClass.ErrorMessage($"Ошибка\n{ex.Message}");
+                await DialogClass.ShowConfirmDialog(
+                    "Ошибка при поиске фильма",
+                    $"{ex.Message}",
+                    "Понятно",
+                    "Отмена");
             }
         }
 
@@ -355,12 +363,12 @@ namespace CinemaPremiereApp.Pages
             // Проверки на наличие названия и рейтинг
             if (string.IsNullOrWhiteSpace(AddTitleTextBox.Text))
             {
-                MessageClass.ErrorMessage($"Ошибка\nВведите название фильма");
+                MessageClass.WarningMessage($"Предупреждение\nВведите название фильма");
                 return;
             }
             if (AddAgeRatingsListBox.SelectedItem == null)
             {
-                MessageClass.ErrorMessage($"Ошибка\nВыберите возрастной рейтинг");
+                MessageClass.WarningMessage($"Предупреждение\nВыберите возрастной рейтинг");
                 return;
             }
 
@@ -427,7 +435,11 @@ namespace CinemaPremiereApp.Pages
             }
             catch (Exception ex)
             {
-                MessageClass.ErrorMessage($"Ошибка\n{ex.Message}");
+                await DialogClass.ShowConfirmDialog(
+                    "Ошибка при сохранении фильма",
+                    $"{ex.Message}",
+                    "Понятно",
+                    "Отмена");
             }
         }
 
@@ -615,7 +627,11 @@ namespace CinemaPremiereApp.Pages
                 }
                 catch (Exception ex)
                 {
-                    MessageClass.ErrorMessage($"Ошибка\n{ex.Message}");
+                    await DialogClass.ShowConfirmDialog(
+                        "Ошибка при удалении фильма",
+                        $"{ex.Message}",
+                        "Понятно",
+                        "Отмена");
                 }
             }
         }
@@ -684,7 +700,7 @@ namespace CinemaPremiereApp.Pages
             // Собираем отфильтрованные данные
             if (_filteredFilms == null || !_filteredFilms.Any())
             {
-                MessageClass.ErrorMessage($"Ошибка\nНет данных для экспорта");
+                MessageClass.WarningMessage($"Предупреждение\nНет данных для экспорта");
                 return;
             }
 
@@ -745,7 +761,11 @@ namespace CinemaPremiereApp.Pages
 
                 catch (Exception ex)
                 {
-                    MessageClass.ErrorMessage($"Ошибка\n{ex.Message}");
+                    await DialogClass.ShowConfirmDialog(
+                        "Ошибка при попытке экспорта",
+                        $"{ex.Message}",
+                        "Понятно",
+                        "Отмена");
                 }
                 finally
                 {
@@ -759,7 +779,7 @@ namespace CinemaPremiereApp.Pages
             // Собираем отфильтрованные данные
             if (_filteredFilms == null || !_filteredFilms.Any())
             {
-                MessageClass.ErrorMessage($"Ошибка\nНет данных для экспорта");
+                MessageClass.WarningMessage($"Предупреждение\nНет данных для экспорта");
                 return;
             }
 
@@ -808,7 +828,11 @@ namespace CinemaPremiereApp.Pages
                 }
                 catch (Exception ex)
                 {
-                    MessageClass.ErrorMessage($"Ошибка\n{ex.Message}");
+                    await DialogClass.ShowConfirmDialog(
+                        "Ошибка при попытке экспорта",
+                        $"{ex.Message}",
+                        "Понятно",
+                        "Отмена");
                 }
                 finally
                 {
@@ -822,7 +846,7 @@ namespace CinemaPremiereApp.Pages
             // Собираем отфильтрованные данные
             if (_filteredFilms == null || !_filteredFilms.Any())
             {
-                MessageClass.ErrorMessage($"Ошибка\nНет данных для экспорта");
+                MessageClass.WarningMessage($"Предупреждение\nНет данных для экспорта");
                 return;
             }
 
@@ -869,7 +893,11 @@ namespace CinemaPremiereApp.Pages
                 }
                 catch (Exception ex)
                 {
-                    MessageClass.ErrorMessage($"Ошибка\n{ex.Message}");
+                    await DialogClass.ShowConfirmDialog(
+                        "Ошибка при попытке экспорта",
+                        $"{ex.Message}",
+                        "Понятно",
+                        "Отмена");
                 }
                 finally
                 {
@@ -948,7 +976,11 @@ namespace CinemaPremiereApp.Pages
                 }
                 catch (Exception ex)
                 {
-                    MessageClass.ErrorMessage($"Ошибка\n{ex.Message}");
+                    await DialogClass.ShowConfirmDialog(
+                        "Ошибка при попытке импорта",
+                        $"{ex.Message}",
+                        "Понятно",
+                        "Отмена");
                 }
                 finally
                 {
@@ -978,6 +1010,122 @@ namespace CinemaPremiereApp.Pages
                 {
                     FilmsDataGrid.ContextMenu.PlacementTarget = row;
                     FilmsDataGrid.ContextMenu.IsOpen = true;
+                }
+            }
+        }
+
+        private async void AddNewGenreButtonClick(object sender, RoutedEventArgs e)
+        {
+            string newGenreName = NewGenreTextBox.Text.Trim();
+
+            // Если поле пустое - игнорируем
+            if (string.IsNullOrWhiteSpace(newGenreName))
+                return;
+
+            try
+            {
+                // Проверяем, нет ли уже такого жанра в БД
+                bool exists = await AppData.db.Genres.AnyAsync(g => g.Name.ToLower() ==  newGenreName.ToLower());
+
+                if (exists)
+                {
+                    MessageClass.WarningMessage($"Предупреждение\nТакой жанр уже существует в базе");
+                    return;
+                }
+
+                // Добавляем новый жанр
+                Genres newGenre = new Genres { Name = newGenreName };
+                AppData.db.Genres.Add(newGenre);
+                await AppData.db.SaveChangesAsync();
+
+                // Запоминаем, какие жанры пользоваель уже выделил
+                var previouslySelectedIds = AddGenresListBox.SelectedItems
+                    .Cast<Genres>()
+                    .Select(g => g.GenreId)
+                    .ToList();
+
+                // Загружаем обновленный список из БД
+                var updatedGenreList = await AppData.db.Genres.OrderBy(g => g.Name).ToListAsync();
+
+                // Обновляем источники
+                GenresListBox.ItemsSource = updatedGenreList;
+                AddGenresListBox.ItemsSource = updatedGenreList;
+
+                // Возвращаем галочки и выделяем только что созданный жанр
+                foreach (var genre in updatedGenreList)
+                {
+                    if (previouslySelectedIds.Contains(genre.GenreId) ||
+                            genre.Name == newGenreName)
+                        AddGenresListBox.SelectedItems.Add(genre);
+                }
+
+                // Очищаем поле ввода
+                NewGenreTextBox.Text = "";
+
+                MessageClass.SuccessMessage($"Успех\nЖанр '{newGenreName}' добавлен");
+            }
+            catch (Exception ex)
+            {
+                await DialogClass.ShowConfirmDialog(
+                    "Ошибка при добавлении жанра",
+                    $"{ex.Message}",
+                    "Понятно",
+                    "Отмена");
+            }
+        }
+
+        private async void DeleteGenreMenuItemClick(object sender, RoutedEventArgs e)
+        {
+            var menuItem = sender as MenuItem;
+            if (menuItem == null)
+                return;
+
+            var contextMenu = menuItem.Parent as ContextMenu;
+            if (contextMenu == null)
+                return;
+
+            var listBoxItem = contextMenu.PlacementTarget as FrameworkElement;
+            if (listBoxItem == null)
+                return;
+
+            var genre = listBoxItem.DataContext as Genres;
+            if (genre == null)
+                return;
+
+            // Проверяем, не используется ли жанр в фильмах
+            bool isUsed = await AppData.db.Films.AnyAsync(f => f.Genres.Any(g => g.GenreId == genre.GenreId));
+
+            if (isUsed)
+            {
+                MessageClass.WarningMessage($"Предупреждение\nНельзя удалить жанр '{genre.Name}', так как он используется в фильмах");
+                return;
+            }
+
+            // Подтверждение удаления
+            bool isConfirmed = await DialogClass.ShowConfirmDialog(
+                "Удаление жанра",
+                $"Вы точно хотите удалить жанр '{genre.Name}'?",
+                "Удалить",
+                "Отмена");
+
+            if (isConfirmed)
+            {
+                try
+                {
+                    AppData.db.Genres.Remove(genre);
+                    await AppData.db.SaveChangesAsync();
+
+                    await LoadDataAsync();
+
+                    MessageClass.SuccessMessage("Успех\nЖанр удален");
+                }
+                catch (Exception ex)
+                {
+                    await DialogClass.ShowConfirmDialog(
+                        "Ошибка при удалении жанра",
+                        $"{ex.Message}",
+                        "Понятно",
+                        "Отмена");
                 }
             }
         }

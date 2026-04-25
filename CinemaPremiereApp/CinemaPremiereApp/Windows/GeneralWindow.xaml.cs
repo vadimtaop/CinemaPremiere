@@ -86,6 +86,9 @@ namespace CinemaPremiereApp.Windows
                     case "SettingsItem":
                         MainFrame.Navigate(new Pages.SettingsPage());
                         break;
+                    case "AboutItem":
+                        MainFrame.Navigate(new Pages.AboutPage());
+                        break;
                     case "ExitItem":
                         bool isConfirmed = await DialogClass.ShowConfirmDialog("Выход из системы",
                             "Вы уверены, что хотите выйти из учетной записи?",

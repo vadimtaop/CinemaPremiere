@@ -11,7 +11,7 @@
       FontFamily="{materialDesign:MaterialDesignFont}"
       Language="ru-RU"
       mc:Ignorable="d" 
-      d:DesignHeight="670"
+      d:DesignHeight="6700"
       d:DesignWidth="1280"
       Title="Заказы">
     <materialDesign:DialogHost Identifier="OrdersPageDialogHost"
@@ -53,17 +53,19 @@
                             </Grid.ColumnDefinitions>
                             <DatePicker Name="AddSessionDatePicker"
                                         materialDesign:HintAssist.Hint="Дата сеанса"
+                                        Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
                                         FontSize="14"
                                         Grid.Column="0"
                                         Margin="0 0 5 0"/>
-                            
+
                             <DatePicker Name="AddBuyDatePicker"
                                         materialDesign:HintAssist.Hint="Дата покупки"
+                                        Style="{StaticResource MaterialDesignFloatingHintDatePicker}"
                                         FontSize="14"
                                         Grid.Column="1"
                                         Margin="5 0 0 0"/>
                         </Grid>
-                        
+
                         <StackPanel Margin="0 20 0 0">
                             <TextBlock Text="Фиксированные цены"
                                        FontSize="14"
@@ -102,12 +104,14 @@
                                      FontSize="14"
                                      Grid.Column="0"
                                      Margin="0 0 0 0"
+                                     MaxLength="50"
+                                     materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed"
                                      TextChanged="CalculateTotalSum"
                                      PreviewKeyDown="SpaceValidationPreviewKeyDown"
                                      PreviewTextInput="NumberValidationTextBox"
                                      materialDesign:HintAssist.Hint="Стоимость билета"
                                      Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
-                            
+
                             <materialDesign:NumericUpDown Name="AddCountTicketsUpDown"
                                                           FontSize="14"
                                                           Grid.Column="1"
@@ -126,9 +130,11 @@
                                      Grid.Column="2"
                                      IsReadOnly="True"
                                      materialDesign:HintAssist.Hint="Итоговая сумма"
+                                     MaxLength="50"
+                                     materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed"
                                      Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
                         </Grid>
-                        
+
                         <ComboBox Name="AddPaymentTypeComboBox"
                                   FontSize="14"
                                   Margin="0 10 0 0"
@@ -142,6 +148,8 @@
                                  TextWrapping="Wrap"
                                  Width="500"
                                  MaxHeight="100"
+                                 MaxLength="255"
+                                 materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed"
                                  materialDesign:HintAssist.Hint="Заметка"
                                  Style="{StaticResource MaterialDesignFloatingHintTextBox}"/>
                     </StackPanel>
@@ -168,7 +176,7 @@
                 <ColumnDefinition Width="250"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            
+
             <Border Grid.Column="0"
                     BorderThickness="0 0 1 0"
                     BorderBrush="{DynamicResource MaterialDesignDivider}">
@@ -190,6 +198,8 @@
                             <TextBox Name="SearchTextBox"
                                      Margin="0 0 0 0"
                                      FontSize="14"
+                                     MaxLength="50"
+                                     materialDesign:TextFieldAssist.CharacterCounterVisibility="Collapsed"
                                      TextChanged="SearchTextBoxTextChanged"
                                      Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                                      materialDesign:HintAssist.Hint="Название фильма"
@@ -201,7 +211,7 @@
                                        Opacity="0.6"
                                        FontSize="14"
                                        TextAlignment="Center"/>
-                            
+
                             <DockPanel Margin="0 5 0 0">
                                 <DatePicker Name="StartSessionDatePicker"
                                             Width="95"
@@ -285,7 +295,7 @@
                                 </ListBox>
                             </Expander>
                         </StackPanel>
-                        
+
                         <Separator Background="{DynamicResource MaterialDesignDivider}"/>
 
                         <StackPanel Margin="0 20 0 20">
@@ -377,13 +387,14 @@
                                            VerticalAlignment="Center"/>
                             </StackPanel>
 
-                            <StackPanel Orientation="Horizontal">
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="0 10 0 0">
                                 <materialDesign:PackIcon Kind="CashMultiple"
-                                                     VerticalAlignment="Center"
-                                                     Width="16"
-                                                     Height="16"/>
-                                <TextBlock Name="TotalSumTextBlock"
-                                           Text="Выручка: 0 ₽"
+                                                         VerticalAlignment="Center"
+                                                         Width="16"
+                                                         Height="16"/>
+                                <TextBlock Name="TotalSummaryTextBlock"
+                                           Text="Всего: 0 ₽ / 0 шт."
                                            FontSize="14"
                                            Margin="5 0 0 0"
                                            VerticalAlignment="Center"/>
@@ -391,17 +402,99 @@
 
                             <StackPanel Orientation="Horizontal"
                                         Margin="0 10 0 0">
-                                <materialDesign:PackIcon Kind="TicketConfirmationOutline"
-                                                     VerticalAlignment="Center"
-                                                     Width="16"
-                                                     Height="16"/>
-                                <TextBlock Name="TotalTicketsTextBlock"
-                                       Text="Билетов: 0 шт."
-                                       FontSize="14"
-                                       Margin="5 0 0 0"
-                                       VerticalAlignment="Center"/>
+                                <materialDesign:PackIcon Kind="CreditCard"
+                                                         VerticalAlignment="Center"
+                                                         Width="16"
+                                                         Height="16"/>
+                                <TextBlock Name="BankStatsTextBlock"
+                                           Text="Банк: 0 ₽ / 0 шт."
+                                           FontSize="14"
+                                           Margin="5 0 0 0"
+                                           VerticalAlignment="Center"/>
                             </StackPanel>
 
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="0 10 0 0">
+                                <materialDesign:PackIcon Kind="AccountCard"
+                                                         VerticalAlignment="Center"
+                                                         Width="16"
+                                                         Height="16"/>
+                                <TextBlock Name="PushkinStatsTextBlock"
+                                           Text="Пушка: 0 ₽ / 0 шт."
+                                           FontSize="14"
+                                           Margin="5 0 0 0"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="0 10 0 0">
+                                <materialDesign:PackIcon Kind="Web"
+                                                         VerticalAlignment="Center"
+                                                         Width="16"
+                                                         Height="16"/>
+                                <TextBlock Name="CashStatsTextBlock"
+                                           Text="Внешка: 0 ₽ / 0 шт."
+                                           FontSize="14"
+                                           Margin="5 0 0 0"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <Separator Background="{DynamicResource MaterialDesignDivider}"/>
+
+                        <StackPanel Margin="0 20 0 0">
+                            <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Center"
+                                        Margin="0 0 0 10">
+                                <materialDesign:PackIcon Kind="DatabaseArrowUp"
+                                                         VerticalAlignment="Center"/>
+                                <TextBlock Text="Данные"
+                                           FontSize="18"
+                                           FontWeight="Bold"
+                                           Margin="5 0 0 0"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel Margin="10 0">
+                                <Button ToolTip="Экспорт в Excel"
+                                        Click="ExportToExcelButtonClick"
+                                        Style="{StaticResource MaterialDesignFlatButton}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="FileExcel"/>
+                                        <TextBlock Text="Экспорт в Excel"
+                                                   Margin="10 0 0 0"/>
+                                    </StackPanel>
+                                </Button>
+                                <Button ToolTip="Экспорт в CSV"
+                                        Click="ExportToCsvButtonClick"
+                                        Style="{StaticResource MaterialDesignFlatButton}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="FileCsv"/>
+                                        <TextBlock Text="Экспорт в CSV"
+                                                   Margin="10 0 0 0"/>
+                                    </StackPanel>
+                                </Button>
+                                <Button ToolTip="Экспорт в JSON"
+                                        Click="ExportToJsonButtonClick"
+                                        Style="{StaticResource MaterialDesignFlatButton}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="CodeJson"/>
+                                        <TextBlock Text="Экспорт в JSON"
+                                                   Margin="10 0 0 0"/>
+                                    </StackPanel>
+                                </Button>
+
+                                <Separator Background="{DynamicResource MaterialDesignDivider}"/>
+
+                                <Button ToolTip="Импорт из CSV"
+                                        Click="ImportFromCsvButtonClick"
+                                        Style="{StaticResource MaterialDesignFlatButton}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="FileImport"/>
+                                        <TextBlock Text="Импорт из CSV"
+                                                   Margin="10 0 0 0"/>
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
                         </StackPanel>
 
                         <Button Content="Сбросить параметры"
@@ -739,7 +832,7 @@
                 </Border>
 
             </Grid>
-            
+
         </Grid>
 
 

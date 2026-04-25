@@ -46,5 +46,29 @@ namespace CinemaPremiereApp.Properties {
                 this["PrimaryColor"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CustomAuthImagePath {
+            get {
+                return ((string)(this["CustomAuthImagePath"]));
+            }
+            set {
+                this["CustomAuthImagePath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("250, 300, 350")]
+        public string TemplatePrices {
+            get {
+                return ((string)(this["TemplatePrices"]));
+            }
+            set {
+                this["TemplatePrices"] = value;
+            }
+        }
     }
 }
