@@ -384,6 +384,18 @@
                                                    Margin="10 0 0 0"/>
                                     </StackPanel>
                                 </Button>
+
+                                <Separator Background="{DynamicResource MaterialDesignDivider}"/>
+
+                                <Button ToolTip="Открыть папку постеров"
+                                    Click="OpenPostersFolderButtonClick"
+                                    Style="{StaticResource MaterialDesignFlatButton}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="FolderImage"/>
+                                        <TextBlock Text="Папка постеров"
+                                               Margin="10 0 0 0"/>
+                                    </StackPanel>
+                                </Button>
                             </StackPanel>
                         </StackPanel>
 

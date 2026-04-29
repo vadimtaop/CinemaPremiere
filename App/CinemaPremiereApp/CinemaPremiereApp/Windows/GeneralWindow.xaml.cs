@@ -1,4 +1,5 @@
-﻿using CinemaPremiereApp.Classes;
+﻿using CinemaPremiereApp.Ado;
+using CinemaPremiereApp.Classes;
 using CinemaPremiereApp.Properties;
 using MaterialDesignThemes.Wpf;
 using System;
@@ -69,6 +70,7 @@ namespace CinemaPremiereApp.Windows
             else
                 TopMenuListBox.SelectedIndex = -1;
 
+            // Навигационное меню
             var selectedItem = currentListBox.SelectedItem as ListBoxItem;
             if (selectedItem != null)
             {
@@ -113,6 +115,32 @@ namespace CinemaPremiereApp.Windows
         private void MainSnackbarPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             MainSnackbar.IsActive = false;
+        }
+
+        public void ApplyPermissions()
+        {
+            var user = AppData.CurrentUser;
+
+            if (user == null)
+                return;
+
+            // По умолчанию 1 роль: Администратор
+            OrdersItem.Visibility = Visibility.Visible;
+            FilmsItem.Visibility = Visibility.Visible;
+            ScheduleItem.Visibility = Visibility.Visible;
+
+            // 2 роль: Методист
+            if (user.RoleId == 2)
+            {
+                OrdersItem.Visibility = Visibility.Collapsed;
+            }
+
+            // 3 роль: Кассир
+            if (user.RoleId == 3)
+            {
+                FilmsItem.Visibility = Visibility.Collapsed;
+                ScheduleItem.Visibility = Visibility.Collapsed;
+            }
         }
     }
 }

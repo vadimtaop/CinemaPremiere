@@ -11,7 +11,7 @@
       FontFamily="{materialDesign:MaterialDesignFont}"
       Language="ru-RU"
       mc:Ignorable="d" 
-      d:DesignHeight="6700"
+      d:DesignHeight="670"
       d:DesignWidth="1280"
       Title="Заказы">
     <materialDesign:DialogHost Identifier="OrdersPageDialogHost"

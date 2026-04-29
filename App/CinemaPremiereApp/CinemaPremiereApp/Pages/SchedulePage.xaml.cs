@@ -97,12 +97,18 @@ namespace CinemaPremiereApp.Pages
         // Путь к файлу сохранения в папке с приложением
         private string savePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "autosave.json");
 
+        private bool _isLoaded = false;
+
         public SchedulePage()
         {
             InitializeComponent();
 
             // Привязываем данные страницы к самой себе
             this.DataContext = this;
+
+            TitleTextBox.TextChanged += async (s, e) => await SaveScheduleAsync();
+            SubtitleTextBox.TextChanged += async (s, e) => await SaveScheduleAsync();
+            PhoneTextBox.TextChanged += async (s, e) => await SaveScheduleAsync();
 
             InitAsync();
         }
@@ -112,10 +118,15 @@ namespace CinemaPremiereApp.Pages
             await LoadDataAsync();
             await LoadScheduleAsync();
             SetupAutoSave();
+
+            _isLoaded = true;
         }
 
         private async Task SaveScheduleAsync()
         {
+            if (!_isLoaded)
+                return;
+
             string title = TitleTextBox.Text;
             string sub = SubtitleTextBox.Text;
             string phone = PhoneTextBox.Text;
@@ -150,6 +161,8 @@ namespace CinemaPremiereApp.Pages
 
             try
             {
+                _isLoaded = false;
+
                 string json = await Task.Run(() => File.ReadAllText(savePath));
                 var data = JsonConvert.DeserializeObject<ScheduleSaveData>(json);
 
@@ -157,18 +170,33 @@ namespace CinemaPremiereApp.Pages
                 {
                     // Загружаем постеры
                     Movies.Clear();
-                    foreach (var m in data.SavedMovies)
-                        Movies.Add(m);
+                    if (data.SavedMovies != null)
+                    {
+                        foreach (var m in data.SavedMovies)
+                        {
+                            ReconstructMoviePath(m);
+                            Movies.Add(m);
+                        }
+                    }
 
                     // Загружаем дни и сеансы
                     Days.Clear();
                     foreach (var d in data.SavedDays)
+                    {
                         Days.Add(d);
+                        if (d.Sessions != null)
+                        {
+                            foreach (var sess in d.Sessions)
+                                SubcribeSession(sess);
+                        }
+                    }
 
                     // Восстанавливаем текст
                     TitleTextBox.Text = data.MainTitle;
                     SubtitleTextBox.Text = data.Subtitle;
                     PhoneTextBox.Text = data.Phone;
+
+                    _isLoaded = true;
                 }
             }
             catch (Exception ex)
@@ -188,12 +216,27 @@ namespace CinemaPremiereApp.Pages
                 AvailableFilms = await AppData.db.Films
                     .Include(f => f.Genres)
                     .Include(f => f.AgeRatings)
+                    .OrderByDescending(f => f.ReleaseDate)
                     .ToListAsync();
 
                 FilmsListBox.ItemsSource = AvailableFilms;
             }
             catch (Exception ex)
             {
+                foreach (var entry in AppData.db.ChangeTracker.Entries().ToList())
+                {
+                    switch (entry.State)
+                    {
+                        case EntityState.Added:
+                            entry.State = EntityState.Detached;
+                            break;
+                        case EntityState.Modified:
+                        case EntityState.Deleted:
+                            entry.State = EntityState.Unchanged;
+                            break;
+                    }
+                }
+
                 await DialogClass.ShowConfirmDialog(
                     "Ошибка при загрузке данных фильмов",
                     $"{ex.Message}",
@@ -372,30 +415,41 @@ namespace CinemaPremiereApp.Pages
                 return;
             }
 
-            // Берем выбранный фильм из ListBox в диалоге
-            var selectedFilm = FilmsListBox.SelectedItem as Films;
-
-            if (selectedFilm != null)
+            try
             {
-                // Создаем объект
-                var movie = new ScheduleMovie
+                // Берем выбранный фильм из ListBox в диалоге
+                var selectedFilm = FilmsListBox.SelectedItem as Films;
+
+                if (selectedFilm != null)
                 {
-                    Title = selectedFilm.Title,
-                    ImagePath = selectedFilm.PosterPath?.ToString(),
-                    AgeRating = selectedFilm.AgeRatings?.Name.ToString() + "+",
-                    Genre = selectedFilm.GenresDisplay
-                };
+                    // Создаем объект
+                    var movie = new ScheduleMovie
+                    {
+                        Title = selectedFilm.Title,
+                        ImagePath = selectedFilm.SchedulePosterPath,
+                        AgeRating = selectedFilm.AgeRatings?.Name.ToString() + "+",
+                        Genre = selectedFilm.GenresDisplay
+                    };
 
-                Movies.Add(movie);
+                    Movies.Add(movie);
 
-                //Закрываем диалог
-                DialogHost.CloseDialogCommand.Execute(null, null);
+                    //Закрываем диалог
+                    DialogHost.CloseDialogCommand.Execute(null, null);
 
-                await SaveScheduleAsync();
+                    await SaveScheduleAsync();
+                }
+                else
+                {
+                    MessageClass.WarningMessage($"Предупреждение\nВыберите фильм из списка");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                MessageClass.WarningMessage($"Предупреждение\nВыберите фильм из списка");
+                await DialogClass.ShowConfirmDialog(
+                    "Ошибка при попытке добавить фильм",
+                    $"{ex.Message}",
+                    "Понятно",
+                    "Отмена");
             }
         }
 
@@ -575,7 +629,7 @@ namespace CinemaPremiereApp.Pages
             var saveFileDialog = new Microsoft.Win32.SaveFileDialog()
             {
                 Filter = "JSON файл (*.json)|*.json",
-                FileName = $"Расписание_{DateTime.Now:dd_MM_yyyy}"
+                FileName = $"Расписание_JSON_{DateTime.Now:dd_MM_yyyy}"
             };
 
             if (saveFileDialog.ShowDialog() == true)
@@ -593,10 +647,21 @@ namespace CinemaPremiereApp.Pages
 
                     await Task.Run(() =>
                     {
+                        // Создаем копию данных для сохранения, очищая путь к постерам
+                        var cleanedMovies = moviesSnapshot.Select(m => new ScheduleMovie
+                        {
+                            Title = m.Title,
+                            AgeRating = m.AgeRating,
+                            Genre = m.Genre,
+                            ImagePath = !string.IsNullOrEmpty(m.ImagePath)
+                                ? System.IO.Path.GetFileName(m.ImagePath)
+                                : null
+                        }).ToList();
+
                         // Создаем чистый список с нужными полями
                         var data = new ScheduleSaveData
                         {
-                            SavedMovies = moviesSnapshot,
+                            SavedMovies = cleanedMovies,
                             SavedDays = daysSnapshot,
                             MainTitle = title,
                             Subtitle = subtitle,
@@ -640,6 +705,8 @@ namespace CinemaPremiereApp.Pages
                 {
                     Mouse.OverrideCursor = Cursors.Wait;
 
+                    _isLoaded = false;
+
                     // Читаем файл
                     string json = await Task.Run(() => File.ReadAllText(openFileDialog.FileName, Encoding.UTF8));
 
@@ -653,7 +720,10 @@ namespace CinemaPremiereApp.Pages
                         if (data.SavedMovies != null)
                         {
                             foreach (var m in data.SavedMovies)
+                            {
+                                ReconstructMoviePath(m);
                                 Movies.Add(m);
+                            }
                         }
 
                         // Восстанавливаем дни и сеансы
@@ -677,7 +747,7 @@ namespace CinemaPremiereApp.Pages
                         SubtitleTextBox.Text = data.Subtitle;
                         PhoneTextBox.Text = data.Phone;
 
-                        // Принудительно перезаписываем внутренний autosave.json
+                        _isLoaded = true;
                         await SaveScheduleAsync();
 
                         MessageClass.SuccessMessage($"Успех\nРасписание загружено");
@@ -725,6 +795,43 @@ namespace CinemaPremiereApp.Pages
 
                 return film != null && film.Title.ToLower().Contains(filterText);
             };
+        }
+
+        private void ReconstructMoviePath(ScheduleMovie movie)
+        {
+            if (movie == null || string.IsNullOrEmpty(movie.ImagePath))
+                return;
+
+            if (movie.ImagePath.StartsWith("pack://"))
+                return;
+
+            // Если путь не полный, то прикрепляем путь к папке Images/Posters
+            if (!System.IO.Path.IsPathRooted(movie.ImagePath))
+                movie.ImagePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images", "Posters", movie.ImagePath);
+        }
+
+        private async void OpenPostersFolderButtonClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                // Получаем точный путь
+                string imagesFolder = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images", "Posters");
+
+                // Если папки нет - создаем
+                if (!System.IO.Directory.Exists(imagesFolder))
+                    System.IO.Directory.CreateDirectory(imagesFolder);
+
+                // Открываем папку
+                System.Diagnostics.Process.Start("explorer.exe", imagesFolder);
+            }
+            catch (Exception ex)
+            {
+                await DialogClass.ShowConfirmDialog(
+                    "Ошибка при открытии папки постеров",
+                    $"{ex.Message}",
+                    "Понятно",
+                    "Отмена");
+            }
         }
     }
 }

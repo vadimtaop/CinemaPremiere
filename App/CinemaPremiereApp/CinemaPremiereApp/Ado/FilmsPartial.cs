@@ -31,16 +31,32 @@ namespace CinemaPremiereApp.Ado
                 BitmapImage noPhoto = new BitmapImage(new Uri("pack://application:,,,/Images/NoPhoto.png"));
 
                 if (string.IsNullOrWhiteSpace(this.PosterFileName))
-                {
                     return noPhoto;
-                }
 
                 string fullPath = Path.Combine(folderPath, this.PosterFileName);
 
                 if (File.Exists(fullPath))
-                {
                     return new Uri(fullPath);
-                }
+
+                return noPhoto;
+            }
+        }
+
+        public string SchedulePosterPath
+        {
+            get
+            {
+                string folderPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images", "Posters");
+
+                string noPhoto = "pack://application:,,,/Images/NoPhoto.png";
+
+                if (string.IsNullOrWhiteSpace(this.PosterFileName))
+                    return noPhoto;
+
+                string fullPath = Path.Combine(folderPath, this.PosterFileName);
+
+                if (File.Exists(fullPath))
+                    return fullPath;
 
                 return noPhoto;
             }

@@ -297,6 +297,7 @@
                     </materialDesign:Card>
 
                     <materialDesign:Card Width="450"
+                                         Name="CashierSettingsCard"
                                          Margin="0 0 20 20"
                                          Padding="20"
                                          UniformCornerRadius="15">
@@ -414,6 +415,7 @@
                     </materialDesign:Card>
 
                     <materialDesign:Card Width="450"
+                                         Name="DatabaseSettingsCard"
                                          Margin="0 0 20 20"
                                          Padding="20"
                                          UniformCornerRadius="15">

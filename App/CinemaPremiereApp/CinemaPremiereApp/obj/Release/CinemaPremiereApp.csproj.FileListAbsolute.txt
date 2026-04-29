@@ -79,4 +79,3 @@ C:\Users\Vadim\Desktop\CinemaPremiere\App\CinemaPremiereApp\CinemaPremiereApp\ob
 C:\Users\Vadim\Desktop\CinemaPremiere\App\CinemaPremiereApp\CinemaPremiereApp\obj\Release\CinemaPr.3A6791E5.Up2Date
 C:\Users\Vadim\Desktop\CinemaPremiere\App\CinemaPremiereApp\CinemaPremiereApp\obj\Release\CinemaPremiereApp.exe
 C:\Users\Vadim\Desktop\CinemaPremiere\App\CinemaPremiereApp\CinemaPremiereApp\obj\Release\CinemaPremiereApp.pdb
-C:\Users\Vadim\Desktop\CinemaPremiere\App\CinemaPremiereApp\CinemaPremiereApp\obj\Release\CinemaPremiereApp.exe.config

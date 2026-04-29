@@ -87,6 +87,20 @@ namespace CinemaPremiereApp.Pages
             }
             catch (Exception ex)
             {
+                foreach (var entry in AppData.db.ChangeTracker.Entries().ToList())
+                {
+                    switch (entry.State)
+                    {
+                        case EntityState.Added:
+                            entry.State = EntityState.Detached;
+                            break;
+                        case EntityState.Modified:
+                        case EntityState.Deleted:
+                            entry.State = EntityState.Unchanged;
+                            break;
+                    }
+                }
+
                 await DialogClass.ShowConfirmDialog(
                     "Ошибка при загрузке данных",
                     $"{ex.Message}",
@@ -435,6 +449,20 @@ namespace CinemaPremiereApp.Pages
             }
             catch (Exception ex)
             {
+                foreach (var entry in AppData.db.ChangeTracker.Entries().ToList())
+                {
+                    switch (entry.State)
+                    {
+                        case EntityState.Added:
+                            entry.State = EntityState.Detached;
+                            break;
+                        case EntityState.Modified:
+                        case EntityState.Deleted:
+                            entry.State = EntityState.Unchanged;
+                            break;
+                    }
+                }
+
                 await DialogClass.ShowConfirmDialog(
                     "Ошибка при сохранении фильма",
                     $"{ex.Message}",
@@ -627,6 +655,20 @@ namespace CinemaPremiereApp.Pages
                 }
                 catch (Exception ex)
                 {
+                    foreach (var entry in AppData.db.ChangeTracker.Entries().ToList())
+                    {
+                        switch (entry.State)
+                        {
+                            case EntityState.Added:
+                                entry.State = EntityState.Detached;
+                                break;
+                            case EntityState.Modified:
+                            case EntityState.Deleted:
+                                entry.State = EntityState.Unchanged;
+                                break;
+                        }
+                    }
+
                     await DialogClass.ShowConfirmDialog(
                         "Ошибка при удалении фильма",
                         $"{ex.Message}",
@@ -921,15 +963,26 @@ namespace CinemaPremiereApp.Pages
 
                     // Читаем все строки и пропускаем шапку
                     var lines = await Task.Run(() => 
-                        File.ReadAllLines(openFileDialog.FileName, Encoding.UTF8).Skip(1).ToList());
+                        File.ReadAllLines(openFileDialog.FileName, Encoding.UTF8).ToList());
+
+                    // Если файл пустой или в нем только шапка
+                    if (lines.Count <= 1)
+                    {
+                        MessageClass.WarningMessage("Предупреждение\nФайл пуст или не содержит данных");
+                        return;
+                    }
 
                     // Кэшируем данные из БД
                     var ratingsDict = await AppData.db.AgeRatings.ToDictionaryAsync(r => r.AgeRatingId);
-                    var genresDict = await AppData.db.Genres.ToDictionaryAsync(g => g.Name);
+                    var genresFromDb = await AppData.db.Genres.ToListAsync();
+                    var genresDict = genresFromDb.ToDictionary(g => g.Name.Trim(), StringComparer.OrdinalIgnoreCase);
 
-                    foreach (var line in lines)
+                    int added = 0;
+
+                    // Начинаем со строки 1, пропуская шапку
+                    for (int i = 1; i < lines.Count; i++)
                     {
-                        var parts = line.Split(';');
+                        var parts = lines[i].Split(';');
 
                         // Пропускаем битые строки
                         if (parts.Length < 6)
@@ -937,14 +990,21 @@ namespace CinemaPremiereApp.Pages
                         
                         // Получаем данные из строки
                         string title = parts[1].Trim();
-                        int ageId = int.Parse(parts[2].Trim());
+                        string ageRaw = parts[2].Trim();
                         string poster = parts[3].Trim();
                         string dateRaw = parts[4].Trim();
                         string genresList = parts[5].Trim();
 
-                        // Используем ParseExact, чтобы формат "день.месяц.год" всегда читался верно
-                        DateTime date = DateTime.ParseExact(dateRaw, "dd.MM.yyyy",
-                            System.Globalization.CultureInfo.InvariantCulture);
+                        // Проверка числа
+                        if (!int.TryParse(ageRaw, out int ageId))
+                            throw new Exception($"Ошибка в строке {i + 1}:\nОжидался ID рейтинга (число), а получено '{ageRaw}'.");
+
+                        string[] dateFormats = { "dd.MM.yyyy", "dd.MM.yyyy H:mm:ss", "dd.MM.yyyy HH:mm:ss" };
+
+                        // Проверка даты
+                        if (!DateTime.TryParseExact(dateRaw, dateFormats, System.Globalization.CultureInfo.InvariantCulture,
+                            System.Globalization.DateTimeStyles.None, out DateTime date))
+                            throw new Exception($"Ошибка в строке {i + 1}:\nНеверный формат даты '{dateRaw}'. Ожидается ДД.ММ.ГГГГ.");
 
                         // Достаем рейтинг из словаря
                         ratingsDict.TryGetValue(ageId, out var dbRating);
@@ -955,27 +1015,59 @@ namespace CinemaPremiereApp.Pages
                             Title = title,
                             ReleaseDate = date,
                             AgeRatings = dbRating,
-                            PosterFileName = poster
+                            PosterFileName = poster,
+                            Genres = new HashSet<Genres>()
                         };
 
                         // Обработка жанров
                         var genreNames = genresList.Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
                         foreach (var gName in genreNames)
                         {
-                            if (genresDict.TryGetValue(gName.Trim(), out var dbGenre))
+                            string trimmedName = gName.Trim();
+
+                            // Ищем жанр в нашем кэше
+                            if (genresDict.TryGetValue(trimmedName, out var dbGenre))
+                                // Если жанр найден - привязываем к фильму
                                 newFilm.Genres.Add(dbGenre);
+                            else
+                            {
+                                // Если жанр не найден - создаем новый
+                                Genres newGenre = new Genres
+                                {
+                                    Name = trimmedName
+                                };
+
+                                AppData.db.Genres.Add(newGenre);
+                                genresDict.Add(trimmedName, newGenre);
+                                newFilm.Genres.Add(newGenre);
+                            }
                         }
 
                         AppData.db.Films.Add(newFilm);
+                        added++;
                     }
 
                     await AppData.db.SaveChangesAsync();
                     await LoadDataAsync();
 
-                    MessageClass.SuccessMessage($"Успех\nДанные загружены");
+                    MessageClass.SuccessMessage($"Успех\nФильмов импортировано: {added}");
                 }
                 catch (Exception ex)
                 {
+                    foreach (var entry in AppData.db.ChangeTracker.Entries().ToList())
+                    {
+                        switch (entry.State)
+                        {
+                            case EntityState.Added:
+                                entry.State = EntityState.Detached;
+                                break;
+                            case EntityState.Modified:
+                            case EntityState.Deleted:
+                                entry.State = EntityState.Unchanged;
+                                break;
+                        }
+                    }
+
                     await DialogClass.ShowConfirmDialog(
                         "Ошибка при попытке импорта",
                         $"{ex.Message}",
@@ -1066,6 +1158,20 @@ namespace CinemaPremiereApp.Pages
             }
             catch (Exception ex)
             {
+                foreach (var entry in AppData.db.ChangeTracker.Entries().ToList())
+                {
+                    switch (entry.State)
+                    {
+                        case EntityState.Added:
+                            entry.State = EntityState.Detached;
+                            break;
+                        case EntityState.Modified:
+                        case EntityState.Deleted:
+                            entry.State = EntityState.Unchanged;
+                            break;
+                    }
+                }
+
                 await DialogClass.ShowConfirmDialog(
                     "Ошибка при добавлении жанра",
                     $"{ex.Message}",
@@ -1121,12 +1227,50 @@ namespace CinemaPremiereApp.Pages
                 }
                 catch (Exception ex)
                 {
+                    foreach (var entry in AppData.db.ChangeTracker.Entries().ToList())
+                    {
+                        switch (entry.State)
+                        {
+                            case EntityState.Added:
+                                entry.State = EntityState.Detached;
+                                break;
+                            case EntityState.Modified:
+                            case EntityState.Deleted:
+                                entry.State = EntityState.Unchanged;
+                                break;
+                        }
+                    }
+
                     await DialogClass.ShowConfirmDialog(
                         "Ошибка при удалении жанра",
                         $"{ex.Message}",
                         "Понятно",
                         "Отмена");
                 }
+            }
+        }
+
+        private async void OpenPostersFolderButtonClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                // Получаем точный путь
+                string imagesFolder = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Images", "Posters");
+
+                // Если папки нет - создаем
+                if (!System.IO.Directory.Exists(imagesFolder))
+                    System.IO.Directory.CreateDirectory(imagesFolder);
+
+                // Открываем папку
+                System.Diagnostics.Process.Start("explorer.exe", imagesFolder);
+            }
+            catch (Exception ex)
+            {
+                await DialogClass.ShowConfirmDialog(
+                    "Ошибка при открытии папки постеров",
+                    $"{ex.Message}",
+                    "Понятно",
+                    "Отмена");
             }
         }
     }

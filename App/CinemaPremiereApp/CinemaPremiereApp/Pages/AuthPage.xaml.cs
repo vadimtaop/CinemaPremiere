@@ -106,9 +106,14 @@ namespace CinemaPremiereApp.Pages
                         if (GeneralWindow.Instance != null)
                         {
                             GeneralWindow.Instance.MenuButton.Visibility = Visibility.Visible;
+
+                            GeneralWindow.Instance.ApplyPermissions();
                         }
 
-                        NavigationService.Navigate(new OrdersPage());
+                        if (user.RoleId == 2)
+                            NavigationService.Navigate(new FilmsPage());
+                        else
+                            NavigationService.Navigate(new OrdersPage());
                     }
                     else
                     {
@@ -136,6 +141,20 @@ namespace CinemaPremiereApp.Pages
             }
             catch (Exception ex)
             {
+                foreach (var entry in AppData.db.ChangeTracker.Entries().ToList())
+                {
+                    switch (entry.State)
+                    {
+                        case EntityState.Added:
+                            entry.State = EntityState.Detached;
+                            break;
+                        case EntityState.Modified:
+                        case EntityState.Deleted:
+                            entry.State = EntityState.Unchanged;
+                            break;
+                    }
+                }
+
                 await DialogClass.ShowConfirmDialog(
                     "Ошибка в авторизации",
                     $"{ex.Message}",

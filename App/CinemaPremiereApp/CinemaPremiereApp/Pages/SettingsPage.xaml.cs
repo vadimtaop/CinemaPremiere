@@ -37,6 +37,7 @@ namespace CinemaPremiereApp.Pages
             InitializeComponent();
 
             LoadProjectSettings();
+            ApplyPermissions();
         }
 
         private void LoadProjectSettings()
@@ -285,6 +286,20 @@ namespace CinemaPremiereApp.Pages
             }
             catch (Exception ex)
             {
+                foreach (var entry in AppData.db.ChangeTracker.Entries().ToList())
+                {
+                    switch (entry.State)
+                    {
+                        case EntityState.Added:
+                            entry.State = EntityState.Detached;
+                            break;
+                        case EntityState.Modified:
+                        case EntityState.Deleted:
+                            entry.State = EntityState.Unchanged;
+                            break;
+                    }
+                }
+
                 await DialogClass.ShowConfirmDialog(
                     "Ошибка при попытке смены пароля",
                     $"{ex.Message}",
@@ -344,6 +359,20 @@ namespace CinemaPremiereApp.Pages
                     }
                     else
                     {
+                        foreach (var entry in AppData.db.ChangeTracker.Entries().ToList())
+                        {
+                            switch (entry.State)
+                            {
+                                case EntityState.Added:
+                                    entry.State = EntityState.Detached;
+                                    break;
+                                case EntityState.Modified:
+                                case EntityState.Deleted:
+                                    entry.State = EntityState.Unchanged;
+                                    break;
+                            }
+                        }
+
                         await DialogClass.ShowConfirmDialog(
                             "Ошибка при попытке сохранения базы данных",
                             $"{ex.Message}",
@@ -400,6 +429,20 @@ namespace CinemaPremiereApp.Pages
                 }
                 catch (Exception ex)
                 {
+                    foreach (var entry in AppData.db.ChangeTracker.Entries().ToList())
+                    {
+                        switch (entry.State)
+                        {
+                            case EntityState.Added:
+                                entry.State = EntityState.Detached;
+                                break;
+                            case EntityState.Modified:
+                            case EntityState.Deleted:
+                                entry.State = EntityState.Unchanged;
+                                break;
+                        }
+                    }
+
                     await DialogClass.ShowConfirmDialog(
                         "Ошибка при попытке восстановления базы данных",
                         $"{ex.Message}",
@@ -410,6 +453,31 @@ namespace CinemaPremiereApp.Pages
                 {
                     Mouse.OverrideCursor = null;
                 }
+            }
+        }
+
+        private void ApplyPermissions()
+        {
+            var user = AppData.CurrentUser;
+
+            if (user == null)
+                return;
+
+            // 1 роль: Администратор
+            CashierSettingsCard.Visibility = Visibility.Visible;
+            DatabaseSettingsCard.Visibility = Visibility.Visible;
+
+            // 2 роль: Методист
+            if (user.RoleId == 2)
+            {
+                CashierSettingsCard.Visibility = Visibility.Collapsed;
+                DatabaseSettingsCard.Visibility = Visibility.Collapsed;
+            }
+
+            // 3 роль: Кассир
+            if (user.RoleId == 3)
+            {
+                DatabaseSettingsCard.Visibility = Visibility.Collapsed;
             }
         }
     }

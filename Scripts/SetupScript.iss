@@ -80,10 +80,12 @@ Source: "C:\Users\Vadim\Desktop\CinemaPremiere\App\CinemaPremiereApp\CinemaPremi
 Source: "C:\Users\Vadim\Desktop\CinemaPremiere\App\CinemaPremiereApp\CinemaPremiereApp\bin\Release\System.Numerics.Vectors.xml"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\Vadim\Desktop\CinemaPremiere\App\CinemaPremiereApp\CinemaPremiereApp\bin\Release\System.Runtime.CompilerServices.Unsafe.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\Users\Vadim\Desktop\CinemaPremiere\App\CinemaPremiereApp\CinemaPremiereApp\bin\Release\System.Runtime.CompilerServices.Unsafe.xml"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\Vadim\Desktop\CinemaPremiere\App\CinemaPremiereApp\CinemaPremiereApp\bin\Release\Images\*"; DestDir: "{app}\Images"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\Users\Vadim\Desktop\CinemaPremiere\App\CinemaPremiereApp\CinemaPremiereApp\bin\Release\ru\*"; DestDir: "{app}\ru"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Dirs]
-Name: "{app}\Images"; Permissions: users-modify
+Name: "{app}"; Permissions: users-modify
 
 [Registry]
 Root: HKA; Subkey: "Software\Classes\{#MyAppAssocExt}\OpenWithProgids"; ValueType: string; ValueName: "{#MyAppAssocKey}"; ValueData: ""; Flags: uninsdeletevalue
@@ -97,7 +99,5 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 
 [Run]
 Filename: "{app}\SetupDatabase.bat"; StatusMsg: "Настройка базы данных (это может занять несколько секунд)..."; Flags: runhidden waituntilterminated
-
-[Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 

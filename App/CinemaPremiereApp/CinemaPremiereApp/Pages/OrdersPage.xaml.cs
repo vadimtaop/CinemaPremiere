@@ -2,9 +2,11 @@
 using CinemaPremiereApp.Classes;
 using CinemaPremiereApp.Properties;
 using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
 using System.IO;
 using System.Linq;
@@ -26,7 +28,7 @@ namespace CinemaPremiereApp.Pages
     /// <summary>
     /// Логика взаимодействия для OrdersPage.xaml
     /// </summary>
-    public partial class OrdersPage : Page
+    public partial class OrdersPage : System.Windows.Controls.Page
     {
         // Вспомогательный класс для экспорта/импорта
         public class OrderDto
@@ -119,6 +121,20 @@ namespace CinemaPremiereApp.Pages
             }
             catch (Exception ex)
             {
+                foreach (var entry in AppData.db.ChangeTracker.Entries().ToList())
+                {
+                    switch (entry.State)
+                    {
+                        case EntityState.Added:
+                            entry.State = EntityState.Detached;
+                            break;
+                        case EntityState.Modified:
+                        case EntityState.Deleted:
+                            entry.State = EntityState.Unchanged;
+                            break;
+                    }
+                }
+
                 await DialogClass.ShowConfirmDialog(
                     "Ошибка при загрузке данных",
                     $"{ex.Message}",
@@ -186,14 +202,20 @@ namespace CinemaPremiereApp.Pages
                     query = query.Where(o => o.SessionDate >= startSessionDate.Value);
 
                 if (endSessionDate.HasValue)
-                    query = query.Where(o => o.SessionDate <= endSessionDate.Value);
-
+                {
+                    DateTime endLimit = endSessionDate.Value.AddDays(1);
+                    query = query.Where(o => o.SessionDate <= endLimit);
+                }
+                    
                 // Фильтр по дате покупки
                 if (startBuyDate.HasValue)
                     query = query.Where(o => o.BuyDate >= startBuyDate.Value);
 
                 if (endBuyDate.HasValue)
+                {
+                    DateTime endLimit = endBuyDate.Value.AddDays(1);
                     query = query.Where(o => o.BuyDate <= endBuyDate.Value);
+                }
 
                 // Тип оплаты
                 if (selectedPaymentIds.Any())
@@ -618,7 +640,7 @@ namespace CinemaPremiereApp.Pages
                         CountTickets = (int)AddCountTicketsUpDown.Value,
                         PaymentTypeId = selectedPayment.PaymentTypeId,
                         Note = AddNoteTextBox.Text,
-                        UserId = 1
+                        UserId = AppData.CurrentUser.UserId
                     };
 
                     AppData.db.Orders.Add(newOrder);
@@ -649,6 +671,20 @@ namespace CinemaPremiereApp.Pages
             }
             catch (Exception ex)
             {
+                foreach (var entry in AppData.db.ChangeTracker.Entries().ToList())
+                {
+                    switch (entry.State)
+                    {
+                        case EntityState.Added:
+                            entry.State = EntityState.Detached;
+                            break;
+                        case EntityState.Modified:
+                        case EntityState.Deleted:
+                            entry.State = EntityState.Unchanged;
+                            break;
+                    }
+                }
+
                 await DialogClass.ShowConfirmDialog(
                     "Ошибка при сохранении заказа",
                     $"{ex.Message}",
@@ -732,6 +768,20 @@ namespace CinemaPremiereApp.Pages
                 }
                 catch (Exception ex)
                 {
+                    foreach (var entry in AppData.db.ChangeTracker.Entries().ToList())
+                    {
+                        switch (entry.State)
+                        {
+                            case EntityState.Added:
+                                entry.State = EntityState.Detached;
+                                break;
+                            case EntityState.Modified:
+                            case EntityState.Deleted:
+                                entry.State = EntityState.Unchanged;
+                                break;
+                        }
+                    }
+
                     await DialogClass.ShowConfirmDialog(
                         "Ошибка при удалении заказа",
                         $"{ex.Message}",
@@ -1029,38 +1079,78 @@ namespace CinemaPremiereApp.Pages
 
                     // Читаем все строки и пропускаем шапку
                     var lines = await Task.Run(() =>
-                        File.ReadAllLines(openFileDialog.FileName, Encoding.UTF8).Skip(1).ToList());
+                        File.ReadAllLines(openFileDialog.FileName, Encoding.UTF8).ToList());
+
+                    // Если файл пустой или в нем только шапка
+                    if (lines.Count <= 1)
+                    {
+                        MessageClass.WarningMessage("Предупреждение\nФайл пуст или не содержит данных");
+                        return;
+                    }
 
                     // Кэшируем данные из БД
-                    var filmsDict = await AppData.db.Films.ToDictionaryAsync(f => f.Title.ToLower());
-                    var paymentsDict = await AppData.db.PaymentTypes.ToDictionaryAsync(p => p.Name.ToLower());
+                    var filmsDict = await AppData.db.Films.ToDictionaryAsync(f => f.Title.Trim(), StringComparer.OrdinalIgnoreCase);
+                    var paymentsDict = await AppData.db.PaymentTypes.ToDictionaryAsync(p => p.Name.Trim(), StringComparer.OrdinalIgnoreCase);
 
                     int added = 0;
-                    foreach (var line in lines)
+
+                    for (int i = 1; i < lines.Count; i++)
                     {
-                        var parts = line.Split(';');
+                        var parts = lines[i].Split(';');
 
                         // Пропускаем битые строки
                         if (parts.Length < 6)
                             continue;
 
-                        // Ищем по названиям из CSV
-                        if (filmsDict.TryGetValue(parts[0].Trim().ToLower(), out var film) &&
-                            paymentsDict.TryGetValue(parts[5].Trim().ToLower(), out var payment))
+                        // Извлекаем сырые данные
+                        string filmTitle = parts[0].Trim();
+                        string sessionDateRaw = parts[1].Trim();
+                        string buyDateRaw = parts[2].Trim();
+                        string priceRaw = parts[3].Trim();
+                        string countRaw = parts[4].Trim();
+                        string paymentTypeRaw = parts[5].Trim();
+                        string note = parts.Length > 6 ? parts[6].Trim() : "";
+
+                        string[] dateFormats = { "dd.MM.yyyy", "dd.MM.yyyy H:mm:ss" };
+
+                        // Проверка даты сеанса
+                        if (!DateTime.TryParseExact(sessionDateRaw, dateFormats, System.Globalization.CultureInfo.InvariantCulture,
+                            System.Globalization.DateTimeStyles.None, out DateTime sessionDate))
+                            throw new Exception($"Ошибка в строке {i + 1}:\nНеверный формат даты сеанса '{sessionDate}'. Ожидается ДД.ММ.ГГГГ.");
+
+                        // Проверка даты покупки
+                        if (!DateTime.TryParseExact(buyDateRaw, dateFormats, System.Globalization.CultureInfo.InvariantCulture,
+                            System.Globalization.DateTimeStyles.None, out DateTime buyDate))
+                            throw new Exception($"Ошибка в строке {i + 1}:\nНеверный формат даты покупки '{buyDate}'. Ожидается ДД.ММ.ГГГГ.");
+
+                        // Проверка цены
+                        if (!decimal.TryParse(priceRaw.Replace('.', ','), out decimal price))
+                            throw new Exception($"Ошибка в строке {i + 1}:\nОжидалась цена (число), а получено '{priceRaw}'.");
+
+                        // Проверка количества билетов
+                        if (!int.TryParse(countRaw, out int countTickets))
+                            throw new Exception($"Ошибка в строке {i + 1}:\nОжидалось количество билетов (целое число), а получено '{countRaw}'.");
+
+                        // Ищем фильм
+                        if (!filmsDict.TryGetValue(filmTitle, out var film))
+                            throw new Exception($"Ошибка в строке {i + 1}:\nФильм '{filmTitle}' не найден в базе данных\n Сначала добавьте этот фильм в разделе 'Фильмы'.");
+
+                        // Ищем тип оплаты
+                        if (!paymentsDict.TryGetValue(paymentTypeRaw, out var payment))
+                            throw new Exception($"Ошибка в строке {i + 1}:\nТип оплаты '{paymentTypeRaw}' не найден в базе данных.");
+
+                        AppData.db.Orders.Add(new Orders
                         {
-                            AppData.db.Orders.Add(new Orders
-                            {
-                                FilmId = film.FilmId,
-                                SessionDate = DateTime.Parse(parts[1]),
-                                BuyDate = DateTime.Parse(parts[2]),
-                                Price = decimal.Parse(parts[3]),
-                                CountTickets = int.Parse(parts[4]),
-                                PaymentTypeId = payment.PaymentTypeId,
-                                Note = parts.Length > 6 ? parts[6] : "",
-                                UserId = 1
-                            });
-                            added++;
-                        }
+                            FilmId = film.FilmId,
+                            SessionDate = sessionDate,
+                            BuyDate = buyDate,
+                            Price = price,
+                            CountTickets = countTickets,
+                            PaymentTypeId = payment.PaymentTypeId,
+                            Note = note,
+                            UserId = AppData.CurrentUser.UserId
+                        });
+                        added++;
                     }
 
                     await AppData.db.SaveChangesAsync();
@@ -1070,6 +1160,20 @@ namespace CinemaPremiereApp.Pages
                 }
                 catch (Exception ex)
                 {
+                    foreach (var entry in AppData.db.ChangeTracker.Entries().ToList())
+                    {
+                        switch (entry.State)
+                        {
+                            case EntityState.Added:
+                                entry.State = EntityState.Detached;
+                                break;
+                            case EntityState.Modified:
+                            case EntityState.Deleted:
+                                entry.State = EntityState.Unchanged;
+                                break;
+                        }
+                    }
+
                     await DialogClass.ShowConfirmDialog(
                         "Ошибка при попытке импорта",
                         $"{ex.Message}",
