@@ -31,7 +31,9 @@
                     <TextBlock Text="Добавление нового заказа"
                                FontSize="20"
                                FontWeight="Bold"
-                               Grid.Row="0"/>
+                               Grid.Row="0"
+                               TextWrapping="Wrap"
+                               Name="TitleDialogTextBlock"/>
 
                     <StackPanel HorizontalAlignment="Center"
                                 Margin="0 0 0 0"

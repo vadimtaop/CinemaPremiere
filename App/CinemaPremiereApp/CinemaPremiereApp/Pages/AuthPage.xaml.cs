@@ -127,7 +127,12 @@ namespace CinemaPremiereApp.Pages
 
                             AppData.db.SaveChanges();
 
-                            MessageClass.ErrorMessage($"Ошибка\nПревышение допустымых попыток. Вы временно заблокированы. Повторите попытку позже");
+                            await DialogClass.ShowConfirmDialog(
+                                "Ошибка в авторизации",
+                                "Превышение допустымых попыток. Вы временно заблокированы. Повторите попытку позже",
+                                "Понятно",
+                                "Отмена");
+
                             return;
                         }
 

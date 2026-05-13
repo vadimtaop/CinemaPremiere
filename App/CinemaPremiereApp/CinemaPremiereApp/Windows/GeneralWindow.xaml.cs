@@ -85,6 +85,9 @@ namespace CinemaPremiereApp.Windows
                     case "ScheduleItem":
                         MainFrame.Navigate(new Pages.SchedulePage());
                         break;
+                    case "UsersItem":
+                        MainFrame.Navigate(new Pages.UsersPage());
+                        break;
                     case "SettingsItem":
                         MainFrame.Navigate(new Pages.SettingsPage());
                         break;
@@ -128,11 +131,13 @@ namespace CinemaPremiereApp.Windows
             OrdersItem.Visibility = Visibility.Visible;
             FilmsItem.Visibility = Visibility.Visible;
             ScheduleItem.Visibility = Visibility.Visible;
+            UsersItem.Visibility = Visibility.Visible;
 
             // 2 роль: Методист
             if (user.RoleId == 2)
             {
                 OrdersItem.Visibility = Visibility.Collapsed;
+                UsersItem.Visibility = Visibility.Collapsed;
             }
 
             // 3 роль: Кассир
@@ -140,6 +145,7 @@ namespace CinemaPremiereApp.Windows
             {
                 FilmsItem.Visibility = Visibility.Collapsed;
                 ScheduleItem.Visibility = Visibility.Collapsed;
+                UsersItem.Visibility = Visibility.Collapsed;
             }
         }
     }

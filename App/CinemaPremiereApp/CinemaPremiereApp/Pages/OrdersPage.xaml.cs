@@ -528,6 +528,9 @@ namespace CinemaPremiereApp.Pages
         {
             _editingOrder = null;
 
+            // Меняем заголовок диалога
+            TitleDialogTextBlock.Text = "Добавление нового заказа";
+
             // Очистка полей
             AddFilmComboBox.SelectedIndex = -1;
             AddSessionDatePicker.SelectedDate = DateTime.Now;
@@ -665,6 +668,9 @@ namespace CinemaPremiereApp.Pages
                 MainDialogHost.IsOpen = false;
                 _editingOrder = null;
 
+                // Меняем заголовок диалога
+                TitleDialogTextBlock.Text = "Добавление нового заказа";
+
                 await LoadDataAsync();
 
                 MessageClass.SuccessMessage($"Успех\nЗаказ {status}");
@@ -700,6 +706,9 @@ namespace CinemaPremiereApp.Pages
 
             if (_editingOrder == null)
                 return;
+
+            // Меняем заголовок диалога
+            TitleDialogTextBlock.Text = $"Редактирование заказа #{_editingOrder.OrderId}";
 
             // Заполняем поля
             AddFilmComboBox.SelectedItem = AddFilmComboBox.Items.Cast<Films>()

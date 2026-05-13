@@ -360,6 +360,9 @@ namespace CinemaPremiereApp.Pages
             _editingFilm = null;
             selectedImagePath = null;
 
+            // Меняем заголовок диалога
+            TitleDialogTextBlock.Text = "Добавление нового фильма";
+
             // Очистка полей
             AddTitleTextBox.Text = "";
             AddReleaseDatePicker.SelectedDate = DateTime.Now;
@@ -443,6 +446,10 @@ namespace CinemaPremiereApp.Pages
                 MainDialogHost.IsOpen = false;
                 _editingFilm = null;
                 selectedImagePath = null;
+
+                // Меняем заголовок диалога
+                TitleDialogTextBlock.Text = "Добавление нового фильма";
+
                 await LoadDataAsync();
 
                 MessageClass.SuccessMessage($"Успех\nФильм {status}");
@@ -513,6 +520,9 @@ namespace CinemaPremiereApp.Pages
         {
             if (_editingFilm == null)
                 return;
+
+            // Меняем заголовок диалога
+            TitleDialogTextBlock.Text = $"Редактирование фильма \"{_editingFilm.Title}\"";
 
             // Заполняем поля данными
             AddTitleTextBox.Text = _editingFilm.Title;

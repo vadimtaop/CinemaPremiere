@@ -87,6 +87,18 @@
                                            VerticalAlignment="Center"/>
                             </StackPanel>
                         </ListBoxItem>
+                        <ListBoxItem Name="UsersItem">
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="10">
+                                <materialDesign:PackIcon Kind="Users"
+                                                         Width="24"
+                                                         Height="24"/>
+                                <TextBlock Text="Пользователи"
+                                           FontSize="16"
+                                           Margin="20 0 0 0"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </ListBoxItem>
                     </ListBox>
 
                     <StackPanel Grid.Row="2"

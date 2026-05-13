@@ -187,3 +187,6 @@ C:\Users\Vadim\Desktop\CinemaPremiere\App\CinemaPremiereApp\CinemaPremiereApp\ob
 C:\Users\Vadim\Desktop\CinemaPremiere\App\CinemaPremiereApp\CinemaPremiereApp\obj\Debug\CinemaPr.3A6791E5.Up2Date
 C:\Users\Vadim\Desktop\CinemaPremiere\App\CinemaPremiereApp\CinemaPremiereApp\obj\Debug\CinemaPremiereApp.exe
 C:\Users\Vadim\Desktop\CinemaPremiere\App\CinemaPremiereApp\CinemaPremiereApp\obj\Debug\CinemaPremiereApp.pdb
+C:\Users\Vadim\Desktop\CinemaPremiere\App\CinemaPremiereApp\CinemaPremiereApp\obj\Debug\Pages\UsersPage.g.cs
+C:\Users\Vadim\Desktop\CinemaPremiere\App\CinemaPremiereApp\CinemaPremiereApp\obj\Debug\Pages\UsersPage.baml
+C:\Users\Vadim\Desktop\CinemaPremiere\App\CinemaPremiereApp\CinemaPremiereApp\obj\Debug\CinemaPremiereApp.exe.config

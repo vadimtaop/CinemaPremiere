@@ -12,64 +12,82 @@ namespace CinemaPremiereApp.Classes
 {
     public static class DialogClass
     {
+        private static bool _isDialogOpen = false;
+
         public static async Task<bool> ShowConfirmDialog(string title, string message, string yes, string no)
         {
-            var dialogContent = new StackPanel
+            if (_isDialogOpen)
+                return false;
+
+            _isDialogOpen = true;
+
+            try
             {
-                Margin = new Thickness(20),
-                Width = 350
-            };
+                var dialogContent = new StackPanel
+                {
+                    Margin = new Thickness(20),
+                    Width = 350
+                };
 
-            dialogContent.Children.Add(new TextBlock
+                dialogContent.Children.Add(new TextBlock
+                {
+                    Text = title,
+                    FontSize = 20,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                    FontWeight = FontWeights.Bold,
+                    Margin = new Thickness(0, 0, 0, 10),
+                    TextWrapping = TextWrapping.Wrap
+                });
+
+                dialogContent.Children.Add(new TextBlock
+                {
+                    Text = message,
+                    FontSize = 16,
+                    TextWrapping = TextWrapping.Wrap,
+                    Margin = new Thickness(0, 0, 0, 20)
+                });
+
+                var buttonsPanel = new StackPanel
+                {
+                    Orientation = Orientation.Horizontal,
+                    HorizontalAlignment = HorizontalAlignment.Right
+                };
+
+                var yesButton = new Button
+                {
+                    Content = yes,
+                    IsDefault = true,
+                    FontWeight = FontWeights.Bold,
+                    Style = (Style)Application.Current.FindResource("MaterialDesignFlatButton"),
+                    Command = DialogHost.CloseDialogCommand,
+                    CommandParameter = true
+                };
+
+                var noButton = new Button
+                {
+                    Content = no,
+                    IsCancel = true,
+                    Style = (Style)Application.Current.FindResource("MaterialDesignFlatButton"),
+                    Command = DialogHost.CloseDialogCommand,
+                    CommandParameter = false
+                };
+
+                buttonsPanel.Children.Add(noButton);
+                buttonsPanel.Children.Add(yesButton);
+                dialogContent.Children.Add(buttonsPanel);
+
+                var result = await DialogHost.Show(dialogContent, "GlobalDialogHost");
+
+                return result is bool boolResult && boolResult;
+            }
+            catch (InvalidOperationException)
             {
-                Text = title,
-                FontSize = 20,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                FontWeight = FontWeights.Bold,
-                Margin = new Thickness(0, 0, 0, 10),
-                TextWrapping = TextWrapping.Wrap
-            });
-
-            dialogContent.Children.Add(new TextBlock
+                return false;
+            }
+            finally
             {
-                Text = message,
-                FontSize = 16,
-                TextWrapping = TextWrapping.Wrap,
-                Margin = new Thickness(0, 0, 0, 20)
-            });
-
-            var buttonsPanel = new StackPanel
-            {
-                Orientation = Orientation.Horizontal,
-                HorizontalAlignment = HorizontalAlignment.Right
-            };
-
-            var yesButton = new Button
-            {
-                Content = yes,
-                IsDefault = true,
-                FontWeight = FontWeights.Bold,
-                Style = (Style)Application.Current.FindResource("MaterialDesignFlatButton"),
-                Command = DialogHost.CloseDialogCommand,
-                CommandParameter = true
-            };
-
-            var noButton = new Button
-            {
-                Content = no,
-                IsCancel = true,
-                Style = (Style)Application.Current.FindResource("MaterialDesignFlatButton"),
-                Command = DialogHost.CloseDialogCommand,
-                CommandParameter = false
-            };
-
-            buttonsPanel.Children.Add(noButton);
-            buttonsPanel.Children.Add(yesButton);
-            dialogContent.Children.Add(buttonsPanel);
-
-            var result = await DialogHost.Show(dialogContent, "GlobalDialogHost");
-
-            return result is bool boolResult && boolResult;
+                _isDialogOpen = false;
+            }
         }
     }
 }
