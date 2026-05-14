@@ -3,7 +3,7 @@
 ; Non-commercial use only
 
 #define MyAppName "Кинотеатр «Премьера»"
-#define MyAppVersion "1.0"
+#define MyAppVersion "1.7"
 #define MyAppPublisher "Мухин Вадим Юрьевич"
 #define MyAppExeName "CinemaPremiereApp.exe"
 #define MyAppAssocName MyAppName + " File"
