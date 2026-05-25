@@ -81,3 +81,4 @@ C:\Users\Vadim\Desktop\CinemaPremiere\App\CinemaPremiereApp\CinemaPremiereApp\ob
 C:\Users\Vadim\Desktop\CinemaPremiere\App\CinemaPremiereApp\CinemaPremiereApp\obj\Release\CinemaPremiereApp.pdb
 C:\Users\Vadim\Desktop\CinemaPremiere\App\CinemaPremiereApp\CinemaPremiereApp\obj\Release\Pages\UsersPage.g.cs
 C:\Users\Vadim\Desktop\CinemaPremiere\App\CinemaPremiereApp\CinemaPremiereApp\obj\Release\Pages\UsersPage.baml
+C:\Users\Vadim\Desktop\CinemaPremiere\App\CinemaPremiereApp\CinemaPremiereApp\obj\Release\CinemaPremiereApp.exe.config

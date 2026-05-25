@@ -3,8 +3,8 @@
   "WorkspaceRootPath": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\App\\CinemaPremiereApp\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{91A8D746-A9B3-4269-AA16-6E68CB15ADF8}|CinemaPremiereApp\\CinemaPremiereApp.csproj|c:\\users\\vadim\\desktop\\cinemapremiere\\app\\cinemapremiereapp\\cinemapremiereapp\\pages\\aboutpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{91A8D746-A9B3-4269-AA16-6E68CB15ADF8}|CinemaPremiereApp\\CinemaPremiereApp.csproj|solutionrelative:cinemapremiereapp\\pages\\aboutpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+      "AbsoluteMoniker": "D:0:0:{91A8D746-A9B3-4269-AA16-6E68CB15ADF8}|CinemaPremiereApp\\CinemaPremiereApp.csproj|c:\\users\\vadim\\desktop\\cinemapremiere\\app\\cinemapremiereapp\\cinemapremiereapp\\pages\\authpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{91A8D746-A9B3-4269-AA16-6E68CB15ADF8}|CinemaPremiereApp\\CinemaPremiereApp.csproj|solutionrelative:cinemapremiereapp\\pages\\authpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -19,13 +19,14 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "AboutPage.xaml",
-              "DocumentMoniker": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\App\\CinemaPremiereApp\\CinemaPremiereApp\\Pages\\AboutPage.xaml",
-              "RelativeDocumentMoniker": "CinemaPremiereApp\\Pages\\AboutPage.xaml",
-              "ToolTip": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\App\\CinemaPremiereApp\\CinemaPremiereApp\\Pages\\AboutPage.xaml",
-              "RelativeToolTip": "CinemaPremiereApp\\Pages\\AboutPage.xaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2026-05-14T17:49:37.114Z",
+              "Title": "AuthPage.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\App\\CinemaPremiereApp\\CinemaPremiereApp\\Pages\\AuthPage.xaml.cs",
+              "RelativeDocumentMoniker": "CinemaPremiereApp\\Pages\\AuthPage.xaml.cs",
+              "ToolTip": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\App\\CinemaPremiereApp\\CinemaPremiereApp\\Pages\\AuthPage.xaml.cs",
+              "RelativeToolTip": "CinemaPremiereApp\\Pages\\AuthPage.xaml.cs",
+              "ViewState": "AgIAAEQAAAAAAAAAAAAwwFcAAABxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-21T13:29:55.377Z",
               "EditorCaption": ""
             }
           ]

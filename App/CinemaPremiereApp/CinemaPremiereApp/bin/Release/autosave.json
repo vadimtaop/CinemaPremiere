@@ -1,7 +1,145 @@
 {
-  "SavedMovies": [],
-  "SavedDays": [],
-  "MainTitle": "",
-  "Subtitle": "",
-  "Phone": ""
+  "SavedMovies": [
+    {
+      "Title": "Три богатыря и свет клином",
+      "ImagePath": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\App\\CinemaPremiereApp\\CinemaPremiereApp\\bin\\Release\\Images\\Posters\\7527356.jpg",
+      "AgeRating": "6+",
+      "Genre": "Приключения"
+    },
+    {
+      "Title": "Буратино",
+      "ImagePath": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\App\\CinemaPremiereApp\\CinemaPremiereApp\\bin\\Release\\Images\\Posters\\5354680.jpg",
+      "AgeRating": "6+",
+      "Genre": "Сказка"
+    },
+    {
+      "Title": "Чебурашка 2",
+      "ImagePath": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\App\\CinemaPremiereApp\\CinemaPremiereApp\\bin\\Release\\Images\\Posters\\5379012.jpg",
+      "AgeRating": "6+",
+      "Genre": "Семейная комедия"
+    },
+    {
+      "Title": "Простоквашино",
+      "ImagePath": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\App\\CinemaPremiereApp\\CinemaPremiereApp\\bin\\Release\\Images\\Posters\\5498755.jpg",
+      "AgeRating": "6+",
+      "Genre": "Приключения, Семейный"
+    },
+    {
+      "Title": "Левша",
+      "ImagePath": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\App\\CinemaPremiereApp\\CinemaPremiereApp\\bin\\Release\\Images\\Posters\\6553075.jpg",
+      "AgeRating": "12+",
+      "Genre": "Фантастика, Экшн"
+    },
+    {
+      "Title": "Возвращение в Сайлент Хилл",
+      "ImagePath": "C:\\Users\\Vadim\\Desktop\\CinemaPremiere\\App\\CinemaPremiereApp\\CinemaPremiereApp\\bin\\Release\\Images\\Posters\\5268266.jpg",
+      "AgeRating": "18+",
+      "Genre": "Хоррор"
+    }
+  ],
+  "SavedDays": [
+    {
+      "DateText": "15 ЯНВАРЯ",
+      "Sessions": [
+        {
+          "Time": "14:00",
+          "Title": "Три богатыря и свет клином",
+          "Price": "250 р."
+        },
+        {
+          "Time": "16:00",
+          "Title": "Буратино",
+          "Price": "250 р."
+        },
+        {
+          "Time": "18:00",
+          "Title": "Чебурашка 2",
+          "Price": "300 р."
+        },
+        {
+          "Time": "20:00",
+          "Title": "Левша",
+          "Price": "300 р."
+        }
+      ]
+    },
+    {
+      "DateText": "16 ЯНВАРЯ",
+      "Sessions": [
+        {
+          "Time": "14:00",
+          "Title": "Буратино",
+          "Price": "250 р."
+        },
+        {
+          "Time": "16:00",
+          "Title": "Чебурашка 2",
+          "Price": "250 р."
+        },
+        {
+          "Time": "18:00",
+          "Title": "Простоквашино",
+          "Price": "300 р."
+        },
+        {
+          "Time": "20:00",
+          "Title": "Левша",
+          "Price": "300 р."
+        }
+      ]
+    },
+    {
+      "DateText": "17 ЯНВАРЯ",
+      "Sessions": [
+        {
+          "Time": "14:00",
+          "Title": "Чебурашка 2",
+          "Price": "250 р."
+        },
+        {
+          "Time": "16:00",
+          "Title": "Простоквашино",
+          "Price": "250 р."
+        },
+        {
+          "Time": "18:00",
+          "Title": "Три богатыря и свет клином",
+          "Price": "300 р."
+        },
+        {
+          "Time": "20:00",
+          "Title": "Возвращение в Сайлент Хилл",
+          "Price": "300 р."
+        }
+      ]
+    },
+    {
+      "DateText": "18 ЯНВАРЯ",
+      "Sessions": [
+        {
+          "Time": "14:00",
+          "Title": "Простоквашино",
+          "Price": "250 р."
+        },
+        {
+          "Time": "16:00",
+          "Title": "Три богатыря и свет клином",
+          "Price": "250 р."
+        },
+        {
+          "Time": "18:00",
+          "Title": "Буратино",
+          "Price": "300 р."
+        },
+        {
+          "Time": "20:00",
+          "Title": "Возвращение в Сайлент Хилл",
+          "Price": "300 р."
+        }
+      ]
+    }
+  ],
+  "MainTitle": "РАСПИСАНИЕ",
+  "Subtitle": "КИНОТЕАТР «ПРЕМЬЕРА»",
+  "Phone": "8 (831-97) 5-18-86"
 }
